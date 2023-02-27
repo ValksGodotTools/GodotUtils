@@ -1,2 +1,1 @@
-# GodotUtils
-Godot 4 C# Utils Library
+A utils library for Godot 4 C#
