@@ -8,7 +8,15 @@
     <PackageId>Valks$(AssemblyName)</PackageId>
     <Title>Valks Godot Utils</Title>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	<PackageLicenseFile>LICENSE</PackageLicenseFile>
+	<PackageReadmeFile>README.md</PackageReadmeFile>
+	<Description>A utils library for Godot 4 C#</Description>
+	<RepositoryUrl>https://github.com/Valks-Games/GodotUtils</RepositoryUrl>
   </PropertyGroup>
+  <ItemGroup>
+	<None Include="LICENSE" Pack="true" PackagePath="" />
+	<None Include="README.md" Pack="true" PackagePath="" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GodotSharp" Version="4.0.0-rc.5" />
 	<PackageReference Include="Newtonsoft.Json" Version="13.0.1" /> <!--This is used because net472 does not have System.Text.Json-->
