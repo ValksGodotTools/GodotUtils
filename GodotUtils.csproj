@@ -12,6 +12,7 @@
 	<PackageReadmeFile>README.md</PackageReadmeFile>
 	<Description>A utils library for Godot 4 C#</Description>
 	<RepositoryUrl>https://github.com/Valks-Games/GodotUtils</RepositoryUrl>
+	<Version>1.0.1</Version>
   </PropertyGroup>
   <ItemGroup>
 	<None Include="LICENSE" Pack="true" PackagePath="" />

@@ -1,6 +1,6 @@
 ﻿namespace GodotUtils;
 
-public static class ExtensionsRayCast2D
+public static class ExtensionsRayCast
 {
 	/// <summary>
 	/// A convience function to tell the raycast to exlude all parents that
@@ -15,6 +15,20 @@ public static class ExtensionsRayCast2D
 				raycast.AddException(collision);
 
 			ExcludeRaycastParents(raycast, parent.GetParentOrNull<Node>());
+		}
+	}
+
+	public static void ExcludeRaycastParents(this RayCast3D raycast) =>
+		ExcludeParents(raycast, raycast.GetParent());
+
+	private static void ExcludeParents(RayCast3D raycast, Node parent)
+	{
+		if (parent != null)
+		{
+			if (parent is CollisionObject3D collision)
+				raycast.AddException(collision);
+
+			ExcludeParents(raycast, parent.GetParentOrNull<Node>());
 		}
 	}
 
@@ -37,7 +51,7 @@ public static class ExtensionsRayCast2D
 	/// </summary>
 	/// <param name="raycasts">Collection of raycasts to check</param>
 	/// <returns>Raycast which is colliding, else default</returns>
-	public static RayCast2D GetAnyRayCastCollider(this List<RayCast2D> raycasts)
+	public static RayCast2D? GetAnyRayCastCollider(this List<RayCast2D> raycasts)
 	{
 		foreach (var raycast in raycasts)
 			if (raycast.IsColliding())
