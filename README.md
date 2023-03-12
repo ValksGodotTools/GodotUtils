@@ -16,6 +16,7 @@ See the following for inspiration
 - https://github.com/GodotModules/GodotModulesCSharp
 - https://github.com/GodotModules/Sandbox
 - https://github.com/Valks-Games/Project2D
+- https://github.com/Valks-Games/DialogueSystem
 
 ## Install
 https://www.nuget.org/packages/ValksGodotUtils/
