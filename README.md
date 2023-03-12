@@ -10,6 +10,7 @@ Created for personal needs.
 - Camera Shake
 - Option UI Helpers
 - Dialogue System
+- Inventory UI
 
 See the following for inspiration
 - https://github.com/GodotModules/GodotModulesCSharp
