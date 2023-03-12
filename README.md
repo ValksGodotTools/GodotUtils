@@ -6,6 +6,15 @@ Created for personal needs.
 ## Todo
 - Debug Console UI
 - Multiplayer
+- Mod Loader UI
+- Camera Shake
+- Option UI Helpers
+- Dialogue System
+
+See the following for inspiration
+- https://github.com/GodotModules/GodotModulesCSharp
+- https://github.com/GodotModules/Sandbox
+- https://github.com/Valks-Games/Project2D
 
 ## Install
 https://www.nuget.org/packages/ValksGodotUtils/
