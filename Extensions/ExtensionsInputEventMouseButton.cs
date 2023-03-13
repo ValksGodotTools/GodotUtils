@@ -1,8 +1,7 @@
 ﻿namespace GodotUtils;
 
-public static class ExtensionsInputEvent
+public static class ExtensionsInputEventMouseButton
 {
-	// InputEventMouseButton
 	public static bool IsLeftClickPressed(this InputEventMouseButton @event) => 
 		@event.IsPressed(MouseButton.Left);
 
