@@ -5,7 +5,7 @@ public static class ExtensionsInput
     private static Dictionary<ulong, string> PrevTexts { get; } = new();
     private static Dictionary<ulong, int> PrevNums { get; } = new();
 
-    public static string? Filter(this LineEdit lineEdit, Func<string, bool> filter)
+    public static string Filter(this LineEdit lineEdit, Func<string, bool> filter)
     {
         var text = lineEdit.Text;
         var id = lineEdit.GetInstanceId();
@@ -29,7 +29,7 @@ public static class ExtensionsInput
         return text;
     }
 
-    public static string? Filter(this TextEdit textEdit, Func<string, bool> filter)
+    public static string Filter(this TextEdit textEdit, Func<string, bool> filter)
     {
         var text = textEdit.Text;
         var id = textEdit.GetInstanceId();

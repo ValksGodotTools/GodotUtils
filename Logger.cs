@@ -32,9 +32,9 @@ public static class Logger
 	public static void LogErr
 	(
 		Exception e,
-		string? hint = default,
+		string hint = default,
 		ConsoleColor color = ConsoleColor.Red,
-		[CallerFilePath] string? filePath = default,
+		[CallerFilePath] string filePath = default,
 		[CallerLineNumber] int lineNumber = 0
 	) => LogDetailed(LoggerOpcode.Exception, $@"[Error] {(string.IsNullOrWhiteSpace(hint) ? "" : $"'{hint}' ")}{e.Message}\n{e.StackTrace}", color, true, filePath, lineNumber);
 
@@ -46,7 +46,7 @@ public static class Logger
 		object message,
 		ConsoleColor color = ConsoleColor.Magenta,
 		bool trace = true,
-		[CallerFilePath] string? filePath = default,
+		[CallerFilePath] string filePath = default,
 		[CallerLineNumber] int lineNumber = 0
 	) => LogDetailed(LoggerOpcode.Debug, $"[Debug] {message}", color, trace, filePath, lineNumber);
 
