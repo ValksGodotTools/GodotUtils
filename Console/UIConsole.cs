@@ -160,40 +160,14 @@ public partial class UIConsole : Control
 		Feed.HighlightCurrentLine = true;
 		Feed.HighlightAllOccurrences = true;
 
-		var codeHighlighter = new CodeHighlighter
-		{
-			NumberColor         = new Color("FFB6FF"),
-			SymbolColor         = new Color("a8b1d6"),
-			FunctionColor       = new Color("b988ff"),
-			MemberVariableColor = new Color("becaf5"),
-			ColorRegions        = new Godot.Collections.Dictionary
-			{
-				{ "//", new Color("434048") }
-			},
-			KeywordColors       = new Godot.Collections.Dictionary()
-		};
+		Feed.SyntaxHighlighter = new GCodeHighlighter();
 
-		// keywords cannot contain any symbols except for "_" so can't include stuff like "'"
-		var keywords = new string[] 
-		{ 
-			"var",
-			"true",
-			"false",
-			"new",
-			"private",
-			"public",
-			"protected",
-			"internal",
-			"void"
-		};
-
-		foreach (var keyword in keywords)
-			codeHighlighter.KeywordColors.Add(keyword, new Color("a59fff"));
-
-		Feed.SyntaxHighlighter = codeHighlighter;
+		// This wrap mode does not wrap words that are larger than the consoles width
+		Feed.WrapMode = TextEdit.LineWrappingMode.Boundary;
 		Feed.SizeFlagsVertical = SizeFlags.ExpandFill;
 		Feed.AddThemeColorOverride("background_color", new Color(0, 0, 0, 0.8f));
 		Feed.AddThemeColorOverride("font_color", Colors.DarkGray);
+		Feed.AddThemeFontSizeOverride("font_size", 14);
 
 		// the default has transparency making the font hard to see, so we want to remove that
 		Feed.AddThemeColorOverride("font_readonly_color", Colors.Black);
