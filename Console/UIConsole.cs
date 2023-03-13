@@ -148,7 +148,7 @@ public partial class UIConsole : Control
 
 		// setup feed
 		Feed.Editable = false;
-		Feed.HighlightCurrentLine = true;
+		Feed.HighlightCurrentLine = false;
 		Feed.HighlightAllOccurrences = true;
 
 		Feed.SyntaxHighlighter = new GCodeHighlighter();
