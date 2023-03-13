@@ -15,6 +15,11 @@ public partial class UIConsole : Node
 		GD.Print("Test");
 	}
 
+	public static void Test2()
+	{
+		GD.Print("Test2");
+	}
+
 	public static void AddMessage(object message)
 	{
 		// add the message to the console
