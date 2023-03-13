@@ -19,18 +19,16 @@ See the following for inspiration
 - https://github.com/Valks-Games/DialogueSystem
 
 ## Install
-https://www.nuget.org/packages/ValksGodotUtils/
+https://www.nuget.org/packages/ValksGodotUtils/ (no longer being maintained or used)
 
-The nuget package will not always be up-to-date with the source. To ensure you're getting the latest release build the dll yourself, then add it to the root of your project and add the following to your `.csproj` file. 
-
-```csproj
-<ItemGroup>
-    <Reference Include="GodotUtils">
-        <HintPath>GodotUtils.dll</HintPath>
-    </Reference>
-</ItemGroup>
+Add this as a submodule to your GitHub repo
+```
+git submodule add https://github.com/Valks-Games/GodotUtils GodotUtils
 ```
 
-Or if you don't want to build the dll, you can just copy the entire project directory to your project.
-
-Note that if you have `<EnableDynamicLoading>true</EnableDynamicLoading>` enabled for whatever reason then the dll will not be found for some reason. There is a high chance that you don't even have this setting in your `.csproj` so you can ignore this.
+Make sure this is in your `.csproj`
+```xml
+<ItemGroup>
+	<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+</ItemGroup>
+```
