@@ -4,15 +4,12 @@ namespace GodotUtils;
 
 public partial class UIConsole : Control
 {
-	public  static bool             ScrollToBottom    { get; set; } = true;
-							        			      
-	private static bool             Initialized       { get; set; }
-	private static TextEdit         Feed              { get; set; }
-	private static LineEdit         Input             { get; set; }
-
-	private Dictionary<int, string> InputHistory      { get; } = new();
-	private int                     InputHistoryIndex { get; set; }
-	private int                     InputHistoryNav   { get; set; }
+	public  static bool           ScrollToBottom { get; set; } = true;
+							      			   
+	private static bool           Initialized    { get; set; }
+	private static TextEdit       Feed           { get; set; }
+	private static LineEdit       Input          { get; set; }
+	private        ConsoleHistory History        { get; set; } = new();
 
 	public static void AddMessage(object message)
 	{
@@ -56,35 +53,30 @@ public partial class UIConsole : Control
 
 	private void InputNavigateHistory()
 	{
-		if (!Visible || InputHistory.Count == 0)
+		// If console is not visible or there is no history to navigate do nothing
+		if (!Visible || History.NoHistory())
 			return;
 
 		if (Godot.Input.IsActionJustPressed("ui_up"))
 		{
-			InputHistoryNav--;
+			var historyText = History.MoveUpOne();
 
-			if (!InputHistory.ContainsKey(InputHistoryNav))
-				InputHistoryNav++;
-
-			Input.Text = InputHistory[InputHistoryNav];
+			Input.Text = historyText;
 
 			// if deferred is not use then something else will override these settings
 			Input.CallDeferred("grab_focus");
-			Input.CallDeferred("set", "caret_column", InputHistory[InputHistoryNav].Length);
+			Input.CallDeferred("set", "caret_column", historyText.Length);
 		}
 
 		if (Godot.Input.IsActionJustPressed("ui_down"))
 		{
-			InputHistoryNav++;
+			var historyText = History.MoveDownOne();
 
-			if (!InputHistory.ContainsKey(InputHistoryNav))
-				InputHistoryNav--;
-
-			Input.Text = InputHistory[InputHistoryNav];
+			Input.Text = historyText;
 
 			// if deferred is not use then something else will override these settings
 			Input.CallDeferred("grab_focus");
-			Input.CallDeferred("set", "caret_column", InputHistory[InputHistoryNav].Length);
+			Input.CallDeferred("set", "caret_column", historyText.Length);
 		}
 	}
 
@@ -119,8 +111,7 @@ public partial class UIConsole : Control
 			return;
 
 		// keep track of input history
-		InputHistory.Add(InputHistoryIndex++, inputToLowerTrimmed);
-		InputHistoryNav = InputHistoryIndex;
+		History.Add(inputToLowerTrimmed);
 
 		// check to see if the command is valid
 		var command = Command.Instances.FirstOrDefault(x => x.IsMatch(cmd));
