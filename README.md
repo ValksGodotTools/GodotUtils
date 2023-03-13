@@ -34,3 +34,7 @@ Make sure this is in your `.csproj`
 ```
 
 *https://www.nuget.org/packages/ValksGodotUtils/ (no longer being maintained or used)*
+
+## Notes
+- Remember to do `Logger.Update()` in `_PhysicsProcess(double delta)` and always use `Logger.Log()` over `GD.Print()`
+- `UIConsole` will only be used if you add it to the scene with `AddChild(new UIConsole())`
