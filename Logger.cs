@@ -36,7 +36,7 @@ public static class Logger
 		ConsoleColor color = ConsoleColor.Red,
 		[CallerFilePath] string filePath = default,
 		[CallerLineNumber] int lineNumber = 0
-	) => LogDetailed(LoggerOpcode.Exception, $@"[Error] {(string.IsNullOrWhiteSpace(hint) ? "" : $"'{hint}' ")}{e.Message}\n{e.StackTrace}", color, true, filePath, lineNumber);
+	) => LogDetailed(LoggerOpcode.Exception, $"[Error] {(string.IsNullOrWhiteSpace(hint) ? "" : $"'{hint}' ")}{e.Message}{e.StackTrace}", color, true, filePath, lineNumber);
 
 	/// <summary>
 	/// Logs a debug message that optionally contains trace information
@@ -78,13 +78,13 @@ public static class Logger
 		switch (result.Opcode)
 		{
 			case LoggerOpcode.Message:
-				//GameManager.Console.AddMessage(result.Data.Message);
+				UIConsole.AddMessage(result.Data.Message);
 				Print(result.Data.Message, result.Color);
 				Console.ResetColor();
 				break;
 
 			case LoggerOpcode.Exception:
-				//GameManager.Console.AddMessage(result.Data.Message);
+				UIConsole.AddMessage(result.Data.Message);
 				PrintErr(result.Data.Message, result.Color);
 
 				if (result.Data is LogMessageTrace exceptionData && exceptionData.ShowTrace)
@@ -94,7 +94,7 @@ public static class Logger
 				break;
 
 			case LoggerOpcode.Debug:
-				//GameManager.Console.AddMessage(result.Data.Message);
+				UIConsole.AddMessage(result.Data.Message);
 				Print(result.Data.Message, result.Color);
 
 				if (result.Data is LogMessageTrace debugData && debugData.ShowTrace)
@@ -108,8 +108,33 @@ public static class Logger
 	/// <summary>
 	/// Logs a message that may contain trace information
 	/// </summary>
-	private static void LogDetailed(LoggerOpcode opcode, string message, ConsoleColor color, bool trace, string filePath, int lineNumber) =>
-			Messages.Enqueue(new LogInfo(opcode, new LogMessageTrace(message, trace, $"  at {filePath.Substring(filePath.IndexOf("Scripts\\"))}:{lineNumber}"), color));
+	private static void LogDetailed(LoggerOpcode opcode, string message, ConsoleColor color, bool trace, string filePath, int lineNumber)
+	{
+		string tracePath;
+
+		if (filePath.Contains("Scripts"))
+		{
+			// Ex: Scripts/Main.cs:23
+			tracePath = $"  at {filePath.Substring(filePath.IndexOf("Scripts"))}:{lineNumber}";
+			tracePath = tracePath.Replace('\\', '/');
+		}
+		else
+		{
+			// Main.cs:23
+			var elements = filePath.Split('\\');
+			tracePath = $"  at {elements[elements.Length - 1]}:{lineNumber}";
+		}
+
+		Messages.Enqueue(
+			new LogInfo(opcode, 
+				new LogMessageTrace(
+					message, 
+					trace,
+					tracePath
+				), 
+			color
+		));
+	}
 
 	private static void Print(object v, ConsoleColor color)
 	{
