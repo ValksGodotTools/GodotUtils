@@ -143,7 +143,7 @@ public static class Logger
 		if (GOS.IsExportedRelease())
 			GD.Print(v);
 		else
-			GD.PrintRich($"[color={color}]{v}[/color]");
+			GD.PrintRich($"[color={color}]{v}");
 	}
 
 	private static void PrintErr(object v, ConsoleColor color)
