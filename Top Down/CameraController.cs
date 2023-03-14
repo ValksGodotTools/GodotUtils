@@ -2,13 +2,25 @@ namespace GodotUtils.TopDown;
 
 public partial class CameraController : Node
 {
-	// Zooming
+	// Inspector
+	[Export] 
+	private float Speed { get; set; } = 100;
+
+	[ExportGroup("Zoom")]
+	[Export(PropertyHint.Range, "0.02, 0.16")] 
 	private float ZoomIncrementDefault { get; set; } = 0.02f;
+
+	[Export(PropertyHint.Range, "0.01, 1")] 
+	private float MinZoom { get; set; } = 0.01f;
+
+	[Export(PropertyHint.Range, "0.1, 10")] 
+	private float MaxZoom { get; set; } = 1.0f;
+
+	[Export(PropertyHint.Range, "0.01, 1")] 
+	private float SmoothFactor { get; set; } = 0.25f;
+
 	private float ZoomIncrement { get; set; } = 0.02f;
 	private float TargetZoom { get; set; }
-	private float MinZoom { get; set; } = 0.01f;
-	private float MaxZoom { get; set; } = 1.0f;
-	private float SmoothFactor { get; set; } = 0.25f;
 
 	// Panning
 	private Vector2 InitialPanPosition { get; set; }
@@ -28,26 +40,25 @@ public partial class CameraController : Node
 		// Not sure if the below code should be in _PhysicsProcess or _Process
 
 		// Arrow keys and WASD move camera around
-		var velocity = Vector2.Zero;
+		var dir = Vector2.Zero;
 
 		if (GInput.IsMovingLeft())
-			velocity.X -= 1;
+			dir.X -= 1;
 
 		if (GInput.IsMovingRight())
-			velocity.X += 1;
+			dir.X += 1;
 
 		if (GInput.IsMovingUp())
-			velocity.Y -= 1;
+			dir.Y -= 1;
 
 		if (GInput.IsMovingDown())
-			velocity.Y += 1;
+			dir.Y += 1;
 		
 		if (Panning)
 			Camera.Position = InitialPanPosition - (GetViewport().GetMousePosition() / Camera.Zoom.X);
 
 		// Arrow keys and WASD movement are added onto the panning position changes
-		var speed = 50;
-		Camera.Position += velocity.Normalized() * speed;
+		Camera.Position += dir.Normalized() * Speed;
 	}
 
 	public override void _PhysicsProcess(double delta)
