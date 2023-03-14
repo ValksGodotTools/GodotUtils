@@ -1,6 +1,6 @@
 namespace GodotUtils;
 
-public static class ExtensionsInput
+public static class ExtensionsLineEdit
 {
     private static Dictionary<ulong, string> PrevTexts { get; } = new();
     private static Dictionary<ulong, int> PrevNums { get; } = new();
@@ -22,30 +22,6 @@ public static class ExtensionsInput
             }
 
             lineEdit.ChangeLineEditText(PrevTexts[id]);
-            return PrevTexts[id];
-        }
-
-        PrevTexts[id] = text;
-        return text;
-    }
-
-    public static string Filter(this TextEdit textEdit, Func<string, bool> filter)
-    {
-        var text = textEdit.Text;
-        var id = textEdit.GetInstanceId();
-
-        if (string.IsNullOrWhiteSpace(text))
-            return PrevTexts.ContainsKey(id) ? PrevTexts[id] : null;
-
-        if (!filter(text))
-        {
-            if (!PrevTexts.ContainsKey(id))
-            {
-                textEdit.ChangeTextEditText("");
-                return null;
-            }
-
-            textEdit.ChangeTextEditText(PrevTexts[id]);
             return PrevTexts[id];
         }
 
@@ -118,11 +94,5 @@ public static class ExtensionsInput
     {
         lineEdit.Text = text;
         lineEdit.CaretColumn = text.Length;
-    }
-
-    private static void ChangeTextEditText(this TextEdit textEdit, string text)
-    {
-        textEdit.Text = text;
-        //textEdit.CaretColumn = text.Length;
     }
 }
