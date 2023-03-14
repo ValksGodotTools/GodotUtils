@@ -3,6 +3,8 @@ A utils library for Godot 4 C# RC5+
 
 Created for personal needs.
 
+Currently using https://github.com/Valks-Games/Sandbox2 (among other repos but mainly this one) to test out GodotUtils in various ways
+
 ## Features
 - Pressing `F12` opens the console
 - Various helper functions
