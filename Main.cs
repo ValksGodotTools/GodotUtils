@@ -5,6 +5,9 @@ global using System.Threading.Tasks;
 
 namespace GodotUtils;
 
+// NuGet Package: https://www.nuget.org/packages/ValksGodotUtils/
+// No longer being maintained or used but kept here just in case
+
 public class Main
 {
 	

@@ -2,6 +2,11 @@
 
 namespace GodotUtils;
 
+/*
+ * Create new Command classes that extend from this to create new commands for
+ * use in the UIConsole. Make sure all command classes have CommandName formatting
+ * for the name.
+ */
 public abstract class Command
 {
 	public static List<Command> Instances { get; } = Assembly.GetExecutingAssembly()

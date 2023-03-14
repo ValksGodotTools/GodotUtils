@@ -1,5 +1,8 @@
 namespace GodotUtils.TopDown;
 
+/*
+ * Attach this script to a child node of the Camera node
+ */
 public partial class CameraController : Node
 {
 	// Inspector

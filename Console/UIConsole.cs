@@ -2,6 +2,11 @@
 
 namespace GodotUtils;
 
+/*
+ * Attach this script to a Control node under the CanvasLayer node.
+ * Make sure this UIConsole node is below every other node so the console
+ * will appear on top of every node.
+ */
 public partial class UIConsole : Control
 {
 	public  static bool           ScrollToBottom { get; set; } = true;

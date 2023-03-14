@@ -4,6 +4,12 @@ using System.Runtime.CompilerServices;
 
 namespace GodotUtils;
 
+/*
+ * This is meant to replace all GD.Print(...) with Logger.Log(...) to make
+ * logging multi-thread friendly. Remember to put Logger.Update() in
+ * _PhysicsProcess(double delta) otherwise you will be wondering why Logger.Log(...)
+ * is printing nothing to the console.
+ */
 public static class Logger
 {
 	private static ConcurrentQueue<LogInfo> Messages { get; } = new();
