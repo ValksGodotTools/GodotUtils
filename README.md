@@ -8,13 +8,9 @@ Created for personal needs.
 - Various helper functions
 
 ## Todo
-#### Debug Console UI
-- Make exceptions log the full stack, not what its doing right now
-
 #### Multiplayer
 #### Mod Loader UI
 #### Camera Shake
-#### Option UI Helpers
 #### Dialogue System
 #### Inventory UI
 
@@ -43,3 +39,4 @@ Make sure this is in your `.csproj`
 - Remember to do `Logger.Update()` in `_PhysicsProcess(double delta)` and always use `Logger.Log()` over `GD.Print()`
 - `UIConsole` will only be used if you add it to the scene with `AddChild(new UIConsole())`
 - To create new commands for use in the console, create new classes that extend from `Command`
+- Make sure the UIConsole is placed at the very bottom of all the nodes under a CanvasLayer node otherwise your console will appear below some other UI elements
