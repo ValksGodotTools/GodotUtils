@@ -6,4 +6,5 @@ public abstract class ENetLow
 
 	protected CancellationTokenSource CTS { get; set; }
 	protected abstract void DisconnectCleanup();
+	protected abstract void Stop();
 }

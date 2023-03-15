@@ -7,12 +7,19 @@ public class ENetServer<TClientPacketOpcode> : ENetLow
 {
 	private static Dictionary<TClientPacketOpcode, APacketClient> HandlePacket { get; set; } = NetcodeUtils.LoadInstances<TClientPacketOpcode, APacketClient>("CPacket");
 	private ConcurrentQueue<ServerPacket> Outgoing { get; } = new();
+	private ConcurrentQueue<ENetServerCmd> ENetCmds { get; } = new();
 
 	public async void Start(ushort port, int maxClients)
 	{
 		CTS = new CancellationTokenSource();
 		using var task = Task.Run(() => WorkerThread(port, maxClients), CTS.Token);
 		await task;
+	}
+
+	protected override void Stop()
+	{
+		Log("Requesting to stop server..");
+		ENetCmds.Enqueue(new ENetServerCmd(ENetServerOpcode.Stop));
 	}
 
 	public void Send<TServerPacketOpcode>(TServerPacketOpcode opcode, APacket packet, Peer peer, params Peer[] peers) =>
@@ -39,6 +46,23 @@ public class ENetServer<TClientPacketOpcode> : ENetLow
 		while (!CTS.IsCancellationRequested)
 		{
 			var polled = false;
+
+			// ENet Cmds
+			while (ENetCmds.TryDequeue(out ENetServerCmd cmd))
+			{
+				switch (cmd.Opcode)
+				{
+					case ENetServerOpcode.Stop:
+						if (CTS.IsCancellationRequested)
+						{
+							Log("Server is in the middle of stopping");
+							break;
+						}
+
+						DisconnectCleanup();
+						break;
+				}
+			}
 
 			// Outgoing
 			while (Outgoing.TryDequeue(out ServerPacket packet))
@@ -114,6 +138,8 @@ public class ENetServer<TClientPacketOpcode> : ENetLow
 		}
 
 		server.Flush();
+
+		Log("Server is no longer running");
 	}
 
 	private void Send(ServerPacket gamePacket, Peer peer)
@@ -149,4 +175,21 @@ public class ENetServer<TClientPacketOpcode> : ENetLow
 
 	public override void Log(object message, ConsoleColor color = ConsoleColor.Green) => 
 		Logger.Log($"[Server] {message}", color);
+}
+
+public class ENetServerCmd
+{
+	public ENetServerOpcode Opcode { get; set; }
+	public object Data { get; set; }
+
+	public ENetServerCmd(ENetServerOpcode opcode, object data = null)
+	{
+		Opcode = opcode;
+		Data = data;
+	}
+}
+
+public enum ENetServerOpcode
+{
+	Stop
 }

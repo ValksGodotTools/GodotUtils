@@ -1,4 +1,5 @@
 ﻿using ENet;
+using GodotUtils.Netcode.Server;
 
 namespace GodotUtils.Netcode.Client;
 
@@ -9,14 +10,21 @@ public class ENetClient<TServerPacketOpcode> : ENetLow
 	private long connected;
 
 	private static Dictionary<TServerPacketOpcode, APacketServer> HandlePacket { get; set; }
-	private ConcurrentQueue<ClientPacket> Outgoing { get; } = new();
+	protected ConcurrentQueue<ClientPacket> Outgoing { get; } = new();
+	private ConcurrentQueue<ENetClientCmd> ENetCmds { get; } = new();
 
-	public async void Start(string ip, ushort port)
+	protected override void Start(string ip, ushort port)
 	{
 		HandlePacket = NetcodeUtils.LoadInstances<TServerPacketOpcode, APacketServer>("SPacket");
 		CTS = new CancellationTokenSource();
 		using var task = Task.Run(() => WorkerThread(ip, port), CTS.Token);
 		await task;
+	}
+
+	protected override void Stop()
+	{
+		Log("Requesting to stop client..");
+		ENetCmds.Enqueue(new ENetClientCmd(ENetClientOpcode.Disconnect));
 	}
 
 	public void Send<TClientPacketOpcode>(TClientPacketOpcode opcode, APacket data = null, PacketFlags flags = PacketFlags.Reliable)
@@ -59,6 +67,24 @@ public class ENetClient<TServerPacketOpcode> : ENetLow
 		while (!CTS.IsCancellationRequested)
 		{
 			var polled = false;
+
+			// ENetCmds
+			while (ENetCmds.TryDequeue(out ENetClientCmd cmd))
+			{
+				switch (cmd.Opcode)
+				{
+					case ENetClientOpcode.Disconnect:
+						if (CTS.IsCancellationRequested)
+						{
+							Log("Client is in the middle of stopping");
+							break;
+						}
+
+						DisconnectCleanup();
+						peer.Disconnect(0);
+						break;
+				}
+			}
 
 			// Outgoing
 			while (Outgoing.TryDequeue(out var clientPacket))
@@ -123,6 +149,8 @@ public class ENetClient<TServerPacketOpcode> : ENetLow
 		}
 
 		client.Flush();
+
+		Log("Client is no longer running");
 	}
 
 	protected override void DisconnectCleanup()
@@ -133,4 +161,22 @@ public class ENetClient<TServerPacketOpcode> : ENetLow
 
 	public override void Log(object message, ConsoleColor color = ConsoleColor.Cyan) => 
 		Logger.Log($"[Client] {message}", color);
+}
+
+
+public class ENetClientCmd
+{
+	public ENetClientOpcode Opcode { get; set; }
+	public object Data { get; set; }
+
+	public ENetClientCmd(ENetClientOpcode opcode, object data = null)
+	{
+		Opcode = opcode;
+		Data = data;
+	}
+}
+
+public enum ENetClientOpcode
+{
+	Disconnect
 }
