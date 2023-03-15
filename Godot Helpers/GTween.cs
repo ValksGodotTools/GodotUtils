@@ -12,7 +12,7 @@ public class GTween
         Tween.Stop();
     }
 
-	public void Callback(string methodName) => Tween.TweenCallback(new Callable(Target, methodName));
+    public void Callback(string methodName) => Tween.TweenCallback(new Callable(Target, methodName));
 
     /// <summary>
     /// Hover over the property in the editor to get the string value of that property.
@@ -22,23 +22,23 @@ public class GTween
         NodePath property, 
         Variant finalValue, 
         float duration,
-		float delay = 0,
-		bool parallel = false,
-		Tween.EaseType easeType = Tween.EaseType.InOut,
-		Tween.TransitionType transType = Tween.TransitionType.Quad
+        float delay = 0,
+        bool parallel = false,
+        Tween.EaseType easeType = Tween.EaseType.InOut,
+        Tween.TransitionType transType = Tween.TransitionType.Quad
     )
-	{
-		if (parallel)
-			return Tween.Parallel().TweenProperty(Target, property, finalValue, duration)
-				.SetEase(easeType)
-				.SetTrans(transType)
-				.SetDelay(delay);
-		else
-			return Tween.TweenProperty(Target, property, finalValue, duration)
-				.SetEase(easeType)
-				.SetTrans(transType)
-				.SetDelay(delay);
-	}
+    {
+        if (parallel)
+            return Tween.Parallel().TweenProperty(Target, property, finalValue, duration)
+                .SetEase(easeType)
+                .SetTrans(transType)
+                .SetDelay(delay);
+        else
+            return Tween.TweenProperty(Target, property, finalValue, duration)
+                .SetEase(easeType)
+                .SetTrans(transType)
+                .SetDelay(delay);
+    }
 
     public async Task AnimatePlatform
     (
@@ -51,7 +51,7 @@ public class GTween
         Tween.EaseType easeType = Tween.EaseType.InOut
     ) 
     {
-		Tween.SetLoops(); // Run forever
+        Tween.SetLoops(); // Run forever
         InterpolateProperty("position", finalValue, duration);
         InterpolateProperty("position", initialValue, duration);
         await Task.Delay(startDelay * 1000);

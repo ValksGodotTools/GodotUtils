@@ -12,8 +12,8 @@ public static class ExtensionsTileMap
         foreach (var layer in layers)
             result += Math.UIntPow(2, layer - 1);
 
-		tileMap.TileSet.SetPhysicsLayerCollisionLayer(0, result);
-		tileMap.TileSet.SetPhysicsLayerCollisionMask(0, result);
+        tileMap.TileSet.SetPhysicsLayerCollisionLayer(0, result);
+        tileMap.TileSet.SetPhysicsLayerCollisionMask(0, result);
     }
 
     public static string GetTileName(this TileMap tilemap, Vector2 pos, int layer = 0)

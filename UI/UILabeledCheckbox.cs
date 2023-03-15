@@ -2,26 +2,26 @@
 
 public partial class UILabeledCheckbox : UILabeled
 {
-	public Action<bool> ValueChanged { get; set; }
+    public Action<bool> ValueChanged { get; set; }
 
-	private LabeledCheckboxOptions Options { get; set; }
+    private LabeledCheckboxOptions Options { get; set; }
 
-	public UILabeledCheckbox(LabeledCheckboxOptions options) : base(options)
-	{
-		Options = options;
-	}
+    public UILabeledCheckbox(LabeledCheckboxOptions options) : base(options)
+    {
+        Options = options;
+    }
 
-	public override void CreateUI(HBoxContainer hbox)
-	{
-		var checkbox = Options.CheckBox;
+    public override void CreateUI(HBoxContainer hbox)
+    {
+        var checkbox = Options.CheckBox;
 
-		checkbox.Toggled += value => ValueChanged?.Invoke(value);
+        checkbox.Toggled += value => ValueChanged?.Invoke(value);
 
-		hbox.AddChild(checkbox);
-	}
+        hbox.AddChild(checkbox);
+    }
 }
 
 public class LabeledCheckboxOptions : LabeledOptions
 {
-	public CheckBox CheckBox { get; set; } = new CheckBox();
+    public CheckBox CheckBox { get; set; } = new CheckBox();
 }
