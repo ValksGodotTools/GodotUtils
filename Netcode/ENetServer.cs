@@ -3,12 +3,16 @@
 namespace GodotUtils.Netcode.Server;
 
 // ENet API Reference: https://github.com/SoftwareGuy/ENet-CSharp/blob/master/DOCUMENTATION.md
-public class ENetServer<TClientPacketOpcode> : ENetLow
+public class ENetServer : ENetLow
 {
-	private static Dictionary<TClientPacketOpcode, APacketClient> HandlePacket { get; set; } = NetcodeUtils.LoadInstances<TClientPacketOpcode, APacketClient>("CPacket");
 	private ConcurrentQueue<ServerPacket> Outgoing { get; } = new();
 	private ConcurrentQueue<ENetServerCmd> ENetCmds { get; } = new();
 	private Dictionary<uint, Peer> Peers { get; } = new();
+
+	static ENetServer()
+	{
+		APacketClient.MapOpcodes();
+	}
 
 	public async void Start(ushort port, int maxClients)
 	{
@@ -30,8 +34,8 @@ public class ENetServer<TClientPacketOpcode> : ENetLow
 		ENetCmds.Enqueue(new ENetServerCmd(ENetServerOpcode.Stop));
 	}
 
-	public void Send<TServerPacketOpcode>(TServerPacketOpcode opcode, APacket packet, Peer peer, params Peer[] peers) =>
-		Outgoing.Enqueue(new ServerPacket(Convert.ToByte(opcode), PacketFlags.Reliable, packet, JoinPeers(peer, peers)));
+	public void Send(APacket packet, Peer peer, params Peer[] peers) =>
+		Outgoing.Enqueue(new ServerPacket(packet.GetOpcode(), PacketFlags.Reliable, packet, JoinPeers(peer, peers)));
 
 	protected override void ConcurrentQueues()
 	{
@@ -127,15 +131,16 @@ public class ENetServer<TClientPacketOpcode> : ENetLow
 		}
 
 		var packetReader = new PacketReader(packet);
-		var opcode = (TClientPacketOpcode)Enum.Parse(typeof(TClientPacketOpcode), packetReader.ReadByte().ToString(), true);
+		var opcode = packetReader.ReadByte();
 
-		if (!HandlePacket.ContainsKey(opcode))
+		if (!APacketClient.PacketMapBytes.ContainsKey(opcode))
 		{
 			Log($"Received malformed opcode: {opcode} (Ignoring)");
 			return;
 		}
 
-		var handlePacket = HandlePacket[opcode];
+		var type = APacketClient.PacketMapBytes[opcode];
+		var handlePacket = APacketClient.PacketMap[type].Instance;
 		try
 		{
 			handlePacket.Read(packetReader);

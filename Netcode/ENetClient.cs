@@ -3,13 +3,13 @@
 namespace GodotUtils.Netcode.Client;
 
 // ENet API Reference: https://github.com/SoftwareGuy/ENet-CSharp/blob/master/DOCUMENTATION.md
-public class ENetClient<TServerPacketOpcode> : ENetLow
+public class ENetClient : ENetLow
 {
 	public bool IsConnected => Interlocked.Read(ref _connected) == 1;
 
 	protected ConcurrentQueue<ClientPacket> Outgoing { get; } = new();
 	
-	private static Dictionary<TServerPacketOpcode, APacketServer> HandlePacket { get; set; }
+	//private static List<APacketServer> HandlePacket { get; set; }
 	private ConcurrentQueue<ENetClientCmd> ENetCmds { get; } = new();
 	private Peer Peer { get; set; }
 	private uint PingInterval { get; } = 1000;
@@ -19,9 +19,14 @@ public class ENetClient<TServerPacketOpcode> : ENetLow
 
 	private long _connected;
 
+	static ENetClient()
+	{
+		APacketServer.MapOpcodes();
+	}
+
 	public async void Start(string ip, ushort port)
 	{
-		HandlePacket = NetcodeUtils.LoadInstances<TServerPacketOpcode, APacketServer>("SPacket");
+		//HandlePacket = NetcodeUtils.LoadInstances<APacketServer>();
 		CTS = new CancellationTokenSource();
 		using var task = Task.Run(() => WorkerThread(ip, port), CTS.Token);
 		await task;
@@ -33,9 +38,9 @@ public class ENetClient<TServerPacketOpcode> : ENetLow
 		ENetCmds.Enqueue(new ENetClientCmd(ENetClientOpcode.Disconnect));
 	}
 
-	public void Send<TClientPacketOpcode>(TClientPacketOpcode opcode, APacket data = null, PacketFlags flags = PacketFlags.Reliable)
+	public void Send(APacket data = null, PacketFlags flags = PacketFlags.Reliable)
 	{
-		Outgoing.Enqueue(new ClientPacket(Convert.ToByte(opcode), flags, data));
+		Outgoing.Enqueue(new ClientPacket(Convert.ToByte(data.GetOpcode()), flags, data));
 	}
 
 	protected override void ConcurrentQueues()
@@ -97,10 +102,12 @@ public class ENetClient<TServerPacketOpcode> : ENetLow
 		}
 
 		var packetReader = new PacketReader(packet);
-		var opcode = (TServerPacketOpcode)Enum.Parse(typeof(TServerPacketOpcode), packetReader.ReadByte().ToString(), true);
-		var handlePacket = HandlePacket[opcode];
-		handlePacket.Read(packetReader);
+		var opcode = packetReader.ReadByte();
 
+		var type = APacketServer.PacketMapBytes[opcode];
+		var handlePacket = APacketServer.PacketMap[type].Instance;
+
+		handlePacket.Read(packetReader);
 		handlePacket.Handle();
 
 		packetReader.Dispose();

@@ -1,35 +1,33 @@
 using System.Reflection;
+using GodotUtils.Netcode;
 
 namespace GodotUtils;
 
 public static class NetcodeUtils
 {
-	public static Dictionary<TKey, TValue> LoadInstances<TKey, TValue>(string prefix)
+	public static Dictionary<Type, PacketInfo<T>> MapPackets<T>()
 	{
-		return Assembly.GetExecutingAssembly()
+		var types = Assembly.GetExecutingAssembly()
 			.GetTypes()
-			.Where(x => typeof(TValue).IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract)
-			.Select(Activator.CreateInstance).Cast<TValue>()
-			.ToDictionary(
-				x =>
-				{
-					var className = x.GetType().Name;
-					var opcodeName = className.Replace(prefix, "");
+			.Where(x => typeof(T).IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract)
+			.OrderBy(x => x.Name)
+			.ToList();
 
-					try
-					{
-						return (TKey)Enum.Parse(typeof(TKey), opcodeName);
-					}
-					catch (ArgumentException)
-					{
-						var enumName = $"{typeof(TKey).Name }.{opcodeName}";
-						var message = $"No enum called '{enumName}' " +
-						$"was defined for the '{className}' class. Please remove " +
-						$"the '{className}' class or create the '{enumName}' enum.";
+		var dict = new Dictionary<Type, PacketInfo<T>>();
 
-						throw new Exception(message);
-					}
+		for (byte i = 0; i < types.Count; i++)
+			dict.Add(types[i], new PacketInfo<T>
+			{
+				Opcode = i,
+				Instance = (T)Activator.CreateInstance(types[i])
+			});
 
-				}, x => x);
+		return dict;
 	}
+}
+
+public class PacketInfo<T>
+{
+	public byte Opcode { get; set; }
+	public T Instance { get; set; }
 }
