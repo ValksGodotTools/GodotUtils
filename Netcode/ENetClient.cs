@@ -9,8 +9,7 @@ public class ENetClient<TServerPacketOpcode> : ENetLow
 	private long connected;
 
 	private static Dictionary<TServerPacketOpcode, APacketServer> HandlePacket { get; set; }
-	private ConcurrentDictionary<int, ClientPacket> Outgoing { get; } = new();
-	private int OutgoingId { get; set; }
+	private ConcurrentQueue<ClientPacket> Outgoing { get; } = new();
 
 	public async void Start(string ip, ushort port)
 	{
@@ -22,11 +21,7 @@ public class ENetClient<TServerPacketOpcode> : ENetLow
 
 	public void Send<TClientPacketOpcode>(TClientPacketOpcode opcode, APacket data = null, PacketFlags flags = PacketFlags.Reliable)
 	{
-		OutgoingId++;
-		var success = Outgoing.TryAdd(OutgoingId, new ClientPacket(Convert.ToByte(opcode), flags, data));
-
-		if (!success)
-			Log($"Failed to add {opcode} to Outgoing queue because of duplicate key");
+		Outgoing.Enqueue(new ClientPacket(Convert.ToByte(opcode), flags, data));
 	}
 
 	private void WorkerThread(string ip, ushort port)
@@ -66,9 +61,8 @@ public class ENetClient<TServerPacketOpcode> : ENetLow
 			var polled = false;
 
 			// Outgoing
-			while (Outgoing.TryRemove(OutgoingId, out var clientPacket))
+			while (Outgoing.TryDequeue(out var clientPacket))
 			{
-				OutgoingId--;
 				byte channelID = 0; // The channel all networking traffic will be going through
 				var packet = default(Packet);
 				packet.Create(clientPacket.Data, clientPacket.PacketFlags);
