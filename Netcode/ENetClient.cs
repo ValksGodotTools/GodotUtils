@@ -5,6 +5,9 @@ namespace GodotUtils.Netcode.Client;
 // ENet API Reference: https://github.com/SoftwareGuy/ENet-CSharp/blob/master/DOCUMENTATION.md
 public class ENetClient<TServerPacketOpcode> : ENetLow
 {
+	public bool IsConnected => Interlocked.Read(ref connected) == 1;
+	private long connected;
+
 	private static Dictionary<TServerPacketOpcode, APacketServer> HandlePacket { get; set; }
 	private ConcurrentDictionary<int, ClientPacket> Outgoing { get; } = new();
 	private int OutgoingId { get; set; }
@@ -88,14 +91,17 @@ public class ENetClient<TServerPacketOpcode> : ENetLow
 						break;
 
 					case EventType.Connect:
+						connected = 1;
 						Log("Client connected to server");
 						break;
 
 					case EventType.Disconnect:
+						DisconnectCleanup();
 						Log("Client disconnected from server");
 						break;
 
 					case EventType.Timeout:
+						DisconnectCleanup();
 						Log("Client connection timeout");
 						break;
 
@@ -125,6 +131,12 @@ public class ENetClient<TServerPacketOpcode> : ENetLow
 		client.Flush();
 	}
 
-	public void Log(object message, ConsoleColor color = ConsoleColor.Cyan) => 
+	protected override void DisconnectCleanup()
+	{
+		connected = 0;
+		CTS.Cancel();
+	}
+
+	public override void Log(object message, ConsoleColor color = ConsoleColor.Cyan) => 
 		Logger.Log($"[Client] {message}", color);
 }

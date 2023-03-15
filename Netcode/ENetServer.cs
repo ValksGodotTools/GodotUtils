@@ -64,10 +64,12 @@ public class ENetServer<TClientPacketOpcode> : ENetLow
 						break;
 
 					case EventType.Disconnect:
+						DisconnectCleanup();
 						Log("Client disconnected - ID: " + netEvent.Peer.ID);
 						break;
 
 					case EventType.Timeout:
+						DisconnectCleanup();
 						Log("Client timeout - ID: " + netEvent.Peer.ID);
 						break;
 
@@ -140,6 +142,11 @@ public class ENetServer<TClientPacketOpcode> : ENetLow
 		return thePeers;
 	}
 
-	public void Log(object message, ConsoleColor color = ConsoleColor.Green) => 
+	protected override void DisconnectCleanup()
+	{
+		CTS.Cancel();
+	}
+
+	public override void Log(object message, ConsoleColor color = ConsoleColor.Green) => 
 		Logger.Log($"[Server] {message}", color);
 }
