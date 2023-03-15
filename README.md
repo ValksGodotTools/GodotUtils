@@ -50,6 +50,28 @@ public class CPacketInfo : APacketClient
 }
 ```
 
+```cs
+public class SPacketPong : APacketServer
+{
+	public int Data { get; set; }
+
+	public override void Write(PacketWriter writer)
+	{
+		writer.Write(Data);
+	}
+
+	public override void Read(PacketReader reader)
+	{
+		Data = reader.ReadInt();
+	}
+
+	public override void Handle()
+	{
+		Logger.Log("[Client] Pong received from server. Value is " + Data);
+	}
+}
+```
+
 ## Other Features
 There are many other things that are not documented here. Check out the source. More will be documented in time.
 
