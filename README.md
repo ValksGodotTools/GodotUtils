@@ -17,11 +17,9 @@ public partial class SandboxExample : Node
         while (!Client.IsConnected)
             await Task.Delay(1);
         
-        Client.Send(ClientPacketOpcode.Info, new CPacketInfo {
+        Client.Send(new CPacketInfo {
             Username = "Freddy"
         });
-
-        Server.Kick(0, DisconnectOpcode.Banned);
     }
 }
 ```
@@ -44,24 +42,11 @@ public class CPacketInfo : APacketClient
 	public override void Handle(Peer peer)
 	{
 		Logger.Log("Hello from the server. The username is " + Username);
-		Main.Server.Send(ServerPacketOpcode.Pong, new SPacketPong
+		Main.Server.Send(new SPacketPong
 		{
 			Data = 66
 		}, peer);
 	}
-}
-```
-
-```cs
-public enum ServerPacketOpcode
-{
-	Pong,
-	Info
-}
-
-public enum ClientPacketOpcode
-{
-	Info
 }
 ```
 
