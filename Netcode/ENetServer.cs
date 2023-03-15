@@ -127,62 +127,63 @@ public class ENetServer<TClientPacketOpcode> : ENetLow
 					polled = true;
 				}
 
-				switch (netEvent.Type)
+				var type = netEvent.Type;
+
+				if (type == EventType.None)
 				{
-					case EventType.None:
-						break;
+					// do nothing
+				}
+				else if (type == EventType.Connect)
+				{
+					Peers[netEvent.Peer.ID] = netEvent.Peer;
+					Log("Client connected - ID: " + netEvent.Peer.ID);
+				}
+				else if (type == EventType.Disconnect)
+				{
+					DisconnectCleanup(netEvent.Peer);
+					Log("Client disconnected - ID: " + netEvent.Peer.ID);
+				}
+				else if (type == EventType.Timeout)
+				{
+					DisconnectCleanup(netEvent.Peer);
+					Log("Client timeout - ID: " + netEvent.Peer.ID);
+				}
+				else if (type == EventType.Receive)
+				{
+					var packet = netEvent.Packet;
 
-					case EventType.Connect:
-						Peers[netEvent.Peer.ID] = netEvent.Peer;
-						Log("Client connected - ID: " + netEvent.Peer.ID);
-						break;
+					if (packet.Length > GamePacket.MaxSize)
+					{
+						Log($"Tried to read packet from client of size {packet.Length} when max packet size is {GamePacket.MaxSize}");
+						packet.Dispose();
+						continue;
+					}
 
-					case EventType.Disconnect:
-						DisconnectCleanup(netEvent.Peer);
-						Log("Client disconnected - ID: " + netEvent.Peer.ID);
-						break;
+					var packetReader = new PacketReader(packet);
+					var opcode = (TClientPacketOpcode)Enum.Parse(typeof(TClientPacketOpcode), packetReader.ReadByte().ToString(), true);
 
-					case EventType.Timeout:
-						DisconnectCleanup(netEvent.Peer);
-						Log("Client timeout - ID: " + netEvent.Peer.ID);
-						break;
+					if (!HandlePacket.ContainsKey(opcode))
+					{
+						Log($"Received malformed opcode: {opcode} (Ignoring)");
+						return;
+					}
 
-					case EventType.Receive:
-						var packet = netEvent.Packet;
+					var handlePacket = HandlePacket[opcode];
+					try
+					{
+						handlePacket.Read(packetReader);
+					}
+					catch (System.IO.EndOfStreamException e)
+					{
+						Log($"Received malformed opcode: {opcode} {e.Message} (Ignoring)");
+						return;
+					}
 
-						if (packet.Length > GamePacket.MaxSize)
-						{
-							Log($"Tried to read packet from client of size {packet.Length} when max packet size is {GamePacket.MaxSize}");
-							packet.Dispose();
-							continue;
-						}
+					Log($"Received opcode: {opcode}");
 
-						var packetReader = new PacketReader(packet);
-						var opcode = (TClientPacketOpcode)Enum.Parse(typeof(TClientPacketOpcode), packetReader.ReadByte().ToString(), true);
+					handlePacket.Handle(netEvent.Peer);
 
-						if (!HandlePacket.ContainsKey(opcode)) 
-						{ 
-							Log($"Received malformed opcode: {opcode} (Ignoring)");
-							return;
-						}
-
-						var handlePacket = HandlePacket[opcode];
-						try
-						{
-							handlePacket.Read(packetReader);
-						}
-						catch (System.IO.EndOfStreamException e)
-						{
-							Log($"Received malformed opcode: {opcode} {e.Message} (Ignoring)");
-							return;
-						}
-
-						Log($"Received opcode: {opcode}");
-
-						handlePacket.Handle(netEvent.Peer);
-
-						packetReader.Dispose();
-						break;
+					packetReader.Dispose();
 				}
 			}
 		}

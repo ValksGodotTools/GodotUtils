@@ -71,18 +71,16 @@ public class ENetClient<TServerPacketOpcode> : ENetLow
 			// ENetCmds
 			while (ENetCmds.TryDequeue(out ENetClientCmd cmd))
 			{
-				switch (cmd.Opcode)
+				if (cmd.Opcode == ENetClientOpcode.Disconnect)
 				{
-					case ENetClientOpcode.Disconnect:
-						if (CTS.IsCancellationRequested)
-						{
-							Log("Client is in the middle of stopping");
-							break;
-						}
-
-						peer.Disconnect(0);
-						DisconnectCleanup(peer);
+					if (CTS.IsCancellationRequested)
+					{
+						Log("Client is in the middle of stopping");
 						break;
+					}
+
+					peer.Disconnect(0);
+					DisconnectCleanup(peer);
 				}
 			}
 
@@ -105,48 +103,47 @@ public class ENetClient<TServerPacketOpcode> : ENetLow
 					polled = true;
 				}
 
-				switch (netEvent.Type)
+				var type = netEvent.Type;
+
+				if (type == EventType.None)
 				{
-					case EventType.None:
-						break;
+					// do nothing
+				}
+				else if (type == EventType.Connect)
+				{
+					connected = 1;
+					Log("Client connected to server");
+				}
+				else if (type == EventType.Disconnect)
+				{
+					DisconnectCleanup(peer);
 
-					case EventType.Connect:
-						connected = 1;
-						Log("Client connected to server");
-						break;
+					var opcode = (DisconnectOpcode)netEvent.Data;
+					Log($"Client was {opcode.ToString().ToLower()} from server");
+				}
+				else if (type == EventType.Timeout)
+				{
+					DisconnectCleanup(peer);
+					Log("Client connection timeout");
+				}
+				else if (type == EventType.Receive)
+				{
+					var packet = netEvent.Packet;
+					if (packet.Length > GamePacket.MaxSize)
+					{
+						Log($"Tried to read packet from server of size {packet.Length} when max packet size is {GamePacket.MaxSize}");
+						packet.Dispose();
+						continue;
+					}
 
-					case EventType.Disconnect:
-						DisconnectCleanup(peer);
+					var packetReader = new PacketReader(packet);
+					var opcode = (TServerPacketOpcode)Enum.Parse(typeof(TServerPacketOpcode), packetReader.ReadByte().ToString(), true);
+					var handlePacket = HandlePacket[opcode];
+					handlePacket.Read(packetReader);
 
-						var disconnectedOpcode = (DisconnectOpcode)netEvent.Data;
+					handlePacket.Handle();
 
-						Log($"Client was {disconnectedOpcode.ToString().ToLower()} from server");
-						break;
-
-					case EventType.Timeout:
-						DisconnectCleanup(peer);
-						Log("Client connection timeout");
-						break;
-
-					case EventType.Receive:
-						var packet = netEvent.Packet;
-						if (packet.Length > GamePacket.MaxSize)
-						{
-							Log($"Tried to read packet from server of size {packet.Length} when max packet size is {GamePacket.MaxSize}");
-							packet.Dispose();
-							continue;
-						}
-
-						var packetReader = new PacketReader(packet);
-						var opcode = (TServerPacketOpcode)Enum.Parse(typeof(TServerPacketOpcode), packetReader.ReadByte().ToString(), true);
-						var handlePacket = HandlePacket[opcode];
-						handlePacket.Read(packetReader);
-
-						handlePacket.Handle();
-
-						packetReader.Dispose();
-
-						break;
+					packetReader.Dispose();
 				}
 			}
 		}
