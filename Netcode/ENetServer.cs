@@ -33,52 +33,50 @@ public class ENetServer<TClientPacketOpcode> : ENetLow
 	public void Send<TServerPacketOpcode>(TServerPacketOpcode opcode, APacket packet, Peer peer, params Peer[] peers) =>
 		Outgoing.Enqueue(new ServerPacket(Convert.ToByte(opcode), PacketFlags.Reliable, packet, JoinPeers(peer, peers)));
 
-	private void WorkerThread(ushort port, int maxClients)
+	protected override void ConcurrentQueues()
 	{
-		using var server = new Host();
-
-		var address = new Address {
-			Port = port
-		};
-
-		try
+		// ENet Cmds
+		while (ENetCmds.TryDequeue(out ENetServerCmd cmd))
 		{
-			server.Create(address, maxClients);
-		}
-		catch (InvalidOperationException e)
-		{
-			Log($"A server is running on port {port} already! {e.Message}");
-			return;
-		}
-
-		while (!CTS.IsCancellationRequested)
-		{
-			var polled = false;
-
-			// ENet Cmds
-			while (ENetCmds.TryDequeue(out ENetServerCmd cmd))
+			if (cmd.Opcode == ENetServerOpcode.Stop)
 			{
-				if (cmd.Opcode == ENetServerOpcode.Stop)
+				if (CTS.IsCancellationRequested)
 				{
-					if (CTS.IsCancellationRequested)
-					{
-						Log("Server is in the middle of stopping");
-						break;
-					}
-
-					CTS.Cancel();
+					Log("Server is in the middle of stopping");
+					break;
 				}
-				else if (cmd.Opcode == ENetServerOpcode.Kick)
+
+				CTS.Cancel();
+			}
+			else if (cmd.Opcode == ENetServerOpcode.Kick)
+			{
+				var id = (uint)cmd.Data[0];
+				var opcode = (DisconnectOpcode)cmd.Data[1];
+
+				if (!Peers.ContainsKey(id))
 				{
-					var id = (uint)cmd.Data[0];
-					var opcode = (DisconnectOpcode)cmd.Data[1];
+					Log($"Tried to kick peer with id '{id}' but this peer does not exist");
+					break;
+				}
 
-					if (!Peers.ContainsKey(id))
-					{
-						Log($"Tried to kick peer with id '{id}' but this peer does not exist");
-						break;
-					}
+				if (opcode == DisconnectOpcode.Banned)
+				{
+					/* 
+					 * TODO: Save the peer ip to banned.json and
+					 * check banned.json whenever a peer tries to
+					 * rejoin
+					 */
+				}
 
+				Peers[id].DisconnectNow((uint)opcode);
+				Peers.Remove(id);
+			}
+			else if (cmd.Opcode == ENetServerOpcode.KickAll)
+			{
+				var opcode = (DisconnectOpcode)cmd.Data[0];
+
+				Peers.Values.ForEach(peer =>
+				{
 					if (opcode == DisconnectOpcode.Banned)
 					{
 						/* 
@@ -88,106 +86,88 @@ public class ENetServer<TClientPacketOpcode> : ENetLow
 						 */
 					}
 
-					Peers[id].DisconnectNow((uint)opcode);
-					Peers.Remove(id);
-				}
-				else if (cmd.Opcode == ENetServerOpcode.KickAll)
-				{
-					var opcode = (DisconnectOpcode)cmd.Data[0];
-
-					Peers.Values.ForEach(peer =>
-					{
-						if (opcode == DisconnectOpcode.Banned)
-						{
-							/* 
-							 * TODO: Save the peer ip to banned.json and
-							 * check banned.json whenever a peer tries to
-							 * rejoin
-							 */
-						}
-
-						peer.DisconnectNow((uint)opcode);
-					});
-					Peers.Clear();
-				}
-			}
-
-			// Outgoing
-			while (Outgoing.TryDequeue(out ServerPacket packet))
-				packet.Peers.ForEach(peer => Send(packet, peer));
-
-			while (!polled)
-			{
-				if (server.CheckEvents(out Event netEvent) <= 0)
-				{
-					if (server.Service(15, out netEvent) <= 0)
-						break;
-
-					polled = true;
-				}
-
-				var type = netEvent.Type;
-
-				if (type == EventType.None)
-				{
-					// do nothing
-				}
-				else if (type == EventType.Connect)
-				{
-					Peers[netEvent.Peer.ID] = netEvent.Peer;
-					Log("Client connected - ID: " + netEvent.Peer.ID);
-				}
-				else if (type == EventType.Disconnect)
-				{
-					DisconnectCleanup(netEvent.Peer);
-					Log("Client disconnected - ID: " + netEvent.Peer.ID);
-				}
-				else if (type == EventType.Timeout)
-				{
-					DisconnectCleanup(netEvent.Peer);
-					Log("Client timeout - ID: " + netEvent.Peer.ID);
-				}
-				else if (type == EventType.Receive)
-				{
-					var packet = netEvent.Packet;
-
-					if (packet.Length > GamePacket.MaxSize)
-					{
-						Log($"Tried to read packet from client of size {packet.Length} when max packet size is {GamePacket.MaxSize}");
-						packet.Dispose();
-						continue;
-					}
-
-					var packetReader = new PacketReader(packet);
-					var opcode = (TClientPacketOpcode)Enum.Parse(typeof(TClientPacketOpcode), packetReader.ReadByte().ToString(), true);
-
-					if (!HandlePacket.ContainsKey(opcode))
-					{
-						Log($"Received malformed opcode: {opcode} (Ignoring)");
-						return;
-					}
-
-					var handlePacket = HandlePacket[opcode];
-					try
-					{
-						handlePacket.Read(packetReader);
-					}
-					catch (System.IO.EndOfStreamException e)
-					{
-						Log($"Received malformed opcode: {opcode} {e.Message} (Ignoring)");
-						return;
-					}
-
-					Log($"Received opcode: {opcode}");
-
-					handlePacket.Handle(netEvent.Peer);
-
-					packetReader.Dispose();
-				}
+					peer.DisconnectNow((uint)opcode);
+				});
+				Peers.Clear();
 			}
 		}
 
-		server.Flush();
+		// Outgoing
+		while (Outgoing.TryDequeue(out ServerPacket packet))
+			packet.Peers.ForEach(peer => Send(packet, peer));
+	}
+
+	protected override void Connect(Event netEvent)
+	{
+		Peers[netEvent.Peer.ID] = netEvent.Peer;
+		Log("Client connected - ID: " + netEvent.Peer.ID);
+	}
+
+	protected override void Disconnect(Event netEvent)
+	{
+		DisconnectCleanup(netEvent.Peer);
+		Log("Client disconnected - ID: " + netEvent.Peer.ID);
+	}
+
+	protected override void Timeout(Event netEvent)
+	{
+		DisconnectCleanup(netEvent.Peer);
+		Log("Client timeout - ID: " + netEvent.Peer.ID);
+	}
+
+	protected override void Receive(Event netEvent)
+	{
+		var packet = netEvent.Packet;
+
+		if (packet.Length > GamePacket.MaxSize)
+		{
+			Log($"Tried to read packet from client of size {packet.Length} when max packet size is {GamePacket.MaxSize}");
+			packet.Dispose();
+			return;
+		}
+
+		var packetReader = new PacketReader(packet);
+		var opcode = (TClientPacketOpcode)Enum.Parse(typeof(TClientPacketOpcode), packetReader.ReadByte().ToString(), true);
+
+		if (!HandlePacket.ContainsKey(opcode))
+		{
+			Log($"Received malformed opcode: {opcode} (Ignoring)");
+			return;
+		}
+
+		var handlePacket = HandlePacket[opcode];
+		try
+		{
+			handlePacket.Read(packetReader);
+		}
+		catch (System.IO.EndOfStreamException e)
+		{
+			Log($"Received malformed opcode: {opcode} {e.Message} (Ignoring)");
+			return;
+		}
+
+		Log($"Received opcode: {opcode}");
+
+		handlePacket.Handle(netEvent.Peer);
+
+		packetReader.Dispose();
+	}
+
+	private void WorkerThread(ushort port, int maxClients)
+	{
+		using var server = new Host();
+
+		try
+		{
+			server.Create(new Address { Port = port }, maxClients);
+		}
+		catch (InvalidOperationException e)
+		{
+			Log($"A server is running on port {port} already! {e.Message}");
+			return;
+		}
+
+		WorkerLoop(server);
 
 		Log("Server is no longer running");
 	}
@@ -220,8 +200,8 @@ public class ENetServer<TClientPacketOpcode> : ENetLow
 
 	protected override void DisconnectCleanup(Peer peer)
 	{
+		base.DisconnectCleanup(peer);
 		Peers.Remove(peer.ID);
-		CTS.Cancel();
 	}
 
 	public override void Log(object message, ConsoleColor color = ConsoleColor.Green) => 
