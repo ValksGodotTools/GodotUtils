@@ -1,26 +1,72 @@
 ## What is this?
 A utils library for Godot 4 C# RC5+
 
-Created for personal needs.
+## Multiplayer
+Below is a quick and dirty example of how this could be used.
+```cs
+public partial class SandboxExample : Node
+{
+    public static ENetServer<ClientPacketOpcode> Server { get; set; } = new();
+    public static ENetClient<ServerPacketOpcode> Client { get; set; } = new();
 
-Currently using https://github.com/Valks-Games/Sandbox2 (among other repos but mainly this one) to test out GodotUtils in various ways
+    public override async void _Ready()
+    {
+        Server.Start(25565, 100);
+        Client.Start("localhost", 25565);
 
-## Features
-- Pressing `F12` opens the console
-- Various helper functions
+        while (!Client.IsConnected)
+            await Task.Delay(1);
+        
+        Client.Send(ClientPacketOpcode.Info, new CPacketInfo {
+            Username = "Freddy"
+        });
 
-## Todo
-#### Multiplayer
-#### Mod Loader UI
-#### Camera Shake
-#### Dialogue System
-#### Inventory UI
+        Server.Kick(0, DisconnectOpcode.Banned);
+    }
+}
+```
 
-## See the following for inspiration
-- https://github.com/GodotModules/GodotModulesCSharp
-- https://github.com/GodotModules/Sandbox
-- https://github.com/Valks-Games/Project2D
-- https://github.com/Valks-Games/DialogueSystem
+```cs
+public class CPacketInfo : APacketClient
+{
+	public string Username { get; set; }
+
+	public override void Write(PacketWriter writer)
+	{
+		writer.Write(Username);
+	}
+
+	public override void Read(PacketReader reader)
+	{
+		Username = reader.ReadString();
+	}
+
+	public override void Handle(Peer peer)
+	{
+		Logger.Log("Hello from the server. The username is " + Username);
+		Main.Server.Send(ServerPacketOpcode.Pong, new SPacketPong
+		{
+			Data = 66
+		}, peer);
+	}
+}
+```
+
+```cs
+public enum ServerPacketOpcode
+{
+	Pong,
+	Info
+}
+
+public enum ClientPacketOpcode
+{
+	Info
+}
+```
+
+## Other Features
+There are many other things that are not documented here. Check out the source. More will be documented in time.
 
 ## Install
 Add this as a submodule to your GitHub repo
