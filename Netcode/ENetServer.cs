@@ -1,4 +1,5 @@
 ﻿using ENet;
+using System.Reflection.Emit;
 
 namespace GodotUtils.Netcode.Server;
 
@@ -8,6 +9,7 @@ public class ENetServer<TClientPacketOpcode> : ENetLow
 	private static Dictionary<TClientPacketOpcode, APacketClient> HandlePacket { get; set; } = NetcodeUtils.LoadInstances<TClientPacketOpcode, APacketClient>("CPacket");
 	private ConcurrentQueue<ServerPacket> Outgoing { get; } = new();
 	private ConcurrentQueue<ENetServerCmd> ENetCmds { get; } = new();
+	private Dictionary<uint, Peer> Peers { get; } = new();
 
 	public async void Start(ushort port, int maxClients)
 	{
@@ -15,6 +17,13 @@ public class ENetServer<TClientPacketOpcode> : ENetLow
 		using var task = Task.Run(() => WorkerThread(port, maxClients), CTS.Token);
 		await task;
 	}
+
+	public void Ban(uint id) => Kick(id, DisconnectOpcode.Banned);
+	public void BanAll() => KickAll(DisconnectOpcode.Banned);
+	public void KickAll(DisconnectOpcode opcode) => 
+		ENetCmds.Enqueue(new ENetServerCmd(ENetServerOpcode.KickAll, opcode));
+	public void Kick(uint id, DisconnectOpcode opcode) =>
+		ENetCmds.Enqueue(new ENetServerCmd(ENetServerOpcode.Kick, id, opcode));
 
 	public override void Stop()
 	{
@@ -50,17 +59,57 @@ public class ENetServer<TClientPacketOpcode> : ENetLow
 			// ENet Cmds
 			while (ENetCmds.TryDequeue(out ENetServerCmd cmd))
 			{
-				switch (cmd.Opcode)
+				if (cmd.Opcode == ENetServerOpcode.Stop)
 				{
-					case ENetServerOpcode.Stop:
-						if (CTS.IsCancellationRequested)
+					if (CTS.IsCancellationRequested)
+					{
+						Log("Server is in the middle of stopping");
+						break;
+					}
+
+					CTS.Cancel();
+				}
+				else if (cmd.Opcode == ENetServerOpcode.Kick)
+				{
+					var id = (uint)cmd.Data[0];
+					var opcode = (DisconnectOpcode)cmd.Data[1];
+
+					if (!Peers.ContainsKey(id))
+					{
+						Log($"Tried to kick peer with id '{id}' but this peer does not exist");
+						break;
+					}
+
+					if (opcode == DisconnectOpcode.Banned)
+					{
+						/* 
+						 * TODO: Save the peer ip to banned.json and
+						 * check banned.json whenever a peer tries to
+						 * rejoin
+						 */
+					}
+
+					Peers[id].DisconnectNow((uint)opcode);
+					Peers.Remove(id);
+				}
+				else if (cmd.Opcode == ENetServerOpcode.KickAll)
+				{
+					var opcode = (DisconnectOpcode)cmd.Data[0];
+
+					Peers.Values.ForEach(peer =>
+					{
+						if (opcode == DisconnectOpcode.Banned)
 						{
-							Log("Server is in the middle of stopping");
-							break;
+							/* 
+							 * TODO: Save the peer ip to banned.json and
+							 * check banned.json whenever a peer tries to
+							 * rejoin
+							 */
 						}
 
-						DisconnectCleanup();
-						break;
+						peer.DisconnectNow((uint)opcode);
+					});
+					Peers.Clear();
 				}
 			}
 
@@ -84,16 +133,17 @@ public class ENetServer<TClientPacketOpcode> : ENetLow
 						break;
 
 					case EventType.Connect:
+						Peers[netEvent.Peer.ID] = netEvent.Peer;
 						Log("Client connected - ID: " + netEvent.Peer.ID);
 						break;
 
 					case EventType.Disconnect:
-						DisconnectCleanup();
+						DisconnectCleanup(netEvent.Peer);
 						Log("Client disconnected - ID: " + netEvent.Peer.ID);
 						break;
 
 					case EventType.Timeout:
-						DisconnectCleanup();
+						DisconnectCleanup(netEvent.Peer);
 						Log("Client timeout - ID: " + netEvent.Peer.ID);
 						break;
 
@@ -168,8 +218,9 @@ public class ENetServer<TClientPacketOpcode> : ENetLow
 		return thePeers;
 	}
 
-	protected override void DisconnectCleanup()
+	protected override void DisconnectCleanup(Peer peer)
 	{
+		Peers.Remove(peer.ID);
 		CTS.Cancel();
 	}
 
@@ -180,9 +231,9 @@ public class ENetServer<TClientPacketOpcode> : ENetLow
 public class ENetServerCmd
 {
 	public ENetServerOpcode Opcode { get; set; }
-	public object Data { get; set; }
+	public object[] Data { get; set; }
 
-	public ENetServerCmd(ENetServerOpcode opcode, object data = null)
+	public ENetServerCmd(ENetServerOpcode opcode, params object[] data)
 	{
 		Opcode = opcode;
 		Data = data;
@@ -191,5 +242,7 @@ public class ENetServerCmd
 
 public enum ENetServerOpcode
 {
-	Stop
+	Stop,
+	Kick,
+	KickAll
 }

@@ -80,8 +80,8 @@ public class ENetClient<TServerPacketOpcode> : ENetLow
 							break;
 						}
 
-						DisconnectCleanup();
 						peer.Disconnect(0);
+						DisconnectCleanup(peer);
 						break;
 				}
 			}
@@ -116,12 +116,15 @@ public class ENetClient<TServerPacketOpcode> : ENetLow
 						break;
 
 					case EventType.Disconnect:
-						DisconnectCleanup();
-						Log("Client disconnected from server");
+						DisconnectCleanup(peer);
+
+						var disconnectedOpcode = (DisconnectOpcode)netEvent.Data;
+
+						Log($"Client was {disconnectedOpcode.ToString().ToLower()} from server");
 						break;
 
 					case EventType.Timeout:
-						DisconnectCleanup();
+						DisconnectCleanup(peer);
 						Log("Client connection timeout");
 						break;
 
@@ -153,7 +156,7 @@ public class ENetClient<TServerPacketOpcode> : ENetLow
 		Log("Client is no longer running");
 	}
 
-	protected override void DisconnectCleanup()
+	protected override void DisconnectCleanup(Peer peer)
 	{
 		connected = 0;
 		CTS.Cancel();
@@ -167,9 +170,9 @@ public class ENetClient<TServerPacketOpcode> : ENetLow
 public class ENetClientCmd
 {
 	public ENetClientOpcode Opcode { get; set; }
-	public object Data { get; set; }
+	public object[] Data { get; set; }
 
-	public ENetClientCmd(ENetClientOpcode opcode, object data = null)
+	public ENetClientCmd(ENetClientOpcode opcode, params object[] data)
 	{
 		Opcode = opcode;
 		Data = data;
