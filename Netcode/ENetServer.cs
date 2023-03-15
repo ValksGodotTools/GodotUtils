@@ -16,7 +16,7 @@ public class ENetServer<TClientPacketOpcode> : ENetLow
 		await task;
 	}
 
-	protected override void Stop()
+	public override void Stop()
 	{
 		Log("Requesting to stop server..");
 		ENetCmds.Enqueue(new ENetServerCmd(ENetServerOpcode.Stop));

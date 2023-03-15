@@ -13,7 +13,7 @@ public class ENetClient<TServerPacketOpcode> : ENetLow
 	protected ConcurrentQueue<ClientPacket> Outgoing { get; } = new();
 	private ConcurrentQueue<ENetClientCmd> ENetCmds { get; } = new();
 
-	protected override void Start(string ip, ushort port)
+	public async void Start(string ip, ushort port)
 	{
 		HandlePacket = NetcodeUtils.LoadInstances<TServerPacketOpcode, APacketServer>("SPacket");
 		CTS = new CancellationTokenSource();
@@ -21,7 +21,7 @@ public class ENetClient<TServerPacketOpcode> : ENetLow
 		await task;
 	}
 
-	protected override void Stop()
+	public override void Stop()
 	{
 		Log("Requesting to stop client..");
 		ENetCmds.Enqueue(new ENetClientCmd(ENetClientOpcode.Disconnect));
