@@ -4,17 +4,19 @@ using ENet;
 
 public abstract class ENetLow
 {
+    public static bool ENetInitialized { get; set; }
+
     static ENetLow()
     {
         try
         {
             Library.Initialize();
-            Net.ENetInitialized = true;
+            ENetInitialized = true;
         }
         catch (DllNotFoundException e)
         {
             Logger.LogErr(e);
-            Net.ENetInitialized = false;
+            ENetInitialized = false;
         }
     }
 
