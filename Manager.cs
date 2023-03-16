@@ -13,12 +13,12 @@ namespace GodotUtils;
 // NuGet Package: https://www.nuget.org/packages/ValksGodotUtils/
 // No longer being maintained or used but kept here just in case
 
-public partial class Manager : Node
+public partial class Manager<TPlayerData> : Node
 {
-    private ENetServer Server { get; set; }
-    private ENetClient Client { get; set; }
+    private ENetGameServer<TPlayerData> Server { get; set; }
+    private ENetGameClient Client { get; set; }
 
-    protected void PreInit(ENetServer server, ENetClient client)
+    protected void PreInit(ENetGameServer<TPlayerData> server, ENetGameClient client)
     {
         Server = server;
         Client = client;

@@ -201,6 +201,8 @@ public abstract class ENetServer : ENetLow
             return;
         }
 
+        Log("Server is running");
+
         WorkerLoop(server);
 
         Log("Server is no longer running");
