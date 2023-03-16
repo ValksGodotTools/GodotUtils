@@ -4,6 +4,21 @@ using ENet;
 
 public abstract class ENetLow
 {
+    static ENetLow()
+    {
+        try
+        {
+            Library.Initialize();
+            Net.ENetInitialized = true;
+        }
+        catch (DllNotFoundException e)
+        {
+            Logger.LogErr(e);
+            Net.ENetInitialized = false;
+        }
+    }
+
+    public bool IsRunning => Interlocked.Read(ref _running) == 1;
     public abstract void Log(object message, ConsoleColor color);
     public abstract void Stop();
 
@@ -54,6 +69,7 @@ public abstract class ENetLow
         }
 
         host.Flush();
+        _running = 0;
     }
 
     protected abstract void Connect(Event netEvent);
@@ -61,6 +77,8 @@ public abstract class ENetLow
     protected abstract void Timeout(Event netEvent);
     protected abstract void Receive(Event netEvent);
     protected abstract void ConcurrentQueues();
+
+    protected long _running;
 }
 
 public enum DisconnectOpcode

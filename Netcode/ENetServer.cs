@@ -16,6 +16,7 @@ public class ENetServer : ENetLow
 
     public async void Start(ushort port, int maxClients)
     {
+        _running = 1;
         CTS = new CancellationTokenSource();
         using var task = Task.Run(() => WorkerThread(port, maxClients), CTS.Token);
         await task;

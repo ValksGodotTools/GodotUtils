@@ -24,9 +24,9 @@ public class ENetClient : ENetLow
         APacketServer.MapOpcodes();
     }
 
-    public async void Start(string ip, ushort port)
+    public async void Connect(string ip, ushort port)
     {
-        //HandlePacket = NetcodeUtils.LoadInstances<APacketServer>();
+        _running = 1;
         CTS = new CancellationTokenSource();
         using var task = Task.Run(() => WorkerThread(ip, port), CTS.Token);
         await task;
