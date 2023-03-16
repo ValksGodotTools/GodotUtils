@@ -9,26 +9,40 @@ namespace GodotUtils;
  */
 public partial class UIConsole : Control
 {
-    public  static bool           ScrollToBottom { get; set; } = true;
-                                                 
-    private static bool           Initialized    { get; set; }
-    private static TextEdit       Feed           { get; set; }
-    private static LineEdit       Input          { get; set; }
-    private        ConsoleHistory History        { get; set; } = new();
+    public  static bool             ScrollToBottom     { get; set; } = true;
+                                                       
+    private static bool             Initialized        { get; set; }
+    private static LineEdit         Input              { get; set; }
+    private        ConsoleHistory   History            { get; set; } = new();
+    private static VBoxContainer    ScrollVBox         { get; set; }
+    private static UIConsoleElement PrevConsoleElement { get; set; }
+    private static ScrollContainer  ScrollContainer    { get; set; }
 
-    public static void AddMessage(object message)
+    public static async Task AddMessage(object message, bool isCode = false)
     {
         // do not do anything if the console was not setup
         if (!Initialized)
             return;
 
         // add the message to the console
-        Feed.Text += $"{message}\n";
+        var consoleElement = new UIConsoleElement(message);
+
+        if (PrevConsoleElement?.Content.ToString() == message.ToString())
+        {
+            PrevConsoleElement.ShowCount();
+            PrevConsoleElement.IncrementCount();
+        }
+        else
+        {
+            ScrollVBox.AddChild(consoleElement, isCode);
+            PrevConsoleElement = consoleElement;
+        }
 
         // clear the line edit input
         Input.Text = "";
 
         // scroll to bottom after adding the message
+        await Task.Delay(1);
         ScrollDown();
     }
 
@@ -99,7 +113,7 @@ public partial class UIConsole : Control
     private static void ScrollDown()
     {
         if (ScrollToBottom)
-            Feed.ScrollVertical = Mathf.Inf;
+            ScrollContainer.ScrollVertical = (int)ScrollContainer.GetVScrollBar().MaxValue;
     }
 
     private void OnConsoleInputEntered(string text)
@@ -142,41 +156,32 @@ public partial class UIConsole : Control
         // ensure the parent control is full rect
         SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
 
-        var vbox = new VBoxContainer();
-        Feed = new TextEdit();
+        var panelContainer = new PanelContainer();
+        panelContainer.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
+
+        var vbox1 = new VBoxContainer();
+        panelContainer.AddChild(vbox1);
+
+        var margin = new GMarginContainer(10);
+        margin.SizeFlagsVertical = SizeFlags.ExpandFill;
+
         Input = new LineEdit();
-
-        // setup vbox
-        // as the parent is full rect, so does this vbox need to be
-        vbox.SetAnchorsAndOffsetsPreset(LayoutPreset.FullRect);
-        vbox.AddThemeConstantOverride("separation", 0);
-
-        // setup feed
-        Feed.Editable = false;
-        Feed.HighlightCurrentLine = false;
-        Feed.HighlightAllOccurrences = true;
-
-        Feed.SyntaxHighlighter = new GCodeHighlighter();
-
-        // This wrap mode does not wrap words that are larger than the consoles width
-        Feed.WrapMode = TextEdit.LineWrappingMode.Boundary;
-        Feed.SizeFlagsVertical = SizeFlags.ExpandFill;
-        Feed.AddThemeColorOverride("background_color", new Color(0, 0, 0, 0.8f));
-        Feed.AddThemeColorOverride("font_color", Colors.DarkGray);
-        Feed.AddThemeFontSizeOverride("font_size", 14);
-
-        // the default has transparency making the font hard to see, so we want to remove that
-        Feed.AddThemeColorOverride("font_readonly_color", Colors.Black);
-
-        // setup input
         Input.TextSubmitted += OnConsoleInputEntered;
 
-        vbox.AddChild(Feed);
-        vbox.AddChild(Input);
+        vbox1.AddChild(margin);
+        vbox1.AddChild(Input);
 
-        AddChild(vbox);
+        ScrollContainer = new ScrollContainer();
+        ScrollContainer.VerticalScrollMode = ScrollContainer.ScrollMode.ShowNever;
+        margin.AddChild(ScrollContainer);
 
-        // initially hide the console
+        ScrollVBox = new VBoxContainer();
+        ScrollVBox.SizeFlagsHorizontal = SizeFlags.ExpandFill;
+        //ScrollVBox.AddThemeConstantOverride("separation", 0);
+        ScrollContainer.AddChild(ScrollVBox);
+
+        AddChild(panelContainer);
+
         Hide();
     }
 }

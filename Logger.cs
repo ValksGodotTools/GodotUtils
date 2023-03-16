@@ -76,7 +76,7 @@ public static class Logger
     /// <summary>
     /// Dequeues a Requested Message and Logs it
     /// </summary>
-    public static void Update()
+    public static async Task Update()
     {
         if (!Messages.TryDequeue(out LogInfo result))
             return;
@@ -84,13 +84,13 @@ public static class Logger
         switch (result.Opcode)
         {
             case LoggerOpcode.Message:
-                UIConsole.AddMessage(result.Data.Message);
+                await UIConsole.AddMessage(result.Data.Message);
                 Print(result.Data.Message, result.Color);
                 Console.ResetColor();
                 break;
 
             case LoggerOpcode.Exception:
-                UIConsole.AddMessage(result.Data.Message);
+                await UIConsole.AddMessage(result.Data.Message, true);
                 PrintErr(result.Data.Message, result.Color);
 
                 if (result.Data is LogMessageTrace exceptionData && exceptionData.ShowTrace)
@@ -100,7 +100,7 @@ public static class Logger
                 break;
 
             case LoggerOpcode.Debug:
-                UIConsole.AddMessage(result.Data.Message);
+                await UIConsole.AddMessage(result.Data.Message);
                 Print(result.Data.Message, result.Color);
 
                 if (result.Data is LogMessageTrace debugData && debugData.ShowTrace)

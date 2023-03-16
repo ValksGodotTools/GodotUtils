@@ -24,9 +24,9 @@ public partial class Manager<TPlayerData> : Node
         Client = client;
     }
 
-    public override void _PhysicsProcess(double delta)
+    public override async void _PhysicsProcess(double delta)
     {
-        Logger.Update();
+        await Logger.Update();
     }
 
     public override async void _Notification(int what)

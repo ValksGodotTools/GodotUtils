@@ -3,6 +3,13 @@
 public partial class GMarginContainer : MarginContainer
 {
     public GMarginContainer(int padding = 5) => SetMarginAll(5);
+    public GMarginContainer(int left, int right, int top, int bottom)
+    {
+        SetMarginLeft(left);
+        SetMarginRight(right);
+        SetMarginTop(top);
+        SetMarginBottom(bottom);
+    }
 
     public void SetMarginAll(int padding)
     {
