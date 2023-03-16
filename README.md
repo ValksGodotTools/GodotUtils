@@ -2,78 +2,99 @@
 A utils library for Godot 4 C# RC5+
 
 ## Multiplayer
-Below is a quick and dirty example of how this could be used.
+Quick and dirty netcode example
 ```cs
-public partial class SandboxExample : Node
+public static class Net
 {
-    public static ENetServer<ClientPacketOpcode> Server { get; set; } = new();
-    public static ENetClient<ServerPacketOpcode> Client { get; set; } = new();
+    public static GameServer Server { get; set; } = new();
+    public static GameClient Client { get; set; } = new();
+}
+```
 
+```cs
+public partial class Main : Node
+{
     public override async void _Ready()
     {
-        Server.Start(25565, 100);
-        Client.Start("localhost", 25565);
+        Net.Server.Start(25565, 100);
+        Net.Client.Connect("localhost", 25565);
 
-        while (!Client.IsConnected)
+        while (!Net.Client.IsConnected)
             await Task.Delay(1);
-        
-        Client.Send(new CPacketInfo {
-            Username = "Freddy"
-        });
+
+        Net.Client.Send(new CPacketJoin { Username = "Fred" } );
+    }
+
+    public override void _PhysicsProcess(double delta)
+    {
+        Logger.Update();
+        GodotCommands.Update();
+    }
+
+    public override async void _Notification(int what)
+    {
+        if (what == NotificationWMCloseRequest)
+            await Manager.Cleanup(this, Net.Server, Net.Client);
     }
 }
 ```
 
 ```cs
-public class CPacketInfo : APacketClient
+public class CPacketJoin : APacketClient
 {
-	public string Username { get; set; }
+    public string Username { get; set; }
 
-	public override void Write(PacketWriter writer)
-	{
-		writer.Write(Username);
-	}
+    public override void Write(PacketWriter writer)
+    {
+        writer.Write(Username);
+    }
 
-	public override void Read(PacketReader reader)
-	{
-		Username = reader.ReadString();
-	}
+    public override void Read(PacketReader reader)
+    {
+        Username = reader.ReadString();
+    }
 
-	public override void Handle(Peer peer)
-	{
-		Logger.Log("Hello from the server. The username is " + Username);
-		Main.Server.Send(new SPacketPong
-		{
-			Data = 66
-		}, peer);
-	}
+    public override void Handle(Peer peer)
+    {
+        Net.Server.Log($"Player {peer.ID} joined");
+
+        Net.Server.Players.Add(peer.ID, new PlayerData
+        {
+            Username = Username
+        });
+
+        Net.Server.Send(new SPacketSpawnPlayer { Id = peer.ID }, peer);
+    }
 }
 ```
 
 ```cs
-public class SPacketPong : APacketServer
+public class SPacketSpawnPlayer : APacketServer
 {
-	public int Data { get; set; }
+    public uint Id { get; set; }
 
-	public override void Write(PacketWriter writer)
-	{
-		writer.Write(Data);
-	}
+    public override void Write(PacketWriter writer)
+    {
+        writer.Write((uint)Id);
+    }
 
-	public override void Read(PacketReader reader)
-	{
-		Data = reader.ReadInt();
-	}
+    public override void Read(PacketReader reader)
+    {
+        Id = reader.ReadUInt();
+    }
 
-	public override void Handle()
-	{
-		Logger.Log("[Client] Pong received from server. Value is " + Data);
-	}
+    public override void Handle()
+    {
+        GameMaster.CreateOtherPlayer(Id, new PlayerData
+        {
+            Position = new Vector2(500, 500)
+        });
+    }
 }
 ```
 
 ## Other Features
-There are many other things that are not documented here. Check out the source. More will be documented in time.
+There is a lot of stuff in this library. I feel like if I document it here, it's just going to change later. So I'll leave it up to the reader to explore the source themselves.
 
 ## Install
 Add this as a submodule to your GitHub repo
