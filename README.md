@@ -93,6 +93,9 @@ public class SPacketSpawnPlayer : APacketServer
 }
 ```
 
+## UIConsole
+https://user-images.githubusercontent.com/6277739/225775311-cb7bc7cf-c0ed-42c3-9ec9-d85622b6a41e.mp4
+
 ## Other Features
 There is a lot of stuff in this library. I feel like if I document it here, it's just going to change later. So I'll leave it up to the reader to explore the source themselves.
 
