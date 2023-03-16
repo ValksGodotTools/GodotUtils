@@ -7,6 +7,7 @@ public class ENetClient : ENetLow
 {
     public bool IsConnected => Interlocked.Read(ref _connected) == 1;
 
+    private ConcurrentQueue<Packet> Incoming { get; } = new();
     protected ConcurrentQueue<ClientPacket> Outgoing { get; } = new();
 
     private ConcurrentQueue<Cmd<ENetClientOpcode>> ENetCmds { get; } = new();
@@ -60,6 +61,23 @@ public class ENetClient : ENetLow
             }
         }
 
+        // Incoming
+        while (Incoming.TryDequeue(out var packet))
+        {
+            var packetReader = new PacketReader(packet);
+            var opcode = packetReader.ReadByte();
+
+            var type = APacketServer.PacketMapBytes[opcode];
+            var handlePacket = APacketServer.PacketMap[type].Instance;
+
+            Log($"Received packet: {type.Name}");
+
+            handlePacket.Read(packetReader);
+            handlePacket.Handle();
+
+            packetReader.Dispose();
+        }
+
         // Outgoing
         while (Outgoing.TryDequeue(out var clientPacket))
         {
@@ -100,18 +118,7 @@ public class ENetClient : ENetLow
             return;
         }
 
-        var packetReader = new PacketReader(packet);
-        var opcode = packetReader.ReadByte();
-
-        var type = APacketServer.PacketMapBytes[opcode];
-        var handlePacket = APacketServer.PacketMap[type].Instance;
-
-        Log($"Received packet: {type.Name}");
-
-        handlePacket.Read(packetReader);
-        handlePacket.Handle();
-
-        packetReader.Dispose();
+        Incoming.Enqueue(packet);
     }
 
     private void WorkerThread(string ip, ushort port)

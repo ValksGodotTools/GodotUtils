@@ -5,6 +5,7 @@ namespace GodotUtils.Netcode.Server;
 // ENet API Reference: https://github.com/SoftwareGuy/ENet-CSharp/blob/master/DOCUMENTATION.md
 public abstract class ENetServer : ENetLow
 {
+    private ConcurrentQueue<(Packet, Peer)> Incoming { get; } = new();
     private ConcurrentQueue<ServerPacket> Outgoing { get; } = new();
     private ConcurrentQueue<Cmd<ENetServerOpcode>> ENetCmds { get; } = new();
     protected Dictionary<uint, Peer> Peers { get; } = new();
@@ -103,6 +104,37 @@ public abstract class ENetServer : ENetLow
             }
         }
 
+        // Incoming
+        while (Incoming.TryDequeue(out (Packet, Peer) packetPeer))
+        {
+            var packetReader = new PacketReader(packetPeer.Item1);
+            var opcode = packetReader.ReadByte();
+
+            if (!APacketClient.PacketMapBytes.ContainsKey(opcode))
+            {
+                Log($"Received malformed opcode: {opcode} (Ignoring)");
+                return;
+            }
+
+            var type = APacketClient.PacketMapBytes[opcode];
+            var handlePacket = APacketClient.PacketMap[type].Instance;
+            try
+            {
+                handlePacket.Read(packetReader);
+            }
+            catch (System.IO.EndOfStreamException e)
+            {
+                Log($"Received malformed packet: {opcode} {e.Message} (Ignoring)");
+                return;
+            }
+
+            Log($"Received packet: {type.Name}");
+
+            handlePacket.Handle(packetPeer.Item2);
+
+            packetReader.Dispose();
+        }
+
         // Outgoing
         while (Outgoing.TryDequeue(out ServerPacket packet))
             packet.Peers.ForEach(peer => Send(packet, peer));
@@ -141,32 +173,7 @@ public abstract class ENetServer : ENetLow
             return;
         }
 
-        var packetReader = new PacketReader(packet);
-        var opcode = packetReader.ReadByte();
-
-        if (!APacketClient.PacketMapBytes.ContainsKey(opcode))
-        {
-            Log($"Received malformed opcode: {opcode} (Ignoring)");
-            return;
-        }
-
-        var type = APacketClient.PacketMapBytes[opcode];
-        var handlePacket = APacketClient.PacketMap[type].Instance;
-        try
-        {
-            handlePacket.Read(packetReader);
-        }
-        catch (System.IO.EndOfStreamException e)
-        {
-            Log($"Received malformed packet: {opcode} {e.Message} (Ignoring)");
-            return;
-        }
-
-        Log($"Received packet: {type.Name}");
-
-        handlePacket.Handle(netEvent.Peer);
-
-        packetReader.Dispose();
+        Incoming.Enqueue((packet, netEvent.Peer));
     }
 
     private void WorkerThread(ushort port, int maxClients)
