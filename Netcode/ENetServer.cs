@@ -9,11 +9,19 @@ public abstract class ENetServer : ENetLow
     private ConcurrentQueue<ServerPacket> Outgoing { get; } = new();
     private ConcurrentQueue<Cmd<ENetServerOpcode>> ENetCmds { get; } = new();
     protected Dictionary<uint, Peer> Peers { get; } = new();
+    protected STimer UpdateTimer { get; set; }
 
     static ENetServer()
     {
         APacketClient.MapOpcodes();
     }
+
+    public ENetServer()
+    {
+        UpdateTimer = new(100, Update, false);
+    }
+
+    protected virtual void Update() { }
 
     public async void Start(ushort port, int maxClients)
     {
