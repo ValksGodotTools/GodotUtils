@@ -8,9 +8,8 @@ public class ENetClient : ENetLow
     public bool IsConnected => Interlocked.Read(ref _connected) == 1;
 
     protected ConcurrentQueue<ClientPacket> Outgoing { get; } = new();
-    
-    //private static List<APacketServer> HandlePacket { get; set; }
-    private ConcurrentQueue<ENetClientCmd> ENetCmds { get; } = new();
+
+    private ConcurrentQueue<Cmd<ENetClientOpcode>> ENetCmds { get; } = new();
     private Peer Peer { get; set; }
     private uint PingInterval { get; } = 1000;
     private uint PeerTimeout { get; } = 5000;
@@ -35,10 +34,10 @@ public class ENetClient : ENetLow
     public override void Stop()
     {
         Log("Requesting to stop client..");
-        ENetCmds.Enqueue(new ENetClientCmd(ENetClientOpcode.Disconnect));
+        ENetCmds.Enqueue(new Cmd<ENetClientOpcode>(ENetClientOpcode.Disconnect));
     }
 
-    public void Send(APacket data = null, PacketFlags flags = PacketFlags.Reliable)
+    public void Send(APacketClient data = null, PacketFlags flags = PacketFlags.Reliable)
     {
         Outgoing.Enqueue(new ClientPacket(Convert.ToByte(data.GetOpcode()), flags, data));
     }
@@ -46,7 +45,7 @@ public class ENetClient : ENetLow
     protected override void ConcurrentQueues()
     {
         // ENetCmds
-        while (ENetCmds.TryDequeue(out ENetClientCmd cmd))
+        while (ENetCmds.TryDequeue(out Cmd<ENetClientOpcode> cmd))
         {
             if (cmd.Opcode == ENetClientOpcode.Disconnect)
             {
@@ -107,6 +106,8 @@ public class ENetClient : ENetLow
         var type = APacketServer.PacketMapBytes[opcode];
         var handlePacket = APacketServer.PacketMap[type].Instance;
 
+        Log($"Received packet: {type.Name}");
+
         handlePacket.Read(packetReader);
         handlePacket.Handle();
 
@@ -140,19 +141,6 @@ public class ENetClient : ENetLow
 
     public override void Log(object message, ConsoleColor color = ConsoleColor.Cyan) => 
         Logger.Log($"[Client] {message}", color);
-}
-
-
-public class ENetClientCmd
-{
-    public ENetClientOpcode Opcode { get; set; }
-    public object[] Data { get; set; }
-
-    public ENetClientCmd(ENetClientOpcode opcode, params object[] data)
-    {
-        Opcode = opcode;
-        Data = data;
-    }
 }
 
 public enum ENetClientOpcode

@@ -3,11 +3,11 @@
 namespace GodotUtils.Netcode.Server;
 
 // ENet API Reference: https://github.com/SoftwareGuy/ENet-CSharp/blob/master/DOCUMENTATION.md
-public class ENetServer : ENetLow
+public abstract class ENetServer : ENetLow
 {
     private ConcurrentQueue<ServerPacket> Outgoing { get; } = new();
-    private ConcurrentQueue<ENetServerCmd> ENetCmds { get; } = new();
-    private Dictionary<uint, Peer> Peers { get; } = new();
+    private ConcurrentQueue<Cmd<ENetServerOpcode>> ENetCmds { get; } = new();
+    protected Dictionary<uint, Peer> Peers { get; } = new();
 
     static ENetServer()
     {
@@ -16,32 +16,38 @@ public class ENetServer : ENetLow
 
     public async void Start(ushort port, int maxClients)
     {
+        Starting();
         _running = 1;
         CTS = new CancellationTokenSource();
         using var task = Task.Run(() => WorkerThread(port, maxClients), CTS.Token);
         await task;
     }
 
+    protected virtual void Starting() { }
+
     public void Ban(uint id) => Kick(id, DisconnectOpcode.Banned);
     public void BanAll() => KickAll(DisconnectOpcode.Banned);
     public void KickAll(DisconnectOpcode opcode) => 
-        ENetCmds.Enqueue(new ENetServerCmd(ENetServerOpcode.KickAll, opcode));
+        ENetCmds.Enqueue(new Cmd<ENetServerOpcode>(ENetServerOpcode.KickAll, opcode));
     public void Kick(uint id, DisconnectOpcode opcode) =>
-        ENetCmds.Enqueue(new ENetServerCmd(ENetServerOpcode.Kick, id, opcode));
+        ENetCmds.Enqueue(new Cmd<ENetServerOpcode>(ENetServerOpcode.Kick, id, opcode));
 
     public override void Stop()
     {
+        Stopping();
         Log("Requesting to stop server..");
-        ENetCmds.Enqueue(new ENetServerCmd(ENetServerOpcode.Stop));
+        ENetCmds.Enqueue(new Cmd<ENetServerOpcode>(ENetServerOpcode.Stop));
     }
 
-    public void Send(APacket packet, Peer peer, params Peer[] peers) =>
+    protected virtual void Stopping() { }
+
+    public void Send(APacketServer packet, Peer peer, params Peer[] peers) =>
         Outgoing.Enqueue(new ServerPacket(packet.GetOpcode(), PacketFlags.Reliable, packet, JoinPeers(peer, peers)));
 
     protected override void ConcurrentQueues()
     {
         // ENet Cmds
-        while (ENetCmds.TryDequeue(out ENetServerCmd cmd))
+        while (ENetCmds.TryDequeue(out Cmd<ENetServerOpcode> cmd))
         {
             if (cmd.Opcode == ENetServerOpcode.Stop)
             {
@@ -108,16 +114,20 @@ public class ENetServer : ENetLow
         Log("Client connected - ID: " + netEvent.Peer.ID);
     }
 
+    protected abstract void Disconnected(Event netEvent);
+
     protected override void Disconnect(Event netEvent)
     {
         DisconnectCleanup(netEvent.Peer);
         Log("Client disconnected - ID: " + netEvent.Peer.ID);
+        Disconnected(netEvent);
     }
 
     protected override void Timeout(Event netEvent)
     {
         DisconnectCleanup(netEvent.Peer);
         Log("Client timeout - ID: " + netEvent.Peer.ID);
+        Disconnected(netEvent);
     }
 
     protected override void Receive(Event netEvent)
@@ -148,11 +158,11 @@ public class ENetServer : ENetLow
         }
         catch (System.IO.EndOfStreamException e)
         {
-            Log($"Received malformed opcode: {opcode} {e.Message} (Ignoring)");
+            Log($"Received malformed packet: {opcode} {e.Message} (Ignoring)");
             return;
         }
 
-        Log($"Received opcode: {opcode}");
+        Log($"Received packet: {type.Name}");
 
         handlePacket.Handle(netEvent.Peer);
 
@@ -212,18 +222,6 @@ public class ENetServer : ENetLow
 
     public override void Log(object message, ConsoleColor color = ConsoleColor.Green) => 
         Logger.Log($"[Server] {message}", color);
-}
-
-public class ENetServerCmd
-{
-    public ENetServerOpcode Opcode { get; set; }
-    public object[] Data { get; set; }
-
-    public ENetServerCmd(ENetServerOpcode opcode, params object[] data)
-    {
-        Opcode = opcode;
-        Data = data;
-    }
 }
 
 public enum ENetServerOpcode
