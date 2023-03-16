@@ -13,44 +13,62 @@ namespace GodotUtils;
 // NuGet Package: https://www.nuget.org/packages/ValksGodotUtils/
 // No longer being maintained or used but kept here just in case
 
-public class Manager
+public partial class Manager : Node
 {
-    public static async Task Cleanup(Node node, ENetServer server, ENetClient client)
+    private ENetServer Server { get; set; }
+    private ENetClient Client { get; set; }
+
+    protected void PreInit(ENetServer server, ENetClient client)
     {
-        node.GetTree().AutoAcceptQuit = false;
-        await CleanupNet(server, client);
-        await CleanupLogger(node);
+        Server = server;
+        Client = client;
     }
 
-    private static async Task CleanupNet(ENetServer server, ENetClient client)
+    public override void _PhysicsProcess(double delta)
+    {
+        Logger.Update();
+    }
+
+    public override async void _Notification(int what)
+    {
+        if (what == NotificationWMCloseRequest)
+        {
+            GetTree().AutoAcceptQuit = false;
+            await Cleanup();
+        }
+    }
+
+    private async Task Cleanup()
+    {
+        await CleanupNet();
+
+        if (Logger.StillWorking())
+            await Task.Delay(1);
+
+        GetTree().Quit();
+    }
+
+    private async Task CleanupNet()
     {
         if (ENetLow.ENetInitialized)
         {
-            if (client != null)
+            if (Client != null)
             {
-                client.Stop();
+                Client.Stop();
 
-                while (client.IsRunning)
+                while (Client.IsRunning)
                     await Task.Delay(1);
             }
 
-            if (server != null)
+            if (Server != null)
             {
-                server.Stop();
+                Server.Stop();
 
-                while (server.IsRunning)
+                while (Server.IsRunning)
                     await Task.Delay(1);
             }
 
             ENet.Library.Deinitialize();
         }
-    }
-
-    private static async Task CleanupLogger(Node node)
-    {
-        if (Logger.StillWorking())
-            await Task.Delay(1);
-
-        node.GetTree().Quit();
     }
 }
