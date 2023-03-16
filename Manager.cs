@@ -15,27 +15,5 @@ namespace GodotUtils;
 
 public partial class Manager : Node
 {
-    public override void _PhysicsProcess(double delta)
-    {
-        Logger.Update();
-    }
-
-    public override async void _Notification(int what)
-    {
-        if (what == NotificationWMCloseRequest)
-        {
-            GetTree().AutoAcceptQuit = false;
-            await Cleanup();
-        }
-    }
-
-    public async Task Cleanup()
-    {
-        await Net.Cleanup();
-
-        if (Logger.StillWorking())
-            await Task.Delay(1);
-
-        GetTree().Quit();
-    }
+    
 }
