@@ -2,7 +2,7 @@
 A utils library for Godot 4 C# RC5+
 
 ## Multiplayer
-Quick and dirty netcode example
+Quick and dirty netcode example (code this readme may not be up-to-date, please see https://github.com/Valks-Games/Sandbox2 for a working example)
 ```cs
 public static class Net
 {
