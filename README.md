@@ -2,7 +2,7 @@
 A utils library for Godot 4 C# RC5+
 
 ## Multiplayer
-Quick and dirty netcode example
+Quick and dirty netcode example (code this readme may not be up-to-date, please see https://github.com/Valks-Games/Sandbox2 for a working example)
 ```cs
 public static class Net
 {
@@ -92,6 +92,9 @@ public class SPacketSpawnPlayer : APacketServer
     }
 }
 ```
+
+## UIConsole
+https://user-images.githubusercontent.com/6277739/225775311-cb7bc7cf-c0ed-42c3-9ec9-d85622b6a41e.mp4
 
 ## Other Features
 There is a lot of stuff in this library. I feel like if I document it here, it's just going to change later. So I'll leave it up to the reader to explore the source themselves.
