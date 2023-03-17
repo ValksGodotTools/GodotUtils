@@ -30,7 +30,15 @@ public abstract class ENetServer : ENetLow
         _running = 1;
         CTS = new CancellationTokenSource();
         using var task = Task.Run(() => WorkerThread(port, maxClients), CTS.Token);
-        await task;
+
+        try
+        {
+            await task;
+        } 
+        catch (Exception e)
+        {
+            Logger.LogErr(e, "Server");
+        }
     }
 
     protected virtual void Starting() { }

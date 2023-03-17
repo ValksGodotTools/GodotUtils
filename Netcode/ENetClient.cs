@@ -29,7 +29,15 @@ public class ENetClient : ENetLow
         _running = 1;
         CTS = new CancellationTokenSource();
         using var task = Task.Run(() => WorkerThread(ip, port), CTS.Token);
-        await task;
+
+        try
+        {
+            await task;
+        }
+        catch (Exception e)
+        {
+            Logger.LogErr(e, "Client");
+        }
     }
 
     public override void Stop()
