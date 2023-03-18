@@ -38,9 +38,6 @@ public partial class UIConsole : Control
             PrevConsoleElement = consoleElement;
         }
 
-        // clear the line edit input
-        Input.Text = "";
-
         // scroll to bottom after adding the message
         await Task.Delay(1);
         ScrollDown();
