@@ -10,6 +10,7 @@ namespace GodotUtils;
 public partial class UIConsole : Control
 {
     public  static bool             ScrollToBottom     { get; set; } = true;
+    public  static bool             IsVisible          { get => Instance.Visible; }
                                                        
     private static bool             Initialized        { get; set; }
     private static LineEdit         Input              { get; set; }
@@ -17,6 +18,7 @@ public partial class UIConsole : Control
     private static VBoxContainer    ScrollVBox         { get; set; }
     private static UIConsoleElement PrevConsoleElement { get; set; }
     private static ScrollContainer  ScrollContainer    { get; set; }
+    private static UIConsole        Instance           { get; set; }
 
     public static async Task AddMessage(object message, bool isCode = false)
     {
@@ -45,6 +47,7 @@ public partial class UIConsole : Control
 
     public override void _Ready()
     {
+        Instance = this;
         Initialized = true;
         CreateUI();
     }
