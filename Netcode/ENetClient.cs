@@ -1,14 +1,16 @@
 ﻿using ENet;
+using Sandbox2;
 
 namespace GodotUtils.Netcode.Client;
 
 // ENet API Reference: https://github.com/SoftwareGuy/ENet-CSharp/blob/master/DOCUMENTATION.md
-public class ENetClient : ENetLow
+public abstract class ENetClient : ENetLow
 {
     public bool IsConnected => Interlocked.Read(ref _connected) == 1;
 
     private ConcurrentQueue<Packet> Incoming { get; } = new();
     protected ConcurrentQueue<ClientPacket> Outgoing { get; } = new();
+    private ConcurrentQueue<APacketServer> GodotPackets { get; } = new();
 
     private ConcurrentQueue<Cmd<ENetClientOpcode>> ENetCmds { get; } = new();
     private Peer Peer { get; set; }
@@ -81,9 +83,16 @@ public class ENetClient : ENetLow
             Log($"Received packet: {type.Name}");
 
             handlePacket.Read(packetReader);
-            handlePacket.Handle();
 
             packetReader.Dispose();
+
+            /*
+             * Instead of packets being handled client-side, they are handled
+             * on the Godot thread.
+             * //handlePacket.Handle();
+             */
+            GodotPackets.Enqueue(handlePacket);
+
         }
 
         // Outgoing
@@ -94,6 +103,12 @@ public class ENetClient : ENetLow
             packet.Create(clientPacket.Data, clientPacket.PacketFlags);
             Peer.Send(channelID, ref packet);
         }
+    }
+
+    public void HandlePackets()
+    {
+        while (Net.Client.GodotPackets.TryDequeue(out var packet))
+            packet.Handle();
     }
 
     protected override void Connect(Event netEvent)
