@@ -72,8 +72,10 @@ public abstract class ENetLow
 
         host.Flush();
         _running = 0;
+        Stopped();
     }
 
+    protected abstract void Stopped();
     protected abstract void Connect(Event netEvent);
     protected abstract void Disconnect(Event netEvent);
     protected abstract void Timeout(Event netEvent);
