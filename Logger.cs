@@ -84,13 +84,13 @@ public static class Logger
         switch (result.Opcode)
         {
             case LoggerOpcode.Message:
-                await UIConsole.AddMessage(result.Data.Message);
+                await UIConsole.AddMessage(result.Data.Message, result.Color);
                 Print(result.Data.Message, result.Color);
                 Console.ResetColor();
                 break;
 
             case LoggerOpcode.Exception:
-                await UIConsole.AddMessage(result.Data.Message, true);
+                await UIConsole.AddMessage(result.Data.Message, result.Color, true);
                 PrintErr(result.Data.Message, result.Color);
 
                 if (result.Data is LogMessageTrace exceptionData && exceptionData.ShowTrace)
@@ -100,7 +100,7 @@ public static class Logger
                 break;
 
             case LoggerOpcode.Debug:
-                await UIConsole.AddMessage(result.Data.Message);
+                await UIConsole.AddMessage(result.Data.Message, result.Color);
                 Print(result.Data.Message, result.Color);
 
                 if (result.Data is LogMessageTrace debugData && debugData.ShowTrace)

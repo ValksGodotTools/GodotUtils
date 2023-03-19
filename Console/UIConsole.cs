@@ -20,14 +20,14 @@ public partial class UIConsole : Control
     private static ScrollContainer  ScrollContainer    { get; set; }
     private static UIConsole        Instance           { get; set; }
 
-    public static async Task AddMessage(object message, bool isCode = false)
+    public static async Task AddMessage(object message, ConsoleColor color, bool isCode = false)
     {
         // do not do anything if the console was not setup
         if (!Initialized)
             return;
 
         // add the message to the console
-        var consoleElement = new UIConsoleElement(message);
+        var consoleElement = new UIConsoleElement(message, color);
 
         if (PrevConsoleElement?.Content.ToString() == message.ToString())
         {

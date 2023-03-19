@@ -2,16 +2,19 @@
 
 public partial class UIConsoleElement : PanelContainer
 {
-    public object Content { get; }
-    private PanelContainer CountPanelContainer { get; set; }
-    private Label CountLabel { get; set; }
-    private int Count { get; set; } = 1;
-    private bool IsCode { get; }
+    public  object         Content             { get; }
 
-    public UIConsoleElement(object content, bool isCode = false)
+    private PanelContainer CountPanelContainer { get; set; }
+    private Label          CountLabel          { get; set; }
+    private int            Count               { get; set; } = 1;
+    private bool           IsCode              { get; }
+    private ConsoleColor   Color               { get; }
+
+    public UIConsoleElement(object content, ConsoleColor color = ConsoleColor.DarkGray, bool isCode = false)
     {
         Content = content;
-        IsCode = isCode;
+        Color   = color;
+        IsCode  = isCode;
     }
 
     public override void _Ready()
@@ -63,12 +66,17 @@ public partial class UIConsoleElement : PanelContainer
         textEdit.WrapMode = TextEdit.LineWrappingMode.Boundary;
         textEdit.SizeFlagsVertical = SizeFlags.ExpandFill;
         textEdit.AddThemeColorOverride("background_color", new Color(0, 0, 0, 0)); // 0 = transparent
-        textEdit.AddThemeColorOverride("font_color", Colors.DarkGray);
+        
+        var godotColor = Color.ConvertToGodotColor();
+
+        textEdit.AddThemeColorOverride("font_color", godotColor);
+        textEdit.AddThemeColorOverride("font_readonly_color", godotColor);
+        textEdit.AddThemeColorOverride("font_selected_color", godotColor);
         //textEdit.AddThemeFontSizeOverride("font_size", 14);
 
         // the default has transparency making the font hard to see, so we want to remove that
-        var grayness = 0.9f;
-        textEdit.AddThemeColorOverride("font_readonly_color", new Color(grayness, grayness, grayness, 1));
+        //var grayness = 0.9f;
+        //textEdit.AddThemeColorOverride("font_readonly_color", new Color(grayness, grayness, grayness, 1));
 
         textEdit.AddThemeStyleboxOverride("normal", new StyleBoxEmpty());
         textEdit.AddThemeStyleboxOverride("focus", new StyleBoxEmpty());
