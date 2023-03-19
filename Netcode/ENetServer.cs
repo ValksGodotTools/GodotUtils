@@ -8,7 +8,7 @@ public abstract class ENetServer : ENetLow
     private ConcurrentQueue<(Packet, Peer)> Incoming { get; } = new();
     private ConcurrentQueue<ServerPacket> Outgoing { get; } = new();
     private ConcurrentQueue<Cmd<ENetServerOpcode>> ENetCmds { get; } = new();
-    protected Dictionary<uint, Peer> Peers { get; } = new();
+    public Dictionary<uint, Peer> Peers { get; } = new();
     protected STimer UpdateTimer { get; set; }
 
     static ENetServer()
@@ -150,7 +150,6 @@ public abstract class ENetServer : ENetLow
             Log($"Received packet: {type.Name}");
 
             handlePacket.Handle(packetPeer.Item2);
-
             packetReader.Dispose();
         }
 
