@@ -23,8 +23,9 @@ public abstract class ENetServer : ENetLow
 
     protected virtual void Update() { }
 
-    public async void Start(ushort port, int maxClients)
+    public async void Start(ushort port, int maxClients, params Type[] ignoredPackets)
     {
+        InitIgnoredPackets<APacketClient>(ignoredPackets);
         Starting();
         UpdateTimer.Start();
         _running = 1;
@@ -147,7 +148,8 @@ public abstract class ENetServer : ENetLow
                 return;
             }
 
-            Log($"Received packet: {type.Name}");
+            if (!IgnoredPackets.Contains(type))
+                Log($"Received packet: {type.Name}");
 
             handlePacket.Handle(packetPeer.Item2);
             packetReader.Dispose();

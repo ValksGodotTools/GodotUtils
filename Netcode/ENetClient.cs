@@ -26,8 +26,10 @@ public abstract class ENetClient : ENetLow
         APacketServer.MapOpcodes();
     }
 
-    public async void Connect(string ip, ushort port)
+    public async void Connect(string ip, ushort port, params Type[] ignoredPackets)
     {
+        InitIgnoredPackets<APacketServer>(ignoredPackets);
+
         _running = 1;
         CTS = new CancellationTokenSource();
         using var task = Task.Run(() => WorkerThread(ip, port), CTS.Token);
@@ -80,7 +82,8 @@ public abstract class ENetClient : ENetLow
             var type = APacketServer.PacketMapBytes[opcode];
             var handlePacket = APacketServer.PacketMap[type].Instance;
 
-            Log($"Received packet: {type.Name}");
+            if (!IgnoredPackets.Contains(type))
+                Log($"Received packet: {type.Name}");
 
             handlePacket.Read(packetReader);
 
