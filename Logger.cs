@@ -65,7 +65,7 @@ public static class Logger
         watch.Start();
         code();
         watch.Stop();
-        GD.Print($"Took {watch.ElapsedMilliseconds} ms");
+        Log($"Took {watch.ElapsedMilliseconds} ms");
     }
 
     /// <summary>
