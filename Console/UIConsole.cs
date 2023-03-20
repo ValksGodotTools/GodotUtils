@@ -9,7 +9,7 @@ namespace GodotUtils;
  */
 public partial class UIConsole : Control
 {
-    public  static bool             ScrollToBottom     { get; set; } = true;
+    private static bool             AutoScroll         { get; set; } = true;
     public  static bool             IsVisible          { get => Instance.Visible; }
                                                        
     private static bool             Initialized        { get; set; }
@@ -112,7 +112,7 @@ public partial class UIConsole : Control
 
     private static void ScrollDown()
     {
-        if (ScrollToBottom)
+        if (AutoScroll)
             ScrollContainer.ScrollVertical = (int)ScrollContainer.GetVScrollBar().MaxValue;
     }
 
@@ -168,6 +168,8 @@ public partial class UIConsole : Control
         Input = new LineEdit();
         Input.TextSubmitted += OnConsoleInputEntered;
 
+        CreateTopHBoxButtons(vbox1);
+
         vbox1.AddChild(margin);
         vbox1.AddChild(Input);
 
@@ -183,5 +185,34 @@ public partial class UIConsole : Control
         AddChild(panelContainer);
 
         Hide();
+    }
+
+    private void CreateTopHBoxButtons(Node parent)
+    {
+        var marginContainer = new GMarginContainer(10, 10, 5, 5);
+        var hbox = new HBoxContainer();
+        
+        marginContainer.AddChild(hbox);
+        CreateAutoScrollUIButton(hbox);
+
+        parent.AddChild(marginContainer);
+    }
+
+    private void CreateAutoScrollUIButton(Node parent)
+    {
+        var panel = new PanelContainer();
+        var hbox = new HBoxContainer();
+        var label = new Label();
+        var checkBox = new CheckButton();
+
+        label.Text = "Autoscroll";
+        checkBox.ButtonPressed = AutoScroll;
+        checkBox.Toggled += v => AutoScroll = v;
+
+        panel.AddChild(hbox);
+        hbox.AddChild(label);
+        hbox.AddChild(checkBox);
+
+        parent.AddChild(panel);
     }
 }
