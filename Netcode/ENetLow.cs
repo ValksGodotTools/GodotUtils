@@ -35,7 +35,7 @@ public abstract class ENetLow
 
     protected void InitIgnoredPackets<T>(Type[] ignoredPackets)
     {
-        IgnoredPackets = ValidateIgnoredPackets<T>(ignoredPackets).ToList();
+        IgnoredPackets = ignoredPackets.ToList();
     }
 
     protected void WorkerLoop(Host host)
@@ -90,34 +90,6 @@ public abstract class ENetLow
     protected abstract void ConcurrentQueues();
 
     protected long _running;
-
-    private List<Type> ValidateIgnoredPackets<T>(Type[] ignoredPackets)
-    {
-        var serverClient = GetType() == typeof(ENetServer) ? "server" : "client";
-
-        string clientServer;
-        if (serverClient == "server")
-            clientServer = "client";
-        else
-            clientServer = "server";
-
-        var ignoredPacketsList = ignoredPackets.ToList();
-        var invalidPackets = new List<Type>();
-
-        for (int i = 0; i < ignoredPacketsList.Count; i++)
-            if (!typeof(T).IsAssignableFrom(ignoredPacketsList[i]))
-            {
-                Logger.LogWarning($"The {serverClient} should only ignore {clientServer} " +
-                    $"packets but {ignoredPacketsList[i].Name} is a client packet.");
-
-                invalidPackets.Add(ignoredPacketsList[i]);
-            }
-
-        foreach (var invalidPacket in invalidPackets)
-            ignoredPacketsList.Remove(invalidPacket);
-
-        return ignoredPacketsList;
-    }
 }
 
 public enum DisconnectOpcode

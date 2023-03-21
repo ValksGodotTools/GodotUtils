@@ -82,9 +82,6 @@ public abstract class ENetClient : ENetLow
             var type = APacketServer.PacketMapBytes[opcode];
             var handlePacket = APacketServer.PacketMap[type].Instance;
 
-            if (!IgnoredPackets.Contains(type))
-                Log($"Received packet: {type.Name}");
-
             /*
             * Instead of packets being handled client-side, they are handled
             * on the Godot thread.
@@ -95,6 +92,7 @@ public abstract class ENetClient : ENetLow
             */
             GodotPackets.Enqueue(new PacketData
             {
+                Type = type,
                 PacketReader = packetReader,
                 HandlePacket = handlePacket
             });
@@ -116,11 +114,16 @@ public abstract class ENetClient : ENetLow
         {
             var packetReader = packetData.PacketReader;
             var handlePacket = packetData.HandlePacket;
+            var type = packetData.Type;
 
             handlePacket.Read(packetReader);
             packetReader.Dispose();
 
             handlePacket.Handle();
+
+            if (!IgnoredPackets.Contains(type))
+                Log($"Received packet: {type.Name}\n" +
+                    $"{handlePacket.PrintFull()}");
         }
     }
 
@@ -193,6 +196,7 @@ public enum ENetClientOpcode
 
 public class PacketData
 {
+    public Type Type { get; set; }
     public PacketReader PacketReader { get; set; }
     public APacketServer HandlePacket { get; set; }
 }

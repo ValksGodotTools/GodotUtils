@@ -62,8 +62,14 @@ public abstract class ENetServer : ENetLow
 
     protected virtual void Stopping() { }
 
-    public void Send(APacketServer packet, Peer peer, params Peer[] peers) =>
+    public void Send(APacketServer packet, Peer peer, params Peer[] peers)
+    {
+        if (!IgnoredPackets.Contains(packet.GetType()))
+            Log($"Sending packet {packet.GetType().Name} to peer {peer.ID}\n" +
+                $"{packet.PrintFull()}");
+
         Outgoing.Enqueue(new ServerPacket(packet.GetOpcode(), PacketFlags.Reliable, packet, JoinPeers(peer, peers)));
+    }
 
     protected override void ConcurrentQueues()
     {
@@ -149,10 +155,11 @@ public abstract class ENetServer : ENetLow
             }
             packetReader.Dispose();
 
-            if (!IgnoredPackets.Contains(type))
-                Log($"Received packet: {type.Name}");
-
             handlePacket.Handle(packetPeer.Item2);
+
+            if (!IgnoredPackets.Contains(type))
+                Log($"Received packet: {type.Name} from peer {packetPeer.Item2.ID}\n" +
+                    $"{handlePacket.PrintFull()}");
         }
 
         // Outgoing
