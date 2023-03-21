@@ -10,7 +10,7 @@ public abstract class ENetClient : ENetLow
 
     private ConcurrentQueue<Packet> Incoming { get; } = new();
     protected ConcurrentQueue<ClientPacket> Outgoing { get; } = new();
-    private ConcurrentQueue<APacketServer> GodotPackets { get; } = new();
+    private ConcurrentQueue<PacketData> GodotPackets { get; } = new();
 
     private ConcurrentQueue<Cmd<ENetClientOpcode>> ENetCmds { get; } = new();
     private Peer Peer { get; set; }
@@ -85,17 +85,19 @@ public abstract class ENetClient : ENetLow
             if (!IgnoredPackets.Contains(type))
                 Log($"Received packet: {type.Name}");
 
-            handlePacket.Read(packetReader);
-
-            packetReader.Dispose();
-
             /*
-             * Instead of packets being handled client-side, they are handled
-             * on the Godot thread.
-             * //handlePacket.Handle();
-             */
-            GodotPackets.Enqueue(handlePacket);
-
+            * Instead of packets being handled client-side, they are handled
+            * on the Godot thread.
+            * 
+            * Note that handlePacket AND packetReader need to be sent over otherwise
+            * the following issue will happen...
+            * https://github.com/Valks-Games/Multiplayer-Template/issues/8
+            */
+            GodotPackets.Enqueue(new PacketData
+            {
+                PacketReader = packetReader,
+                HandlePacket = handlePacket
+            });
         }
 
         // Outgoing
@@ -110,8 +112,16 @@ public abstract class ENetClient : ENetLow
 
     public void HandlePackets()
     {
-        while (Net.Client.GodotPackets.TryDequeue(out var packet))
-            packet.Handle();
+        while (Net.Client.GodotPackets.TryDequeue(out PacketData packetData))
+        {
+            var packetReader = packetData.PacketReader;
+            var handlePacket = packetData.HandlePacket;
+
+            handlePacket.Read(packetReader);
+            packetReader.Dispose();
+
+            handlePacket.Handle();
+        }
     }
 
     protected override void Connect(Event netEvent)
@@ -179,4 +189,10 @@ public abstract class ENetClient : ENetLow
 public enum ENetClientOpcode
 {
     Disconnect
+}
+
+public class PacketData
+{
+    public PacketReader PacketReader { get; set; }
+    public APacketServer HandlePacket { get; set; }
 }
