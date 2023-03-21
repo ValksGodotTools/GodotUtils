@@ -170,14 +170,14 @@ public abstract class ENetServer : ENetLow
 
     protected override void Disconnect(Event netEvent)
     {
-        DisconnectCleanup(netEvent.Peer);
+        Peers.Remove(netEvent.Peer.ID);
         Log("Client disconnected - ID: " + netEvent.Peer.ID);
         Disconnected(netEvent);
     }
 
     protected override void Timeout(Event netEvent)
     {
-        DisconnectCleanup(netEvent.Peer);
+        Peers.Remove(netEvent.Peer.ID);
         Log("Client timeout - ID: " + netEvent.Peer.ID);
         Disconnected(netEvent);
     }
