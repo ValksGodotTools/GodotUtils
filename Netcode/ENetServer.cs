@@ -147,12 +147,12 @@ public abstract class ENetServer : ENetLow
                 Log($"Received malformed packet: {opcode} {e.Message} (Ignoring)");
                 return;
             }
+            packetReader.Dispose();
 
             if (!IgnoredPackets.Contains(type))
                 Log($"Received packet: {type.Name}");
 
             handlePacket.Handle(packetPeer.Item2);
-            packetReader.Dispose();
         }
 
         // Outgoing
