@@ -31,19 +31,18 @@ public class ServerPacket : GamePacket
     public void Broadcast(Host host)
     {
         var enetPacket = CreateENetPacket();
-        var peers = Peers;
 
-        if (peers.Count() == 0)
+        if (Peers.Count() == 0)
         {
             host.Broadcast(ChannelId, ref enetPacket);
         }
-        else if (peers.Count() == 1)
+        else if (Peers.Count() == 1)
         {
-            host.Broadcast(ChannelId, ref enetPacket, peers[0]);
+            host.Broadcast(ChannelId, ref enetPacket, Peers[0]);
         }
         else
         {
-            host.Broadcast(ChannelId, ref enetPacket, peers);
+            host.Broadcast(ChannelId, ref enetPacket, Peers);
         }
     }
 }
