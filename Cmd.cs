@@ -1,4 +1,4 @@
-﻿namespace GodotUtils.Netcode;
+﻿namespace GodotUtils;
 
 public class Cmd<TOpcode>
 {

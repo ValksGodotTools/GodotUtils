@@ -1,24 +1,18 @@
+using GodotUtils.Netcode.Client;
+
 namespace GodotUtils.Netcode;
 
-public class ServerPacket : GamePacket
+public abstract class ServerPacket : GamePacket
 {
-    public SendType SendType { get; }
+    public static Dictionary<Type, PacketInfo<ServerPacket>> PacketMap { get; } = NetcodeUtils.MapPackets<ServerPacket>();
+    public static Dictionary<byte, Type> PacketMapBytes { get; set; } = new();
 
-    public ServerPacket(SendType sendType, byte opcode, PacketFlags packetFlags, APacket writable = null, params Peer[] peers)
+    private SendType SendType { get; set; }
+
+    public static void MapOpcodes()
     {
-        using (var writer = new PacketWriter())
-        {
-            writer.Write(opcode);
-            writable?.Write(writer);
-
-            Data = writer.Stream.ToArray();
-            Size = writer.Stream.Length;
-        }
-
-        SendType = sendType;
-        Opcode = opcode;
-        PacketFlags = packetFlags;
-        Peers = peers;
+        foreach (var packet in PacketMap)
+            PacketMapBytes.Add(packet.Value.Opcode, packet.Key);
     }
 
     public void Send()
@@ -44,6 +38,16 @@ public class ServerPacket : GamePacket
             host.Broadcast(ChannelId, ref enetPacket, Peers);
         }
     }
+
+    public void SetSendType(SendType sendType) => SendType = sendType;
+    public SendType GetSendType() => SendType;
+
+    public override byte GetOpcode() => PacketMap[GetType()].Opcode;
+
+    /// <summary>
+    /// The packet handled client-side (Godot thread)
+    /// </summary>
+    public abstract void Handle();
 }
 
 public enum SendType

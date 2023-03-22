@@ -3,15 +3,15 @@
 // ENet API Reference: https://github.com/SoftwareGuy/ENet-CSharp/blob/master/DOCUMENTATION.md
 public abstract class ENetServer : ENetLow
 {
-    private ConcurrentQueue<(Packet, Peer)> Incoming { get; } = new();
-    private ConcurrentQueue<ServerPacket> Outgoing { get; } = new();
-    private ConcurrentQueue<Cmd<ENetServerOpcode>> ENetCmds { get; } = new();
-    public Dictionary<uint, Peer> Peers { get; } = new();
-    protected STimer UpdateTimer { get; set; }
+    private   ConcurrentQueue<(Packet, Peer)>        Incoming    { get; } = new();
+    private   ConcurrentQueue<ServerPacket>          Outgoing    { get; } = new();
+    private   ConcurrentQueue<Cmd<ENetServerOpcode>> ENetCmds    { get; } = new();
+    public    Dictionary<uint, Peer>                 Peers       { get; } = new();
+    protected STimer                                 UpdateTimer { get; set; }
 
     static ENetServer()
     {
-        APacketClient.MapOpcodes();
+        ClientPacket.MapOpcodes();
     }
 
     public ENetServer()
@@ -61,13 +61,18 @@ public abstract class ENetServer : ENetLow
     /// <summary>
     /// Send a packet to a peer
     /// </summary>
-    public void Send(APacketServer packet, Peer peer)
+    public void Send(ServerPacket packet, Peer peer)
     {
+        packet.Write();
+
         if (!IgnoredPackets.Contains(packet.GetType()))
-            Log($"Sending packet {packet.GetType().Name} to peer {peer.ID}\n" +
+            Log($"Sending packet {packet.GetType().Name} ({packet.GetSize()} bytes) to peer {peer.ID}\n" +
                 $"{packet.PrintFull()}");
 
-        EnqueuePacket(SendType.Peer, packet, peer);
+        packet.SetSendType(SendType.Peer);
+        packet.SetPeer(peer);
+
+        EnqueuePacket(packet);
     }
 
     /// <summary>
@@ -76,25 +81,24 @@ public abstract class ENetServer : ENetLow
     /// If more than one peer is specified then the packet will only be sent to
     /// those peers.
     /// </summary>
-    public void Broadcast(APacketServer packet, params Peer[] peers)
+    public void Broadcast(ServerPacket packet, params Peer[] peers)
     {
+        packet.Write();
+
         if (!IgnoredPackets.Contains(packet.GetType()))
         {
             // todo
         }
 
-        EnqueuePacket(SendType.Broadcast, packet, peers);
+        packet.SetSendType(SendType.Broadcast);
+        packet.SetPeers(peers);
+
+        EnqueuePacket(packet);
     }
 
-    private void EnqueuePacket(SendType sendType, APacketServer packet, params Peer[] peers)
+    private void EnqueuePacket(ServerPacket packet)
     {
-        Outgoing.Enqueue(
-            new ServerPacket(
-                sendType,
-                packet.GetOpcode(),
-                PacketFlags.Reliable,
-                packet,
-                peers));
+        Outgoing.Enqueue(packet);
     }
 
     protected override void ConcurrentQueues()
@@ -157,19 +161,19 @@ public abstract class ENetServer : ENetLow
         }
 
         // Incoming
-        while (Incoming.TryDequeue(out (Packet, Peer) packetPeer))
+        while (Incoming.TryDequeue(out (ENet.Packet, Peer) packetPeer))
         {
             var packetReader = new PacketReader(packetPeer.Item1);
             var opcode = packetReader.ReadByte();
 
-            if (!APacketClient.PacketMapBytes.ContainsKey(opcode))
+            if (!ClientPacket.PacketMapBytes.ContainsKey(opcode))
             {
                 Log($"Received malformed opcode: {opcode} (Ignoring)");
                 return;
             }
 
-            var type = APacketClient.PacketMapBytes[opcode];
-            var handlePacket = APacketClient.PacketMap[type].Instance;
+            var type = ClientPacket.PacketMapBytes[opcode];
+            var handlePacket = ClientPacket.PacketMap[type].Instance;
             try
             {
                 handlePacket.Read(packetReader);
@@ -191,11 +195,13 @@ public abstract class ENetServer : ENetLow
         // Outgoing
         while (Outgoing.TryDequeue(out ServerPacket packet))
         {
-            if (packet.SendType == SendType.Peer)
+            var sendType = packet.GetSendType();
+
+            if (sendType == SendType.Peer)
             {
                 packet.Send();
             }
-            else if (packet.SendType == SendType.Broadcast)
+            else if (sendType == SendType.Broadcast)
             {
                 packet.Broadcast(Host);
             }

@@ -5,7 +5,7 @@ namespace GodotUtils.Netcode;
 
 public class PacketWriter : IDisposable
 {
-    public MemoryStream Stream { get; } = new();
+    public  MemoryStream Stream { get; } = new();
     private BinaryWriter Writer { get; }
 
     public PacketWriter()

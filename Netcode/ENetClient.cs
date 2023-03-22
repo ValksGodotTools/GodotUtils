@@ -3,16 +3,14 @@
 // ENet API Reference: https://github.com/SoftwareGuy/ENet-CSharp/blob/master/DOCUMENTATION.md
 public abstract class ENetClient : ENetLow
 {
-    public bool IsConnected => Interlocked.Read(ref _connected) == 1;
+    private   ConcurrentQueue<ENet.Packet>           Incoming     { get; } = new();
+    protected ConcurrentQueue<ClientPacket>          Outgoing     { get; } = new();
+    private   ConcurrentQueue<PacketData>            GodotPackets { get; } = new();
+    private   ConcurrentQueue<Cmd<ENetClientOpcode>> ENetCmds     { get; } = new();
 
-    private ConcurrentQueue<Packet> Incoming { get; } = new();
-    protected ConcurrentQueue<ClientPacket> Outgoing { get; } = new();
-    private ConcurrentQueue<PacketData> GodotPackets { get; } = new();
-
-    private ConcurrentQueue<Cmd<ENetClientOpcode>> ENetCmds { get; } = new();
-    private Peer Peer { get; set; }
-    private uint PingInterval { get; } = 1000;
-    private uint PeerTimeout { get; } = 5000;
+    private Peer Peer               { get; set; }
+    private uint PingInterval       { get; } = 1000;
+    private uint PeerTimeout        { get; } = 5000;
     private uint PeerTimeoutMinimum { get; } = 5000;
     private uint PeerTimeoutMaximum { get; } = 5000;
 
@@ -20,8 +18,10 @@ public abstract class ENetClient : ENetLow
 
     static ENetClient()
     {
-        APacketServer.MapOpcodes();
+        ServerPacket.MapOpcodes();
     }
+
+    public bool IsConnected => Interlocked.Read(ref _connected) == 1;
 
     public async void Connect(string ip, ushort port, params Type[] ignoredPackets)
     {
@@ -48,9 +48,11 @@ public abstract class ENetClient : ENetLow
         ENetCmds.Enqueue(new Cmd<ENetClientOpcode>(ENetClientOpcode.Disconnect));
     }
 
-    public void Send(APacketClient data = null, PacketFlags flags = PacketFlags.Reliable)
+    public void Send(ClientPacket packet, PacketFlags flags = PacketFlags.Reliable)
     {
-        Outgoing.Enqueue(new ClientPacket(Convert.ToByte(data.GetOpcode()), flags, Peer, data));
+        packet.Write();
+        packet.SetPeer(Peer);
+        Outgoing.Enqueue(packet);
     }
 
     protected override void ConcurrentQueues()
@@ -77,8 +79,8 @@ public abstract class ENetClient : ENetLow
             var packetReader = new PacketReader(packet);
             var opcode = packetReader.ReadByte();
 
-            var type = APacketServer.PacketMapBytes[opcode];
-            var handlePacket = APacketServer.PacketMap[type].Instance;
+            var type = ServerPacket.PacketMapBytes[opcode];
+            var handlePacket = ServerPacket.PacketMap[type].Instance;
 
             /*
             * Instead of packets being handled client-side, they are handled
@@ -194,5 +196,5 @@ public class PacketData
 {
     public Type Type { get; set; }
     public PacketReader PacketReader { get; set; }
-    public APacketServer HandlePacket { get; set; }
+    public ServerPacket HandlePacket { get; set; }
 }

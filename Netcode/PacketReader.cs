@@ -5,11 +5,11 @@ namespace GodotUtils.Netcode;
 
 public class PacketReader : IDisposable
 {
-    private MemoryStream Stream { get; }
-    private BinaryReader Reader { get; }
-    private byte[] ReadBuffer { get; } = new byte[GamePacket.MaxSize];
+    private MemoryStream Stream     { get; }
+    private BinaryReader Reader     { get; }
+    private byte[]       ReadBuffer { get; } = new byte[GamePacket.MaxSize];
 
-    public PacketReader(Packet packet)
+    public PacketReader(ENet.Packet packet)
     {
         Stream = new MemoryStream(ReadBuffer);
         Reader = new BinaryReader(Stream);
