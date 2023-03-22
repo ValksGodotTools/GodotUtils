@@ -1,4 +1,5 @@
-﻿global using Godot;
+﻿global using ENet;
+global using Godot;
 global using GodotUtils.Netcode;
 global using GodotUtils.Netcode.Server;
 global using GodotUtils.Netcode.Client;

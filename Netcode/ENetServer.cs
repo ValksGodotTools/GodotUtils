@@ -1,6 +1,4 @@
-﻿using ENet;
-
-namespace GodotUtils.Netcode.Server;
+﻿namespace GodotUtils.Netcode.Server;
 
 // ENet API Reference: https://github.com/SoftwareGuy/ENet-CSharp/blob/master/DOCUMENTATION.md
 public abstract class ENetServer : ENetLow
@@ -60,18 +58,43 @@ public abstract class ENetServer : ENetLow
 
     protected virtual void Stopping() { }
 
-    public void Send(APacketServer packet, Peer peer, params Peer[] peers)
+    /// <summary>
+    /// Send a packet to a peer
+    /// </summary>
+    public void Send(APacketServer packet, Peer peer)
     {
         if (!IgnoredPackets.Contains(packet.GetType()))
             Log($"Sending packet {packet.GetType().Name} to peer {peer.ID}\n" +
                 $"{packet.PrintFull()}");
 
-        Outgoing.Enqueue(new ServerPacket(packet.GetOpcode(), PacketFlags.Reliable, packet, JoinPeers(peer, peers)));
+        EnqueuePacket(SendType.Peer, packet, peer);
     }
 
-    public void SendAll(APacketServer packet, Peer excludedPeer)
+    /// <summary>
+    /// If no peers are specified, then the packet will be sent to everyone. If
+    /// one peer is specified then that peer will be excluded from the broadcast.
+    /// If more than one peer is specified then the packet will only be sent to
+    /// those peers.
+    /// </summary>
+    public void Broadcast(APacketServer packet, params Peer[] peers)
     {
-        
+        if (!IgnoredPackets.Contains(packet.GetType()))
+        {
+            // todo
+        }
+
+        EnqueuePacket(SendType.Broadcast, packet, peers);
+    }
+
+    private void EnqueuePacket(SendType sendType, APacketServer packet, params Peer[] peers)
+    {
+        Outgoing.Enqueue(
+            new ServerPacket(
+                sendType,
+                packet.GetOpcode(),
+                PacketFlags.Reliable,
+                packet,
+                peers));
     }
 
     protected override void ConcurrentQueues()
@@ -167,7 +190,16 @@ public abstract class ENetServer : ENetLow
 
         // Outgoing
         while (Outgoing.TryDequeue(out ServerPacket packet))
-            packet.Peers.ForEach(peer => Send(packet, peer));
+        {
+            if (packet.SendType == SendType.Peer)
+            {
+                packet.Send();
+            }
+            else if (packet.SendType == SendType.Broadcast)
+            {
+                packet.Broadcast(Host);
+            }
+        }
     }
 
     protected override void Connect(Event netEvent)
@@ -226,32 +258,6 @@ public abstract class ENetServer : ENetLow
 
         Host.Dispose();
         Log("Server is no longer running");
-    }
-
-    private void Send(ServerPacket gamePacket, Peer peer)
-    {
-        var packet = default(Packet);
-        packet.Create(gamePacket.Data, gamePacket.PacketFlags);
-        byte channelID = 0;
-        peer.Send(channelID, ref packet);
-    }
-
-    private Peer[] JoinPeers(Peer peer, Peer[] peers)
-    {
-        Peer[] thePeers;
-        if (peer.Equals(default(Peer)))
-        {
-            thePeers = peers;
-        }
-        else
-        {
-            thePeers = new Peer[1 + peers.Length];
-            thePeers[0] = peer;
-            for (int i = 0; i < peers.Length; i++)
-                thePeers[i + 1] = peers[i];
-        }
-
-        return thePeers;
     }
 
     protected override void DisconnectCleanup(Peer peer)

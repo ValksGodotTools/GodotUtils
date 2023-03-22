@@ -1,5 +1,3 @@
-using ENet;
-
 namespace GodotUtils.Netcode;
 
 public class ClientPacket : GamePacket
@@ -17,5 +15,11 @@ public class ClientPacket : GamePacket
 
         PacketFlags = flags;
         Opcode = opcode;
+    }
+
+    public void Send(Peer peer)
+    {
+        var enetPacket = CreateENetPacket();
+        peer.Send(ChannelId, ref enetPacket);
     }
 }

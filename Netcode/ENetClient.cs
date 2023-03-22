@@ -1,7 +1,4 @@
-﻿using ENet;
-using Sandbox2;
-
-namespace GodotUtils.Netcode.Client;
+﻿namespace GodotUtils.Netcode.Client;
 
 // ENet API Reference: https://github.com/SoftwareGuy/ENet-CSharp/blob/master/DOCUMENTATION.md
 public abstract class ENetClient : ENetLow
@@ -102,16 +99,13 @@ public abstract class ENetClient : ENetLow
         // Outgoing
         while (Outgoing.TryDequeue(out var clientPacket))
         {
-            byte channelID = 0; // The channel all networking traffic will be going through
-            var packet = default(Packet);
-            packet.Create(clientPacket.Data, clientPacket.PacketFlags);
-            Peer.Send(channelID, ref packet);
+            clientPacket.Send(Peer);
         }
     }
 
     public void HandlePackets()
     {
-        while (Net.Client.GodotPackets.TryDequeue(out PacketData packetData))
+        while (GodotPackets.TryDequeue(out PacketData packetData))
         {
             var packetReader = packetData.PacketReader;
             var handlePacket = packetData.HandlePacket;
