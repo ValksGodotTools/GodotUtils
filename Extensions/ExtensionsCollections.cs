@@ -83,7 +83,8 @@ public static class CollectionExtensions
             {
                 typeof(GodotObject),
                 typeof(Node),
-                typeof(NodePath)
+                typeof(NodePath),
+                typeof(ENet.Packet)
             };
 
             foreach (var ignoredProp in ignoredProps)
