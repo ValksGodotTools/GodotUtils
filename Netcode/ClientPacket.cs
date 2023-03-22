@@ -2,7 +2,7 @@ namespace GodotUtils.Netcode;
 
 public class ClientPacket : GamePacket
 {
-    public ClientPacket(byte opcode, PacketFlags flags, APacket writable = null)
+    public ClientPacket(byte opcode, PacketFlags flags, Peer peer, APacket writable = null)
     {
         using (var writer = new PacketWriter())
         {
@@ -13,13 +13,14 @@ public class ClientPacket : GamePacket
             Size = writer.Stream.Length;
         }
 
+        Peers = new Peer[] { peer };
         PacketFlags = flags;
         Opcode = opcode;
     }
 
-    public void Send(Peer peer)
+    public void Send()
     {
         var enetPacket = CreateENetPacket();
-        peer.Send(ChannelId, ref enetPacket);
+        Peers[0].Send(ChannelId, ref enetPacket);
     }
 }

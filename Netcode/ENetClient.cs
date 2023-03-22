@@ -50,7 +50,7 @@ public abstract class ENetClient : ENetLow
 
     public void Send(APacketClient data = null, PacketFlags flags = PacketFlags.Reliable)
     {
-        Outgoing.Enqueue(new ClientPacket(Convert.ToByte(data.GetOpcode()), flags, data));
+        Outgoing.Enqueue(new ClientPacket(Convert.ToByte(data.GetOpcode()), flags, Peer, data));
     }
 
     protected override void ConcurrentQueues()
@@ -99,7 +99,7 @@ public abstract class ENetClient : ENetLow
         // Outgoing
         while (Outgoing.TryDequeue(out var clientPacket))
         {
-            clientPacket.Send(Peer);
+            clientPacket.Send();
         }
     }
 

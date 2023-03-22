@@ -2,7 +2,6 @@ namespace GodotUtils.Netcode;
 
 public class ServerPacket : GamePacket
 {
-    public Peer[] Peers { get; }
     public SendType SendType { get; }
 
     public ServerPacket(SendType sendType, byte opcode, PacketFlags packetFlags, APacket writable = null, params Peer[] peers)
