@@ -25,6 +25,7 @@ public abstract class ENetLow
     public abstract void Log(object message, ConsoleColor color);
     public abstract void Stop();
 
+    protected Host Host { get; set; }
     protected CancellationTokenSource CTS { get; set; }
     protected List<Type> IgnoredPackets { get; set; } = new();
 
@@ -33,12 +34,12 @@ public abstract class ENetLow
         CTS.Cancel();
     }
 
-    protected void InitIgnoredPackets<T>(Type[] ignoredPackets)
+    protected void InitIgnoredPackets(Type[] ignoredPackets)
     {
         IgnoredPackets = ignoredPackets.ToList();
     }
 
-    protected void WorkerLoop(Host host)
+    protected void WorkerLoop()
     {
         while (!CTS.IsCancellationRequested)
         {
@@ -48,9 +49,9 @@ public abstract class ENetLow
 
             while (!polled)
             {
-                if (host.CheckEvents(out Event netEvent) <= 0)
+                if (Host.CheckEvents(out Event netEvent) <= 0)
                 {
-                    if (host.Service(15, out netEvent) <= 0)
+                    if (Host.Service(15, out netEvent) <= 0)
                         break;
 
                     polled = true;
@@ -77,12 +78,13 @@ public abstract class ENetLow
             }
         }
 
-        host.Flush();
+        Host.Flush();
         _running = 0;
         Stopped();
     }
 
     protected abstract void Stopped();
+    protected virtual void Starting() { }
     protected abstract void Connect(Event netEvent);
     protected abstract void Disconnect(Event netEvent);
     protected abstract void Timeout(Event netEvent);

@@ -25,8 +25,8 @@ public abstract class ENetServer : ENetLow
 
     public async void Start(ushort port, int maxClients, params Type[] ignoredPackets)
     {
-        InitIgnoredPackets<APacketClient>(ignoredPackets);
         Starting();
+        InitIgnoredPackets(ignoredPackets);
         UpdateTimer.Start();
         _running = 1;
         CTS = new CancellationTokenSource();
@@ -41,8 +41,6 @@ public abstract class ENetServer : ENetLow
             Logger.LogErr(e, "Server");
         }
     }
-
-    protected virtual void Starting() { }
 
     public void Ban(uint id) => Kick(id, DisconnectOpcode.Banned);
     public void BanAll() => KickAll(DisconnectOpcode.Banned);
@@ -69,6 +67,11 @@ public abstract class ENetServer : ENetLow
                 $"{packet.PrintFull()}");
 
         Outgoing.Enqueue(new ServerPacket(packet.GetOpcode(), PacketFlags.Reliable, packet, JoinPeers(peer, peers)));
+    }
+
+    public void SendAll(APacketServer packet, Peer excludedPeer)
+    {
+        
     }
 
     protected override void ConcurrentQueues()
@@ -205,11 +208,11 @@ public abstract class ENetServer : ENetLow
 
     private void WorkerThread(ushort port, int maxClients)
     {
-        using var server = new Host();
+        Host = new Host();
 
         try
         {
-            server.Create(new Address { Port = port }, maxClients);
+            Host.Create(new Address { Port = port }, maxClients);
         }
         catch (InvalidOperationException e)
         {
@@ -219,8 +222,9 @@ public abstract class ENetServer : ENetLow
 
         Log("Server is running");
 
-        WorkerLoop(server);
+        WorkerLoop();
 
+        Host.Dispose();
         Log("Server is no longer running");
     }
 

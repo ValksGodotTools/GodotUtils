@@ -28,7 +28,8 @@ public abstract class ENetClient : ENetLow
 
     public async void Connect(string ip, ushort port, params Type[] ignoredPackets)
     {
-        InitIgnoredPackets<APacketServer>(ignoredPackets);
+        Starting();
+        InitIgnoredPackets(ignoredPackets);
 
         _running = 1;
         CTS = new CancellationTokenSource();
@@ -162,20 +163,21 @@ public abstract class ENetClient : ENetLow
 
     private void WorkerThread(string ip, ushort port)
     {
-        using var client = new Host();
+        Host = new Host();
         var address = new Address {
             Port = port
         };
 
         address.SetHost(ip);
-        client.Create();
+        Host.Create();
 
-        Peer = client.Connect(address);
+        Peer = Host.Connect(address);
         Peer.PingInterval(PingInterval);
         Peer.Timeout(PeerTimeout, PeerTimeoutMinimum, PeerTimeoutMaximum);
 
-        WorkerLoop(client);
+        WorkerLoop();
 
+        Host.Dispose();
         Log("Client is no longer running");
     }
 
