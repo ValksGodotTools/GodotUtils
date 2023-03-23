@@ -117,6 +117,8 @@ public abstract class ENetServer : ENetLow
         {
             if (cmd.Opcode == ENetServerOpcode.Stop)
             {
+                KickAll(DisconnectOpcode.Stopping);
+
                 if (CTS.IsCancellationRequested)
                 {
                     Log("Server is in the middle of stopping");

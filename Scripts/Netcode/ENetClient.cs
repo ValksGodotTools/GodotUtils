@@ -6,6 +6,7 @@ public abstract class ENetClient : ENetLow
     private   ConcurrentQueue<ENet.Packet>           Incoming     { get; } = new();
     protected ConcurrentQueue<ClientPacket>          Outgoing     { get; } = new();
     private   ConcurrentQueue<PacketData>            GodotPackets { get; } = new();
+    public    ConcurrentQueue<Cmd<GodotOpcode>>      GodotCmds    { get; } = new();
     private   ConcurrentQueue<Cmd<ENetClientOpcode>> ENetCmds     { get; } = new();
 
     private ENetOptions Options            { get; set; }
@@ -142,7 +143,8 @@ public abstract class ENetClient : ENetLow
         DisconnectCleanup(Peer);
 
         var opcode = (DisconnectOpcode)netEvent.Data;
-        Log($"Client was {opcode.ToString().ToLower()} from server");
+        Log($"Received disconnect opcode from server: {opcode.ToString().ToLower()}");
+        GodotCmds.Enqueue(new Cmd<GodotOpcode>(GodotOpcode.Disconnected, opcode));
     }
 
     protected override void Timeout(Event netEvent)
@@ -197,6 +199,11 @@ public abstract class ENetClient : ENetLow
 public enum ENetClientOpcode
 {
     Disconnect
+}
+
+public enum GodotOpcode
+{
+    Disconnected
 }
 
 public class PacketData
