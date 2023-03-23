@@ -51,6 +51,8 @@ public partial class UIConsole : PanelContainer
 
     public static void AddMessage(object message)
     {
+        var prevScroll = Feed.ScrollVertical;
+        
         // Prevent text feed from becoming too large
         if (Feed.Text.Count() > 1000)
             // If there are say 2353 characters then 2353 - 1000 = 1353 characters
@@ -58,8 +60,14 @@ public partial class UIConsole : PanelContainer
             // 1000 characters
             Feed.Text = Feed.Text.Remove(0, Feed.Text.Count() - 1000);
         
-        // ISSUE: Feed scrolls to very top when a new message is added and AutoScroll is disabled
         Feed.Text += $"\n{message}";
+
+        // Removing text from the feed will mess up the scroll, this is why the
+        // scroll value was stored previous, we set this to that value now to fix
+        // this
+        Feed.ScrollVertical = prevScroll;
+
+        // Autoscroll if enabled
         ScrollDown();
     }
 
