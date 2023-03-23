@@ -76,7 +76,7 @@ public static class Logger
     /// <summary>
     /// Dequeues a Requested Message and Logs it
     /// </summary>
-    public static async Task Update()
+    public static void Update()
     {
         if (!Messages.TryDequeue(out LogInfo result))
             return;

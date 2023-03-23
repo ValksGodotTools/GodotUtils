@@ -1,4 +1,7 @@
-﻿namespace GodotUtils.Netcode.Server;
+﻿using ENet;
+using System.Net.Sockets;
+
+namespace GodotUtils.Netcode.Server;
 
 // ENet API Reference: https://github.com/SoftwareGuy/ENet-CSharp/blob/master/DOCUMENTATION.md
 public abstract class ENetServer : ENetLow
@@ -8,6 +11,7 @@ public abstract class ENetServer : ENetLow
     private   ConcurrentQueue<Cmd<ENetServerOpcode>> ENetCmds    { get; } = new();
     public    Dictionary<uint, Peer>                 Peers       { get; } = new();
     protected STimer                                 UpdateTimer { get; set; }
+    private   ENetOptions                            Options     { get; set; }
 
     static ENetServer()
     {
@@ -21,8 +25,9 @@ public abstract class ENetServer : ENetLow
 
     protected virtual void Update() { }
 
-    public async void Start(ushort port, int maxClients, params Type[] ignoredPackets)
+    public async void Start(ushort port, int maxClients, ENetOptions options, params Type[] ignoredPackets)
     {
+        Options = options;
         Starting();
         InitIgnoredPackets(ignoredPackets);
         UpdateTimer.Start();
@@ -52,7 +57,6 @@ public abstract class ENetServer : ENetLow
         Stopping();
         UpdateTimer.Stop();
         UpdateTimer.Dispose();
-        Log("Requesting to stop server..");
         ENetCmds.Enqueue(new Cmd<ENetServerOpcode>(ENetServerOpcode.Stop));
     }
 
@@ -65,9 +69,11 @@ public abstract class ENetServer : ENetLow
     {
         packet.Write();
 
-        if (!IgnoredPackets.Contains(packet.GetType()))
-            Log($"Sending packet {packet.GetType().Name} ({packet.GetSize()} bytes) to peer {peer.ID}\n" +
-                $"{packet.PrintFull()}");
+        var type = packet.GetType();
+
+        if (!IgnoredPackets.Contains(type) && Options.PrintPacketSent)
+            Log($"Sending packet {type.Name} {(Options.PrintPacketByteSize ? $"({packet.GetSize()} bytes)" : "")}to peer {peer.ID}" +
+                $"{(Options.PrintPacketData ? $"\n{packet.PrintFull()}" : "")}");
 
         packet.SetSendType(SendType.Peer);
         packet.SetPeer(peer);
@@ -85,9 +91,12 @@ public abstract class ENetServer : ENetLow
     {
         packet.Write();
 
-        if (!IgnoredPackets.Contains(packet.GetType()))
+        var type = packet.GetType();
+
+        if (!IgnoredPackets.Contains(type) && Options.PrintPacketSent)
         {
-            // todo
+            Log($"Broadcasting packet {type.Name}. {(Options.PrintPacketByteSize ? $"({packet.GetSize()} bytes)" : "")}Peer IDs: [{peers.Select(x => x.ID).Print()}]" +
+                $"{(Options.PrintPacketData ? $"\n{packet.PrintFull()}" : "")}");
         }
 
         packet.SetSendType(SendType.Broadcast);
@@ -187,9 +196,9 @@ public abstract class ENetServer : ENetLow
 
             handlePacket.Handle(packetPeer.Item2);
 
-            if (!IgnoredPackets.Contains(type))
-                Log($"Received packet: {type.Name} from peer {packetPeer.Item2.ID}\n" +
-                    $"{handlePacket.PrintFull()}");
+            if (!IgnoredPackets.Contains(type) && Options.PrintPacketReceived)
+                Log($"Received packet: {type.Name} from peer {packetPeer.Item2.ID}" +
+                    $"{(Options.PrintPacketData ? $"\n{handlePacket.PrintFull()}" : "")}");
         }
 
         // Outgoing

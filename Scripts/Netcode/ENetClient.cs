@@ -8,11 +8,12 @@ public abstract class ENetClient : ENetLow
     private   ConcurrentQueue<PacketData>            GodotPackets { get; } = new();
     private   ConcurrentQueue<Cmd<ENetClientOpcode>> ENetCmds     { get; } = new();
 
-    private Peer Peer               { get; set; }
-    private uint PingInterval       { get; } = 1000;
-    private uint PeerTimeout        { get; } = 5000;
-    private uint PeerTimeoutMinimum { get; } = 5000;
-    private uint PeerTimeoutMaximum { get; } = 5000;
+    private ENetOptions Options            { get; set; }
+    private Peer        Peer               { get; set; }
+    private uint        PingInterval       { get; } = 1000;
+    private uint        PeerTimeout        { get; } = 5000;
+    private uint        PeerTimeoutMinimum { get; } = 5000;
+    private uint        PeerTimeoutMaximum { get; } = 5000;
 
     private long _connected;
 
@@ -23,8 +24,9 @@ public abstract class ENetClient : ENetLow
 
     public bool IsConnected => Interlocked.Read(ref _connected) == 1;
 
-    public async void Connect(string ip, ushort port, params Type[] ignoredPackets)
+    public async void Connect(string ip, ushort port, ENetOptions options = default, params Type[] ignoredPackets)
     {
+        Options = options;
         Starting();
         InitIgnoredPackets(ignoredPackets);
 
@@ -44,7 +46,6 @@ public abstract class ENetClient : ENetLow
 
     public override void Stop()
     {
-        Log("Requesting to stop client..");
         ENetCmds.Enqueue(new Cmd<ENetClientOpcode>(ENetClientOpcode.Disconnect));
     }
 
@@ -101,6 +102,12 @@ public abstract class ENetClient : ENetLow
         // Outgoing
         while (Outgoing.TryDequeue(out var clientPacket))
         {
+            var type = clientPacket.GetType();
+
+            if (!IgnoredPackets.Contains(type) && Options.PrintPacketSent)
+                Log($"Sent packet: {type.Name}" +
+                    $"{(Options.PrintPacketData ? $"\n{clientPacket.PrintFull()}" : "")}");
+
             clientPacket.Send();
         }
     }
@@ -118,9 +125,9 @@ public abstract class ENetClient : ENetLow
 
             handlePacket.Handle();
 
-            if (!IgnoredPackets.Contains(type))
-                Log($"Received packet: {type.Name}\n" +
-                    $"{handlePacket.PrintFull()}");
+            if (!IgnoredPackets.Contains(type) && Options.PrintPacketReceived)
+                Log($"Received packet: {type.Name}" +
+                    $"{(Options.PrintPacketData ? $"\n{handlePacket.PrintFull()}" : "")}");
         }
     }
 

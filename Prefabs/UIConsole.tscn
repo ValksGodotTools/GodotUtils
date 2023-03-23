@@ -38,9 +38,11 @@ theme_override_constants/separation = 0
 [node name="Feed" type="TextEdit" parent="Margin/VBox"]
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_colors/font_readonly_color = Color(0.87451, 0.87451, 0.87451, 1)
 theme_override_styles/normal = SubResource("StyleBoxEmpty_cq5rj")
 theme_override_styles/focus = SubResource("StyleBoxEmpty_pd54f")
 theme_override_styles/read_only = SubResource("StyleBoxEmpty_1b47e")
+editable = false
 
 [node name="Padding" type="Control" parent="Margin/VBox"]
 custom_minimum_size = Vector2(0, 5)
