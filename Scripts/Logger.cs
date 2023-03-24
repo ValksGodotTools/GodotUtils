@@ -156,7 +156,7 @@ public static class Logger
     {
         Console.ForegroundColor = color;
         GD.PrintErr(v);
-        //GD.PushError("" + v);
+        GD.PushError(v);
     }
 }
 
