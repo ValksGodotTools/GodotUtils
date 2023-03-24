@@ -18,21 +18,21 @@ public class GTimer
         set { Timer.OneShot = !value; }
     }
 
-    public GTimer(Node node, int delayMs = 1000) =>
+    public GTimer(Node node, double delayMs = 1000) =>
         Init(node, delayMs);
 
-    public GTimer(Node node, Action action, int delayMs = 1000)
+    public GTimer(Node node, Action action, double delayMs = 1000)
     {
         Init(node, delayMs);
         Callable = Callable.From(action);
         Timer.Connect("timeout", Callable);
     }
 
-    private void Init(Node target, int delayMs)
+    private void Init(Node target, double delayMs)
     {
         Timer.OneShot = true; // make non-looping by default
         Timer.Autostart = false; // make non-auto-start by default
-        Timer.WaitTime = delayMs / 1000f;
+        Timer.WaitTime = delayMs / 1000;
         target.AddChild(Timer);
     }
 
