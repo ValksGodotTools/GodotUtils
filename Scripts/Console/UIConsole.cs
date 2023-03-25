@@ -2,13 +2,6 @@ namespace GodotUtils;
 
 public partial class UIConsole : PanelContainer
 {
-    // exports
-    [Export] public NodePath NodePathFeed           { get; set; }
-    [Export] public NodePath NodePathInput          { get; set; }
-    [Export] public NodePath NodePathSettingsButton { get; set; }
-    [Export] public NodePath NodePathSettingsPopup  { get; set; }
-    [Export] public NodePath NodePathSettingsVBox   { get; set; }
-
     // nodes
     private static TextEdit Feed               { get; set; }
     private LineEdit        Input              { get; set; }
@@ -27,12 +20,12 @@ public partial class UIConsole : PanelContainer
     {
         Instance = this;
 
-        Feed          = GetNode<TextEdit>(NodePathFeed);
-        Input         = GetNode<LineEdit>(NodePathInput);
-        SettingsBtn   = GetNode<Button>(NodePathSettingsButton);
-        SettingsPopup = GetNode<PopupPanel>(NodePathSettingsPopup);
+        Feed          = GetNode<TextEdit>("Margin/VBox/Feed");
+        Input         = GetNode<LineEdit>("Margin/VBox/HBox/Input");
+        SettingsBtn   = GetNode<Button>  ("Margin/VBox/HBox/Settings");
+        SettingsPopup = GetNode<PopupPanel>("PopupPanel");
         
-        var settingsVBox = GetNode(NodePathSettingsVBox);
+        var settingsVBox = GetNode("PopupPanel/Margin/VBox");
         SettingsAutoScroll = settingsVBox.GetNode<CheckBox>("AutoScroll");
 
         Input.TextSubmitted += OnConsoleInputEntered;
