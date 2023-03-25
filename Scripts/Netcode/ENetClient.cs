@@ -52,6 +52,9 @@ public abstract class ENetClient : ENetLow
 
     public void Send(ClientPacket packet, PacketFlags flags = PacketFlags.Reliable)
     {
+        if (!IsConnected)
+            return;
+
         packet.Write();
         packet.SetPeer(Peer);
         Outgoing.Enqueue(packet);

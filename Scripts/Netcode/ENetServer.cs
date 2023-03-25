@@ -9,9 +9,11 @@ public abstract class ENetServer : ENetLow
     private   ConcurrentQueue<(Packet, Peer)>        Incoming    { get; } = new();
     private   ConcurrentQueue<ServerPacket>          Outgoing    { get; } = new();
     private   ConcurrentQueue<Cmd<ENetServerOpcode>> ENetCmds    { get; } = new();
-    public    Dictionary<uint, Peer>                 Peers       { get; } = new();
-    protected STimer                                 UpdateTimer { get; set; }
-    private   ENetOptions                            Options     { get; set; }
+    
+    public    Dictionary<uint, Peer> Peers          { get; } = new();
+    protected STimer                 EmitLoop       { get; set; }
+    protected STimer                 SimulationLoop { get; set; }
+    private   ENetOptions            Options        { get; set; }
 
     static ENetServer()
     {
@@ -20,17 +22,20 @@ public abstract class ENetServer : ENetLow
 
     public ENetServer()
     {
-        UpdateTimer = new(100, Update, false);
+        EmitLoop = new(100, Emit, false);
+        SimulationLoop = new(16.6666, Simulation, false);
     }
 
-    protected virtual void Update() { }
+    protected virtual void Emit() { }
+    protected virtual void Simulation() { }
 
     public async void Start(ushort port, int maxClients, ENetOptions options, params Type[] ignoredPackets)
     {
         Options = options;
         Starting();
         InitIgnoredPackets(ignoredPackets);
-        UpdateTimer.Start();
+        EmitLoop.Start();
+        SimulationLoop.Start();
         _running = 1;
         CTS = new CancellationTokenSource();
         using var task = Task.Run(() => WorkerThread(port, maxClients), CTS.Token);
@@ -55,8 +60,10 @@ public abstract class ENetServer : ENetLow
     public override void Stop()
     {
         Stopping();
-        UpdateTimer.Stop();
-        UpdateTimer.Dispose();
+        EmitLoop.Stop();
+        EmitLoop.Dispose();
+        SimulationLoop.Stop();
+        SimulationLoop.Dispose();
         ENetCmds.Enqueue(new Cmd<ENetServerOpcode>(ENetServerOpcode.Stop));
     }
 
