@@ -3,11 +3,11 @@ namespace GodotUtils;
 public partial class UIConsole : PanelContainer
 {
     // exports
-    [Export] private NodePath NodePathFeed           { get; set; }
-    [Export] private NodePath NodePathInput          { get; set; }
-    [Export] private NodePath NodePathSettingsButton { get; set; }
-    [Export] private NodePath NodePathSettingsPopup  { get; set; }
-    [Export] private NodePath NodePathSettingsVBox   { get; set; }
+    [Export] public NodePath NodePathFeed           { get; set; }
+    [Export] public NodePath NodePathInput          { get; set; }
+    [Export] public NodePath NodePathSettingsButton { get; set; }
+    [Export] public NodePath NodePathSettingsPopup  { get; set; }
+    [Export] public NodePath NodePathSettingsVBox   { get; set; }
 
     // nodes
     private static TextEdit Feed               { get; set; }
@@ -51,6 +51,10 @@ public partial class UIConsole : PanelContainer
 
     public static void AddMessage(object message)
     {
+        // UIConsole was not set up properly so return
+        if (Instance == null)
+            return;
+
         var prevScroll = Feed.ScrollVertical;
         
         // Prevent text feed from becoming too large
