@@ -17,19 +17,19 @@ public static class Logger
     /// <summary>
     /// Log a message
     /// </summary>
-    public static void Log(object message, ConsoleColor color = ConsoleColor.Gray) =>
+    public static void Log(object message, LoggerColor color = LoggerColor.Gray) =>
         Messages.Enqueue(new LogInfo(LoggerOpcode.Message, new LogMessage($"{message}"), color));
 
     /// <summary>
     /// Log a warning
     /// </summary>
-    public static void LogWarning(object message, ConsoleColor color = ConsoleColor.Yellow) =>
+    public static void LogWarning(object message, LoggerColor color = LoggerColor.Yellow) =>
         Log($"[Warning] {message}", color);
 
     /// <summary>
     /// Log a todo
     /// </summary>
-    public static void LogTodo(object message, ConsoleColor color = ConsoleColor.White) =>
+    public static void LogTodo(object message, LoggerColor color = LoggerColor.White) =>
         Log($"[Todo] {message}", color);
 
     /// <summary>
@@ -39,7 +39,7 @@ public static class Logger
     (
         Exception e,
         string hint = default,
-        ConsoleColor color = ConsoleColor.Red,
+        LoggerColor color = LoggerColor.Red,
         [CallerFilePath] string filePath = default,
         [CallerLineNumber] int lineNumber = 0
     ) => LogDetailed(LoggerOpcode.Exception, $"[Error] {(string.IsNullOrWhiteSpace(hint) ? "" : $"'{hint}' ")}{e.Message}{e.StackTrace}", color, true, filePath, lineNumber);
@@ -50,7 +50,7 @@ public static class Logger
     public static void LogDebug
     (
         object message,
-        ConsoleColor color = ConsoleColor.Magenta,
+        LoggerColor color = LoggerColor.Magenta,
         bool trace = true,
         [CallerFilePath] string filePath = default,
         [CallerLineNumber] int lineNumber = 0
@@ -94,7 +94,7 @@ public static class Logger
                 PrintErr(result.Data.Message, result.Color);
 
                 if (result.Data is LogMessageTrace exceptionData && exceptionData.ShowTrace)
-                    PrintErr(exceptionData.TracePath, ConsoleColor.DarkGray);
+                    PrintErr(exceptionData.TracePath, LoggerColor.DarkGray);
 
                 Console.ResetColor();
                 break;
@@ -104,7 +104,7 @@ public static class Logger
                 Print(result.Data.Message, result.Color);
 
                 if (result.Data is LogMessageTrace debugData && debugData.ShowTrace)
-                    Print(debugData.TracePath, ConsoleColor.DarkGray);
+                    Print(debugData.TracePath, LoggerColor.DarkGray);
 
                 Console.ResetColor();
                 break;
@@ -114,7 +114,7 @@ public static class Logger
     /// <summary>
     /// Logs a message that may contain trace information
     /// </summary>
-    private static void LogDetailed(LoggerOpcode opcode, string message, ConsoleColor color, bool trace, string filePath, int lineNumber)
+    private static void LogDetailed(LoggerOpcode opcode, string message, LoggerColor color, bool trace, string filePath, int lineNumber)
     {
         string tracePath;
 
@@ -142,19 +142,20 @@ public static class Logger
         ));
     }
 
-    private static void Print(object v, ConsoleColor color)
+    private static void Print(object v, LoggerColor color)
     {
-        Console.ForegroundColor = color;
+        //Console.ForegroundColor = color;
 
         if (GOS.IsExportedRelease())
             GD.Print(v);
         else
+            // Full list of BBCode color tags: https://absitomen.com/index.php?topic=331.0
             GD.PrintRich($"[color={color}]{v}");
     }
 
-    private static void PrintErr(object v, ConsoleColor color)
+    private static void PrintErr(object v, LoggerColor color)
     {
-        Console.ForegroundColor = color;
+        //Console.ForegroundColor = color;
         GD.PrintErr(v);
         GD.PushError(v);
     }
@@ -164,9 +165,9 @@ public class LogInfo
 {
     public LoggerOpcode Opcode { get; set; }
     public LogMessage Data { get; set; }
-    public ConsoleColor Color { get; set; }
+    public LoggerColor Color { get; set; }
 
-    public LogInfo(LoggerOpcode opcode, LogMessage data, ConsoleColor color = ConsoleColor.Gray)
+    public LogInfo(LoggerOpcode opcode, LogMessage data, LoggerColor color = LoggerColor.Gray)
     {
         Opcode = opcode;
         Data = data;
@@ -199,4 +200,20 @@ public enum LoggerOpcode
     Message,
     Exception,
     Debug
+}
+
+public enum LoggerColor
+{
+    Gray,
+    DarkGray,
+    Green,
+    DarkGreen,
+    LightGreen,
+    Aqua,
+    DarkAqua,
+    Deepskyblue,
+    Magenta,
+    Red,
+    White,
+    Yellow
 }

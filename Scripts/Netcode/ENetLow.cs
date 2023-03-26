@@ -19,7 +19,7 @@ public abstract class ENetLow
     }
 
     public bool IsRunning => Interlocked.Read(ref _running) == 1;
-    public abstract void Log(object message, ConsoleColor color);
+    public abstract void Log(object message, LoggerColor color);
     public abstract void Stop();
 
     protected Host Host { get; set; }

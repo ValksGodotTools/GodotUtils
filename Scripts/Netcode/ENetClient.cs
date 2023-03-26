@@ -131,7 +131,7 @@ public abstract class ENetClient : ENetLow
 
             if (!IgnoredPackets.Contains(type) && Options.PrintPacketReceived)
                 Log($"Received packet: {type.Name}" +
-                    $"{(Options.PrintPacketData ? $"\n{handlePacket.PrintFull()}" : "")}");
+                    $"{(Options.PrintPacketData ? $"\n{handlePacket.PrintFull()}" : "")}", LoggerColor.Deepskyblue);
         }
     }
 
@@ -195,7 +195,7 @@ public abstract class ENetClient : ENetLow
         _connected = 0;
     }
 
-    public override void Log(object message, ConsoleColor color = ConsoleColor.Cyan) => 
+    public override void Log(object message, LoggerColor color = LoggerColor.Aqua) => 
         Logger.Log($"[Client] {message}", color);
 }
 

@@ -102,8 +102,31 @@ public abstract class ENetServer : ENetLow
 
         if (!IgnoredPackets.Contains(type) && Options.PrintPacketSent)
         {
-            Log($"Broadcasting packet {type.Name}. {(Options.PrintPacketByteSize ? $"({packet.GetSize()} bytes)" : "")}Peer IDs: [{peers.Select(x => x.ID).Print()}]" +
-                $"{(Options.PrintPacketData ? $"\n{packet.PrintFull()}" : "")}");
+            // This is messy but I don't know how I will clean it up right now so
+            // I'm leaving it as is for now..
+            var byteSize = Options.PrintPacketByteSize ? $"({packet.GetSize()} bytes)" 
+                : "";
+            
+            var start = $"Broadcasting packet {type.Name} {byteSize}";
+
+            var peerArr = peers.Select(x => x.ID).Print();
+
+            var middle = "";
+
+            var end = Options.PrintPacketData ? $"\n{packet.PrintFull()}" : "";
+
+            if (peers.Count() == 0)
+                middle = "to everyone";
+
+            else if (peers.Count() == 1)
+                middle = $"to everyone except peer {peerArr}";
+
+            else
+                middle = $"to peers {peerArr}";
+
+            var message = start + middle + end;
+
+            Log(message);
         }
 
         packet.SetSendType(SendType.Broadcast);
@@ -207,7 +230,7 @@ public abstract class ENetServer : ENetLow
 
             if (!IgnoredPackets.Contains(type) && Options.PrintPacketReceived)
                 Log($"Received packet: {type.Name} from peer {packetPeer.Item2.ID}" +
-                    $"{(Options.PrintPacketData ? $"\n{handlePacket.PrintFull()}" : "")}");
+                    $"{(Options.PrintPacketData ? $"\n{handlePacket.PrintFull()}" : "")}", LoggerColor.LightGreen);
         }
 
         // Outgoing
@@ -290,7 +313,7 @@ public abstract class ENetServer : ENetLow
         Peers.Remove(peer.ID);
     }
 
-    public override void Log(object message, ConsoleColor color = ConsoleColor.Green) => 
+    public override void Log(object message, LoggerColor color = LoggerColor.Green) => 
         Logger.Log($"[Server] {message}", color);
 }
 
