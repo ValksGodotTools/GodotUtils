@@ -5,15 +5,27 @@ public static class ExtensionsAnimatedSprite
     /// <summary>
     /// Instantly switch to the next animation without waiting for the current animation to finish
     /// </summary>
-    public static void InstantPlay(this AnimatedSprite2D animatedSprite2D, string animation)
+    public static void InstantPlay(this AnimatedSprite2D sprite, string animation)
     {
-        animatedSprite2D.Animation = animation;
-        animatedSprite2D.Play(animation);
+        sprite.Animation = animation;
+        sprite.Play(animation);
     }
 
-    public static int GetWidth(this AnimatedSprite2D animatedSprite, string animation) =>
-        animatedSprite.SpriteFrames.GetFrameTexture(animation, 0).GetWidth();
+    /// <summary>
+    /// Play a animation starting at a random frame
+    /// </summary>
+    public static void PlayRandom(this AnimatedSprite2D sprite, string animation)
+    {
+        sprite.Play(animation);
+        sprite.Frame = GD.RandRange(0, sprite.SpriteFrames.GetFrameCount(animation));
+    }
 
-    public static int GetHeight(this AnimatedSprite2D animatedSprite, string animation) =>
-        animatedSprite.SpriteFrames.GetFrameTexture(animation, 0).GetHeight();
+    public static int GetWidth(this AnimatedSprite2D sprite, string animation) =>
+        sprite.SpriteFrames.GetFrameTexture(animation, 0).GetWidth();
+
+    public static int GetHeight(this AnimatedSprite2D sprite, string animation) =>
+        sprite.SpriteFrames.GetFrameTexture(animation, 0).GetHeight();
+
+    public static Vector2 GetSize(this AnimatedSprite2D sprite, string animation) =>
+        sprite.SpriteFrames.GetFrameTexture(animation, 0).GetSize();
 }
