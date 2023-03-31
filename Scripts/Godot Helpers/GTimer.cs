@@ -38,23 +38,19 @@ public class GTimer
 
     public bool IsActive() => Timer.TimeLeft != 0;
 
-    public void SetDelay(float delay) => Timer.WaitTime = delay;
-
     public void SetDelayMs(int delayMs) => Timer.WaitTime = delayMs / 1000f;
 
-    public void Start(float delay)
+    /// <summary>
+    /// Start the timer. Starting the timer while it is active already will reset
+    /// the timer countdown.
+    /// </summary>
+    public void StartMs(float delayMs = -1)
     {
-        Timer.WaitTime = delay;
-        Start();
-    }
+        if (delayMs != -1)
+            Timer.WaitTime = delayMs / 1000;
 
-    public void StartMs(float delayMs)
-    {
-        Timer.WaitTime = delayMs / 1000;
-        Start();
+        Timer.Start();
     }
-
-    public void Start() => Timer.Start();
 
     public void Stop()
     {
