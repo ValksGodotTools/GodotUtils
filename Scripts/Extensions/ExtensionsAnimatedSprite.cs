@@ -16,7 +16,7 @@ public static class ExtensionsAnimatedSprite
     /// </summary>
     public static void PlayRandom(this AnimatedSprite2D sprite, string animation)
     {
-        sprite.Play(animation);
+        sprite.InstantPlay(animation);
         sprite.Frame = GD.RandRange(0, sprite.SpriteFrames.GetFrameCount(animation));
     }
 
