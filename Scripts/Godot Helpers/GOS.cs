@@ -7,8 +7,6 @@ namespace GodotUtils;
 /// </summary>
 public static class GOS
 {
-    public static void SetWindowTitle(string title) => DisplayServer.WindowSetTitle(title);
-
     // Read up on feature tags https://docs.godotengine.org/en/latest/tutorials/export/feature_tags.html
     public static bool IsExportedRelease() => OS.HasFeature("template");
 
