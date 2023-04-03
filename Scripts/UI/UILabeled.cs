@@ -34,9 +34,8 @@ public abstract partial class UILabeled : PanelContainer
 
         var hbox = new HBoxContainer();
 
-        var label = new Label
+        var label = new GLabel(Options.Name)
         {
-            Text = Options.Name,
             HorizontalAlignment = HorizontalAlignment.Left,
             VerticalAlignment = VerticalAlignment.Center,
             CustomMinimumSize = new Vector2(Options.MinLabelSize, 0)
