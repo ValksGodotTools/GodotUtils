@@ -11,6 +11,16 @@ public static class ExtensionsAnimatedSprite
         sprite.Play(animation);
     }
 
+    public static void InstantPlay(this AnimatedSprite2D sprite, string animation, int frame)
+    {
+        sprite.Animation = animation;
+
+        if (sprite.SpriteFrames.GetFrameCount(animation) - 1 >= frame)
+            sprite.Frame = frame;
+
+        sprite.Play(animation);
+    }
+
     /// <summary>
     /// Play a animation starting at a random frame
     /// </summary>
