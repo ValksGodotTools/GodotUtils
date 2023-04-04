@@ -2,7 +2,7 @@
 
 public partial class UISlider : UIElement
 {
-    public Action<double> ValueChanged { get; set; }
+    public Action<float> ValueChanged { get; set; }
 
     private SliderOptions Options { get; set; }
 
@@ -29,7 +29,7 @@ public partial class UISlider : UIElement
         hslider.ValueChanged += v =>
         {
             lineEdit.Text = v + "";
-            ValueChanged?.Invoke(v);
+            ValueChanged?.Invoke((float)v);
         };
 
         hbox.AddChild(hslider);
