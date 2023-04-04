@@ -1,12 +1,12 @@
 ﻿namespace GodotUtils;
 
-public partial class UILabeledOptionButton : UILabeled
+public partial class UIOptionButton : UIElement
 {
     public Action<long> ValueChanged { get; set; }
 
-    private LabeledOptionButtonOptions Options { get; set; }
+    private OptionButtonOptions Options { get; set; }
 
-    public UILabeledOptionButton(LabeledOptionButtonOptions options) : 
+    public UIOptionButton(OptionButtonOptions options) : 
         base(options)
     {
         Options = options;
@@ -27,12 +27,12 @@ public partial class UILabeledOptionButton : UILabeled
     }
 }
 
-public class LabeledOptionButtonOptions : LabeledOptions
+public class OptionButtonOptions : ElementOptions
 {
     public OptionButton OptionButton { get; set; } = new OptionButton();
     public string[]     Items        { get; set; }
 
-    public LabeledOptionButtonOptions(params string[] items)
+    public OptionButtonOptions(params string[] items)
     {
         Items = items;
     }

@@ -1,12 +1,12 @@
 ﻿namespace GodotUtils;
 
-public partial class UILabeledColorPickerButton : UILabeled
+public partial class UIColorPickerBtn : UIElement
 {
     public Action<Color> ValueChanged { get; set; }
-    private LabeledColorPickerButtonOptions Options { get; set; }
+    private ColorPickerBtnOptions Options { get; set; }
     private Color Color { get; set; }
 
-    public UILabeledColorPickerButton(LabeledColorPickerButtonOptions options) : base(options)
+    public UIColorPickerBtn(ColorPickerBtnOptions options) : base(options)
     {
         Options = options;
     }
@@ -34,7 +34,7 @@ public partial class UILabeledColorPickerButton : UILabeled
     }
 }
 
-public class LabeledColorPickerButtonOptions : LabeledOptions
+public class ColorPickerBtnOptions : ElementOptions
 {
     public ColorPickerButton ColorPickerButton       { get; set; } = new ColorPickerButton();
     public bool              OnlyUpdateOnPopupClosed { get; set; }

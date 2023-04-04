@@ -1,14 +1,12 @@
-﻿using Newtonsoft.Json.Linq;
+﻿namespace GodotUtils;
 
-namespace GodotUtils;
-
-public partial class UILabeledSlider : UILabeled
+public partial class UISlider : UIElement
 {
     public Action<double> ValueChanged { get; set; }
 
-    private LabeledSliderOptions Options { get; set; }
+    private SliderOptions Options { get; set; }
 
-    public UILabeledSlider(LabeledSliderOptions options) : base(options)
+    public UISlider(SliderOptions options) : base(options)
     {
         Options = options;
     }
@@ -39,7 +37,7 @@ public partial class UILabeledSlider : UILabeled
     }
 }
 
-public class LabeledSliderOptions : LabeledOptions
+public class SliderOptions : ElementOptions
 {
     public HSlider HSlider { get; set; } = new HSlider();
 }

@@ -1,13 +1,13 @@
 ﻿namespace GodotUtils;
 
-public partial class UILabeledLineEdit : UILabeled
+public partial class UILineEdit : UIElement
 {
     public Action<string> ValueChanged { get; set; }
 
-    private LabeledLineEditOptions Options { get; set; }
+    private LineEditOptions Options { get; set; }
     private string PrevText { get; set; } = "";
 
-    public UILabeledLineEdit(LabeledLineEditOptions options) : base(options)
+    public UILineEdit(LineEditOptions options) : base(options)
     {
         Options = options;
     }
@@ -42,7 +42,7 @@ public partial class UILabeledLineEdit : UILabeled
     }
 }
 
-public class LabeledLineEditOptions : LabeledOptions
+public class LineEditOptions : ElementOptions
 {
     public bool     IgnoreEmpty { get; set; } = true;
     public bool     Trimmed     { get; set; } = true;

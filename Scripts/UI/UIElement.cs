@@ -1,16 +1,16 @@
 ﻿namespace GodotUtils;
 
-public abstract partial class UILabeled : PanelContainer
+public abstract partial class UIElement : PanelContainer
 {
-    private LabeledOptions Options { get; set; }
+    private ElementOptions Options { get; set; }
     private GMarginContainer MarginContainer { get; set; }
 
-    public UILabeled()
+    public UIElement()
     {
-        Options = new LabeledOptions();
+        Options = new ElementOptions();
     }
 
-    public UILabeled(LabeledOptions options)
+    public UIElement(ElementOptions options)
     {
         Options = options;
     }
@@ -18,7 +18,7 @@ public abstract partial class UILabeled : PanelContainer
     public override void _Ready()
     {
         // Ex: TemperatureSlider or UsernameLineEdit
-        Name = Options.Name + GetType().Name.Replace(nameof(UILabeled), "");
+        Name = Options.Name + GetType().Name.Replace(nameof(UIElement), "");
         InitUI();
     }
 
@@ -50,7 +50,7 @@ public abstract partial class UILabeled : PanelContainer
         AddChild(MarginContainer);
     }
 
-    public void SetMargin(LabeledOptions options)
+    public void SetMargin(ElementOptions options)
     {
         MarginContainer.SetMarginLeft(options.MarginLeft);
         MarginContainer.SetMarginRight(options.MarginRight);
@@ -59,7 +59,7 @@ public abstract partial class UILabeled : PanelContainer
     }
 }
 
-public class LabeledOptions
+public class ElementOptions
 {
     public string Name           { get; set; } = "Placeholder";
     public float  MinLabelSize   { get; set; } = 200;
