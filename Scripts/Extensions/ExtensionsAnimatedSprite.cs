@@ -15,8 +15,13 @@ public static class ExtensionsAnimatedSprite
     {
         sprite.Animation = animation;
 
-        if (sprite.SpriteFrames.GetFrameCount(animation) - 1 >= frame)
+        var frameCount = sprite.SpriteFrames.GetFrameCount(animation);
+
+        if (frameCount - 1 >= frame)
             sprite.Frame = frame;
+        else
+            Logger.LogWarning($"The frame '{frame}' specified for {sprite.Name} is" +
+                $"lower than the frame count '{frameCount}'");
 
         sprite.Play(animation);
     }
