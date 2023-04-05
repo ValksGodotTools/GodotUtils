@@ -87,7 +87,11 @@ public partial class GPath : Path2D
         PathFollow.AddChild(sprite);
     }
 
-    public void AddCurves()
+    /// <summary>
+    /// Add curves to the path. The curve distance is how far each curve is pushed
+    /// out.
+    /// </summary>
+    public void AddCurves(int curveSize = 50, int curveDistance = 50)
     {
         // Add aditional points to make each line be curved
         var invert = 1;
@@ -98,7 +102,6 @@ public partial class GPath : Path2D
             var B = Points[i + 1];
 
             var center = (A + B) / 2;
-            var curveDistance = 50; // How far the curve is pushed out
             var offset = ((B - A).Orthogonal().Normalized() * curveDistance * invert);
             var newPos = center + offset;
 
@@ -124,7 +127,6 @@ public partial class GPath : Path2D
                 // Next point is over and after first point
                 v = new Vector4(-1, 1, 1, -1);
 
-            var curveSize = 50; // How big the curve is
             var index = 1 + i * 2;
 
             // Insert the curved point at the index in the curve
