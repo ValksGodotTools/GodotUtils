@@ -11,7 +11,17 @@ public static class ExtensionsNode
         var arr = new TNode[children.Count];
 
         for (int i = 0; i < children.Count; i++)
-            arr[i] = (TNode)children[i];
+            try
+            {
+                arr[i] = (TNode)children[i];
+            }
+            catch (InvalidCastException)
+            {
+                GD.PushError($"Could not get all children from parent " +
+                    $"'{parent.Name}' because could not cast from " +
+                    $"{children[i].GetType()} to {typeof(TNode)} for node " +
+                    $"'{children[i].Name}'");
+            }
 
         return arr;
     }
