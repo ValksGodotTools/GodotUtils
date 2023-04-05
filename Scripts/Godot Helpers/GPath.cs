@@ -60,6 +60,14 @@ public partial class GPath : Path2D
         }
     }
 
+    public void AnimateTo(int targetIndex)
+    {
+        if (targetIndex > TweenIndex)
+            AnimateForwards(targetIndex - TweenIndex);
+        else
+            AnimateBackwards(TweenIndex - targetIndex);
+    }
+
     public void AnimateForwards(int step = 1)
     {
         var prevTweenIndex = TweenIndex;
