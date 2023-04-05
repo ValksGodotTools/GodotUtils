@@ -26,8 +26,9 @@ public partial class GPath : Path2D
     private double       AnimSpeed   { get; }
     private Color        Color       { get; }
     private float        Width       { get; }
+    private int          Dashes      { get; }
 
-    public GPath(Vector2[] points, Color color, int width = 5, double animSpeed = 1)
+    public GPath(Vector2[] points, Color color, int width = 5, int dashes = 0, double animSpeed = 1)
     {
         Points = points;
         Curve = new Curve2D();
@@ -36,6 +37,7 @@ public partial class GPath : Path2D
 
         Color = color;
         Width = width;
+        Dashes = dashes;
         AnimSpeed = animSpeed;
 
         // Add points to the path
@@ -49,7 +51,7 @@ public partial class GPath : Path2D
     {
         var points = Curve.GetBakedPoints();
 
-        for (int i = 0; i < points.Length - 1; i++)
+        for (int i = 0; i < points.Length - 1; i += (Dashes + 1))
         {
             var A = points[i];
             var B = points[i + 1];
