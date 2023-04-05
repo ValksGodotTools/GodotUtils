@@ -2,6 +2,15 @@ namespace GodotUtils;
 
 public static class ExtensionsNode 
 {
+    public static void Reparent(this Node curParent, Node newParent, Node node)
+    {
+        // Remove node from current parent
+        curParent.RemoveChild(node);
+
+        // Add node to new parent
+        newParent.AddChild(node);
+    }
+
     /// <summary>
     /// Get all children assuming they all extend from TNode
     /// </summary>
