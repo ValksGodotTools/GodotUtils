@@ -3,9 +3,18 @@
 using TransType = Tween.TransitionType;
 using EaseType  = Tween.EaseType;
 
-public class GPath
+/*
+ * Create a path from a set of points with options to add curvature and
+ * animate the attached sprite.
+ */
+public partial class GPath : Path2D
 {
-    private Path2D       Path        { get; }
+    public bool Rotates 
+    { 
+        get => PathFollow.Rotates; 
+        set => PathFollow.Rotates = value; 
+    }
+
     private PathFollow2D PathFollow  { get; }
     private Vector2[]    Points      { get; }
 
@@ -14,43 +23,55 @@ public class GPath
     private int          TweenIndex  { get; set; }
     private TransType    TransType   { get; } = TransType.Sine;
     private EaseType     EaseType    { get; } = EaseType.Out;
-    private double       Duration    { get; } = 1.5;
+    private double       AnimSpeed   { get; }
+    private Color        Color       { get; }
+    private float        Width       { get; }
 
-    public GPath(Node parent, Vector2[] points)
+    public GPath(Vector2[] points, Color color, int width = 5, double animSpeed = 1)
     {
         Points = points;
-        Path = new Path2D { Curve = new Curve2D() };
+        Curve = new Curve2D();
         PathFollow = new PathFollow2D { Rotates = false };
-        Path.AddChild(PathFollow);
-        parent.AddChild(Path);
+        AddChild(PathFollow);
+
+        Color = color;
+        Width = width;
+        AnimSpeed = animSpeed;
 
         // Add points to the path
         for (int i = 0; i < points.Length; i++)
-            Path.Curve.AddPoint(points[i]);
+            Curve.AddPoint(points[i]);
 
         CalculateTweenValues();
     }
 
-    public void AnimateNext()
+    public override void _Draw()
     {
-        TweenIndex = Mathf.Min(TweenIndex + 1, TweenValues.Count() - 1);
+        var points = Curve.GetBakedPoints();
 
-        Tween?.Kill();
-        Tween = PathFollow.CreateTween();
-        Tween.TweenProperty(PathFollow, "progress", TweenValues[TweenIndex], Duration)
-            .SetTrans(TransType)
-            .SetEase(EaseType);
+        for (int i = 0; i < points.Length - 1; i++)
+        {
+            var A = points[i];
+            var B = points[i + 1];
+
+            DrawLine(A, B, Color, Width, true);
+        }
     }
 
-    public void AnimatePrev()
+    public void AnimateForwards(int step = 1)
     {
-        TweenIndex = Mathf.Max(TweenIndex - 1, 0);
+        var prevTweenIndex = TweenIndex;
+        TweenIndex = Mathf.Min(TweenIndex + step, TweenValues.Count() - 1);
 
-        Tween?.Kill();
-        Tween = PathFollow.CreateTween();
-        Tween.TweenProperty(PathFollow, "progress", TweenValues[TweenIndex], Duration)
-            .SetTrans(TransType)
-            .SetEase(EaseType);
+        Animate(prevTweenIndex, true);
+    }
+
+    public void AnimateBackwards(int step = 1)
+    {
+        var prevTweenIndex = TweenIndex;
+        TweenIndex = Mathf.Max(TweenIndex - step, 0);
+
+        Animate(prevTweenIndex, false);
     }
 
     public void AddSprite(Sprite2D node) => PathFollow.AddChild(node);
@@ -96,7 +117,7 @@ public class GPath
             var index = 1 + i * 2;
 
             // Insert the curved point at the index in the curve
-            Path.Curve.AddPoint(newPos,
+            Curve.AddPoint(newPos,
                 new Vector2(v.X, v.Y) * curveSize,
                 new Vector2(v.Z, v.W) * curveSize, index);
         }
@@ -109,6 +130,26 @@ public class GPath
     {
         TweenValues = new float[Points.Length];
         for (int i = 0; i < Points.Length; i++)
-            TweenValues[i] = Path.Curve.GetClosestOffset(Points[i]);
+            TweenValues[i] = Curve.GetClosestOffset(Points[i]);
+    }
+
+    private void Animate(int prevTweenIndex, bool forwards)
+    {
+        if (prevTweenIndex == TweenIndex)
+            return;
+
+        var s1 = Curve.SampleBaked(TweenValues[TweenIndex], true);
+        var s2 = Curve.SampleBaked(TweenValues[prevTweenIndex], true);
+
+        var o1 = Curve.GetClosestOffset(s1);
+        var o2 = Curve.GetClosestOffset(s2);
+
+        var duration = ((forwards ? (o1 - o2) : (o2 - o1)) / 150) / AnimSpeed;
+
+        Tween?.Kill();
+        Tween = PathFollow.CreateTween();
+        Tween.TweenProperty(PathFollow, "progress", TweenValues[TweenIndex], duration)
+            .SetTrans(TransType)
+            .SetEase(EaseType);
     }
 }
