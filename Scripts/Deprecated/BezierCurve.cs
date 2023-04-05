@@ -1,5 +1,10 @@
-﻿namespace GodotUtils;
+﻿namespace GodotUtils.Deprecated;
 
+/*
+ * No longer being used because Bezier Curves are built into the Godot Game Engine
+ * There is no need to re-invent the wheel. I won't delete this class because I did
+ * spend an insane amount of time trying to figure this stuff out.
+ */
 public static class BezierCurve
 {
     public static Vector2[] Draw(CanvasItem node, Vector2 pointA, Vector2 pointB, Vector2 curve1, Vector2 curve2, Color color, int width = 5, float resolution = 0.01f)
