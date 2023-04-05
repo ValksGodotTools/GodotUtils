@@ -17,6 +17,7 @@ public partial class GPath : Path2D
 
     private PathFollow2D PathFollow  { get; }
     private Vector2[]    Points      { get; }
+    private Sprite2D     Sprite      { get; set; }
 
     private Tween        Tween       { get; set; }
     private float[]      TweenValues { get; set; }
@@ -70,21 +71,21 @@ public partial class GPath : Path2D
 
     public void AnimateForwards(int step = 1)
     {
-        var prevTweenIndex = TweenIndex;
         TweenIndex = Mathf.Min(TweenIndex + step, TweenValues.Count() - 1);
-
-        Animate(prevTweenIndex, true);
+        Animate(true);
     }
 
     public void AnimateBackwards(int step = 1)
     {
-        var prevTweenIndex = TweenIndex;
         TweenIndex = Mathf.Max(TweenIndex - step, 0);
-
-        Animate(prevTweenIndex, false);
+        Animate(false);
     }
 
-    public void AddSprite(Sprite2D node) => PathFollow.AddChild(node);
+    public void AddSprite(Sprite2D sprite)
+    {
+        Sprite = sprite;
+        PathFollow.AddChild(sprite);
+    }
 
     public void AddCurves()
     {
@@ -143,23 +144,25 @@ public partial class GPath : Path2D
             TweenValues[i] = Curve.GetClosestOffset(Points[i]);
     }
 
-    private void Animate(int prevTweenIndex, bool forwards)
+    private void Animate(bool forwards)
     {
-        if (prevTweenIndex == TweenIndex)
-            return;
-
-        var s1 = Curve.SampleBaked(TweenValues[TweenIndex], true);
-        var s2 = Curve.SampleBaked(TweenValues[prevTweenIndex], true);
-
-        var o1 = Curve.GetClosestOffset(s1);
-        var o2 = Curve.GetClosestOffset(s2);
-
-        var duration = ((forwards ? (o1 - o2) : (o2 - o1)) / 150) / AnimSpeed;
-
         Tween?.Kill();
         Tween = PathFollow.CreateTween();
-        Tween.TweenProperty(PathFollow, "progress", TweenValues[TweenIndex], duration)
-            .SetTrans(TransType)
-            .SetEase(EaseType);
+        Tween.TweenProperty(PathFollow, "progress", TweenValues[TweenIndex], 
+            CalculateDuration(forwards)).SetTrans(TransType).SetEase(EaseType);
+    }
+
+    private double CalculateDuration(bool forwards)
+    {
+        var targetPoint = Curve.SampleBaked(TweenValues[TweenIndex], true);
+
+        var remainingProgress = Curve.GetClosestOffset(targetPoint);
+        var currentProgress = PathFollow.Progress;
+
+        var duration = ((forwards ?
+            (remainingProgress - currentProgress) :
+            (currentProgress - remainingProgress)) / 150) / AnimSpeed;
+
+        return duration;
     }
 }
