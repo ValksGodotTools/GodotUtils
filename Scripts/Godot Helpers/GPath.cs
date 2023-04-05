@@ -1,12 +1,20 @@
 ﻿namespace GodotUtils;
 
+using TransType = Tween.TransitionType;
+using EaseType  = Tween.EaseType;
+
 public class GPath
 {
-    public PathFollow2D PathFollow { get; }
-    public float[] TweenValues { get; set; }
+    private Path2D       Path        { get; }
+    private PathFollow2D PathFollow  { get; }
+    private Vector2[]    Points      { get; }
 
-    private Path2D Path { get; }
-    private Vector2[] Points { get; }
+    private Tween        Tween       { get; set; }
+    private float[]      TweenValues { get; set; }
+    private int          TweenIndex  { get; set; }
+    private TransType    TransType   { get; } = TransType.Sine;
+    private EaseType     EaseType    { get; } = EaseType.Out;
+    private double       Duration    { get; } = 1.5;
 
     public GPath(Node parent, Vector2[] points)
     {
@@ -21,6 +29,28 @@ public class GPath
             Path.Curve.AddPoint(points[i]);
 
         CalculateTweenValues();
+    }
+
+    public void AnimateNext()
+    {
+        TweenIndex = Mathf.Min(TweenIndex + 1, TweenValues.Count() - 1);
+
+        Tween?.Kill();
+        Tween = PathFollow.CreateTween();
+        Tween.TweenProperty(PathFollow, "progress", TweenValues[TweenIndex], Duration)
+            .SetTrans(TransType)
+            .SetEase(EaseType);
+    }
+
+    public void AnimatePrev()
+    {
+        TweenIndex = Mathf.Max(TweenIndex - 1, 0);
+
+        Tween?.Kill();
+        Tween = PathFollow.CreateTween();
+        Tween.TweenProperty(PathFollow, "progress", TweenValues[TweenIndex], Duration)
+            .SetTrans(TransType)
+            .SetEase(EaseType);
     }
 
     public void AddSprite(Sprite2D node) => PathFollow.AddChild(node);
