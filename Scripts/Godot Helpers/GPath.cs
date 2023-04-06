@@ -156,14 +156,11 @@ public partial class GPath : Path2D
 
     private double CalculateDuration(bool forwards)
     {
-        var targetPoint = Curve.SampleBaked(TweenValues[TweenIndex], true);
-
-        var remainingProgress = Curve.GetClosestOffset(targetPoint);
-        var currentProgress = PathFollow.Progress;
-
-        var duration = ((forwards ?
-            (remainingProgress - currentProgress) :
-            (currentProgress - remainingProgress)) / 150) / AnimSpeed;
+        // The remaining distance left to go from the current sprites progress
+        var remainingDistance = Mathf.Abs(
+            TweenValues[TweenIndex] - PathFollow.Progress);
+        
+        var duration = remainingDistance / 150 / AnimSpeed;
 
         return duration;
     }
