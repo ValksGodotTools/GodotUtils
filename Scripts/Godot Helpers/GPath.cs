@@ -159,8 +159,21 @@ public partial class GPath : Path2D
         // The remaining distance left to go from the current sprites progress
         var remainingDistance = Mathf.Abs(
             TweenValues[TweenIndex] - PathFollow.Progress);
+
+        var startIndex = 0;
+
+        // Dynamically calculate the start index
+        for (int i = 0; i < TweenValues.Length; i++)
+            if (PathFollow.Progress <= TweenValues[i])
+            {
+                startIndex = i;
+                break;
+            }
+
+        // The number of level icons left to pass
+        var levelIconsLeft = Mathf.Abs(TweenIndex - startIndex);
         
-        var duration = remainingDistance / 150 / AnimSpeed;
+        var duration = remainingDistance / 150 / AnimSpeed / levelIconsLeft;
 
         return duration;
     }
