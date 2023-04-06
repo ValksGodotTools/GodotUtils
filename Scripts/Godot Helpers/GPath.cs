@@ -173,7 +173,7 @@ public partial class GPath : Path2D
             }
 
         // The number of level icons left to pass
-        var levelIconsLeft = Mathf.Abs(TweenIndex - startIndex);
+        var levelIconsLeft = Mathf.Max(1, Mathf.Abs(TweenIndex - startIndex));
         
         var duration = remainingDistance / 150 / AnimSpeed / levelIconsLeft;
 
