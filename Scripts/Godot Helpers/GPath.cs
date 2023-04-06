@@ -69,16 +69,18 @@ public partial class GPath : Path2D
             AnimateBackwards(TweenIndex - targetIndex);
     }
 
-    public void AnimateForwards(int step = 1)
+    public int AnimateForwards(int step = 1)
     {
         TweenIndex = Mathf.Min(TweenIndex + step, TweenValues.Count() - 1);
         Animate(true);
+        return TweenIndex;
     }
 
-    public void AnimateBackwards(int step = 1)
+    public int AnimateBackwards(int step = 1)
     {
         TweenIndex = Mathf.Max(TweenIndex - step, 0);
         Animate(false);
+        return TweenIndex;
     }
 
     public void AddSprite(Sprite2D sprite)
