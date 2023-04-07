@@ -46,14 +46,13 @@ public partial class SceneManager : Node
 
     private void FadeTo(TransType transType, double duration, Action finished = null)
     {
-        // Add canvas layer to scene if does not exist
-        var canvasLayer = CurrentScene.GetNodeOrNull<CanvasLayer>("CanvasLayer");
-
-        if (canvasLayer == null)
+        // Add canvas layer to scene
+        var canvasLayer = new CanvasLayer
         {
-            canvasLayer = new CanvasLayer();
-            CurrentScene.AddChild(canvasLayer);
-        }
+            Layer = 10 // render on top of everything else
+        };
+
+        CurrentScene.AddChild(canvasLayer);
 
         // Setup color rect
         var colorRect = new ColorRect
@@ -71,7 +70,7 @@ public partial class SceneManager : Node
         tween.TweenProperty(colorRect, "color", new Color(0, 0, 0, transType == TransType.Black ? 1 : 0), duration);
         tween.TweenCallback(Callable.From(() =>
         {
-            colorRect.QueueFree();
+            canvasLayer.QueueFree();
             finished?.Invoke();
         }));
     }
