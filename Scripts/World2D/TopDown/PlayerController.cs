@@ -1,4 +1,4 @@
-﻿namespace GodotUtils.TopDown;
+﻿namespace GodotUtils.World2D.TopDown;
 
 // Documentation for CharacterBody2D:
 // https://docs.godotengine.org/en/latest/classes/class_characterbody2d.html#class-characterbody2d-method-move-and-slide
