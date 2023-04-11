@@ -20,6 +20,6 @@ public abstract class State<TEntity> where TEntity : IStateMachine<TEntity>
 
 public interface IStateMachine<TEntity> where TEntity : IStateMachine<TEntity>
 {
-    public Dictionary<object, State<TEntity>> States { get; set; }
+    public Dictionary<object, State<TEntity>> States { get; }
     public object CurrentState { get; set; }
 }
