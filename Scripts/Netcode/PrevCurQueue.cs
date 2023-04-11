@@ -1,4 +1,4 @@
-﻿namespace GodotUtils;
+﻿namespace GodotUtils.Netcode;
 
 public class PrevCurQueue<T>
 {
