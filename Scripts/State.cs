@@ -10,16 +10,15 @@ public abstract class State<TEntity> where TEntity : IStateMachine<TEntity>
     public abstract void ExitState();
     public abstract void Update();
 
-    public void SwitchState(object newState)
+    public void SwitchState(State<TEntity> newState)
     {
-        Entity.States[Entity.CurrentState].ExitState();
+        Entity.CurrentState.ExitState();
         Entity.CurrentState = newState;
-        Entity.States[Entity.CurrentState].EnterState();
+        Entity.CurrentState.EnterState();
     }
 }
 
 public interface IStateMachine<TEntity> where TEntity : IStateMachine<TEntity>
 {
-    public Dictionary<object, State<TEntity>> States { get; }
-    public object CurrentState { get; set; }
+    public State<TEntity> CurrentState { get; set; }
 }
