@@ -19,7 +19,7 @@ public partial class GPath : Path2D
     private Vector2[]    Points      { get; }
     private Sprite2D     Sprite      { get; set; }
 
-    private Tween        Tween       { get; set; }
+    private GTween       Tween       { get; set; }
     private float[]      TweenValues { get; set; }
     private int          TweenIndex  { get; set; }
     private TransType    TransType   { get; } = TransType.Sine;
@@ -34,6 +34,7 @@ public partial class GPath : Path2D
         Points = points;
         Curve = new Curve2D();
         PathFollow = new PathFollow2D { Rotates = false };
+        Tween = new GTween(PathFollow);
         AddChild(PathFollow);
 
         Color = color;
@@ -150,9 +151,8 @@ public partial class GPath : Path2D
 
     private void Animate(bool forwards)
     {
-        Tween?.Kill();
-        Tween = PathFollow.CreateTween();
-        Tween.TweenProperty(PathFollow, "progress", TweenValues[TweenIndex], 
+        Tween.Create();
+        Tween.Animate("progress", TweenValues[TweenIndex], 
             CalculateDuration(forwards)).SetTrans(TransType).SetEase(EaseType);
     }
 

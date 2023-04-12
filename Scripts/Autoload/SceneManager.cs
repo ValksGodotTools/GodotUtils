@@ -66,13 +66,14 @@ public partial class SceneManager : Node
         canvasLayer.AddChild(colorRect);
 
         // Animate color rect
-        var tween = colorRect.CreateTween();
-        tween.TweenProperty(colorRect, "color", new Color(0, 0, 0, transType == TransType.Black ? 1 : 0), duration);
-        tween.TweenCallback(Callable.From(() =>
+        var tween = new GTween(colorRect);
+        tween.Create();
+        tween.Animate("color", new Color(0, 0, 0, transType == TransType.Black ? 1 : 0), duration);
+        tween.Callback(() =>
         {
             canvasLayer.QueueFree();
             finished?.Invoke();
-        }));
+        });
     }
 
     private enum TransType
