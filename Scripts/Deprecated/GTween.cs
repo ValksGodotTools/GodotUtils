@@ -1,5 +1,12 @@
-namespace GodotUtils;
+namespace GodotUtils.Deprecated;
 
+/*
+ * I feel like I could do a much better job with creating a more generic util
+ * for something like this so that is why this is being deprecated but not being
+ * deleted outright because Sankari code is using this and if I delete this I feel
+ * like I'm going to spend a long time trying to figure out what I did to make the
+ * code work.
+ */
 public class GTween 
 {
     private Tween Tween { get; }
