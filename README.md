@@ -10,11 +10,15 @@ An ever expanding utils library for Godot 4 C#
 - [UI](https://github.com/ValksGodotTools/GodotUtils/tree/main/Scripts/UI)
 - [2D Platformer Scripts](https://github.com/ValksGodotTools/GodotUtils/tree/main/Scripts/World2D/Platformer)
 - [2D Top Down Scripts](https://github.com/ValksGodotTools/GodotUtils/tree/main/Scripts/World2D/TopDown)
-- 3D Scripts (TBA)
-- Inventory Script(s) / Prefab(s) (TBA)
 - [EventManager](https://github.com/ValksGodotTools/GodotUtils/blob/main/Scripts/EventManager.cs)
 - [Thread Safe Logger](https://github.com/ValksGodotTools/GodotUtils/blob/main/Scripts/Logger.cs)
 - [State Pattern](https://github.com/ValksGodotTools/GodotUtils/blob/main/Scripts/State.cs)
+
+## Thinking of Adding
+- 3D Scripts
+- Inventory Script(s) / Prefab(s)
+- Modular Mod Manager Logic and UI
+- Procedurally generated tech tree
 
 ## Install
 Add this as a submodule to your GitHub repo
