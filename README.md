@@ -29,3 +29,7 @@ Add the following to your `.csproj`
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
 </ItemGroup>
 ```
+
+## Credits
+- Shaders are from https://godotshaders.com/
+- Thank you to everyone in the Godot Discord for helping me (especially [the31](https://github.com/31)), without you guys I would not have got as far as I've come today
