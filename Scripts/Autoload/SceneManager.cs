@@ -1,4 +1,4 @@
-namespace SideScrollGame;
+namespace GodotUtils;
 
 // About Scene Switching: https://docs.godotengine.org/en/latest/tutorials/scripting/singletons_autoload.html
 public partial class SceneManager : Node
@@ -15,16 +15,27 @@ public partial class SceneManager : Node
         CurrentScene = root.GetChild(root.GetChildCount() - 1);
     }
 
-    public static void SwitchScene(string name)
+    public static void SwitchScene(string name, TransType transType = TransType.None)
     {
-        Instance.FadeTo(TransType.Black, 2, () =>
+        switch (transType)
+        {
+            case TransType.None:
+                ChangeScene(transType);
+                break;
+            case TransType.Fade:
+                Instance.FadeTo(TransColor.Black, 2, () => ChangeScene(transType));
+                break;
+        }
+        
+        void ChangeScene(TransType transType)
         {
             // Wait for engine to be ready to switch scene
-            Instance.CallDeferred(nameof(DeferredSwitchScene), name);
-        });
+            Instance.CallDeferred(nameof(DeferredSwitchScene), name, 
+                Variant.From(transType));
+        }
     }
 
-    private void DeferredSwitchScene(string name)
+    private void DeferredSwitchScene(string name, Variant transTypeVariant)
     {
         // Safe to remove scene now
         CurrentScene.Free();
@@ -41,10 +52,19 @@ public partial class SceneManager : Node
         // Optionally, to make it compatible with the SceneTree.change_scene_to_file() API.
         Tree.CurrentScene = CurrentScene;
 
-        FadeTo(TransType.Transparent, 1);
+        var transType = transTypeVariant.As<TransType>();
+
+        switch (transType)
+        {
+            case TransType.None:
+                break;
+            case TransType.Fade:
+                FadeTo(TransColor.Transparent, 1);
+                break;
+        }
     }
 
-    private void FadeTo(TransType transType, double duration, Action finished = null)
+    private void FadeTo(TransColor transColor, double duration, Action finished = null)
     {
         // Add canvas layer to scene
         var canvasLayer = new CanvasLayer
@@ -57,7 +77,7 @@ public partial class SceneManager : Node
         // Setup color rect
         var colorRect = new ColorRect
         {
-            Color = new Color(0, 0, 0, transType == TransType.Black ? 0 : 1),
+            Color = new Color(0, 0, 0, transColor == TransColor.Black ? 0 : 1),
             MouseFilter = Control.MouseFilterEnum.Ignore
         };
 
@@ -68,7 +88,7 @@ public partial class SceneManager : Node
         // Animate color rect
         var tween = new GTween(colorRect);
         tween.Create();
-        tween.Animate("color", new Color(0, 0, 0, transType == TransType.Black ? 1 : 0), duration);
+        tween.Animate("color", new Color(0, 0, 0, transColor == TransColor.Black ? 1 : 0), duration);
         tween.Callback(() =>
         {
             canvasLayer.QueueFree();
@@ -76,7 +96,13 @@ public partial class SceneManager : Node
         });
     }
 
-    private enum TransType
+    public enum TransType
+    {
+        None,
+        Fade
+    }
+
+    private enum TransColor
     {
         Black,
         Transparent
