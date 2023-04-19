@@ -1,0 +1,60 @@
+﻿namespace GodotUtils;
+
+public class GAudioStreamPlayer
+{
+    /// <summary>
+    /// <para>
+    /// Set the volume from a value of 0 to 100
+    /// </para>
+    /// 
+    /// <para>
+    /// The value will be auto converted to values
+    /// Godot can work with
+    /// </para>
+    /// </summary>
+    public float Volume
+    {
+        get => StreamPlayer.VolumeDb.Remap(-40, 0, 0, 100);
+        set
+        {
+            var v = value.Remap(0, 100, -40, 0);
+
+            if (value == 0)
+                v = -80;
+
+            StreamPlayer.VolumeDb = v;
+        }
+    }
+
+    public bool Playing
+    {
+        get => StreamPlayer.Playing;
+        set => StreamPlayer.Playing = value;
+    }
+
+    public AudioStream Stream
+    {
+        get => StreamPlayer.Stream;
+        set => StreamPlayer.Stream = value;
+    }
+
+    public float Pitch
+    {
+        get => StreamPlayer.PitchScale;
+        set => StreamPlayer.PitchScale = value;
+    }
+
+    public AudioStreamPlayer StreamPlayer { get; }
+
+    public GAudioStreamPlayer(Node parent, bool deleteOnFinished = false)
+    {
+        StreamPlayer = new AudioStreamPlayer();
+        
+        if (deleteOnFinished)
+            StreamPlayer.Finished += () => StreamPlayer.QueueFree();
+
+        parent.AddChild(StreamPlayer);
+    }
+
+    public void Play() => StreamPlayer.Play();
+}
