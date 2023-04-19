@@ -3,6 +3,8 @@ namespace GodotUtils;
 // About Scene Switching: https://docs.godotengine.org/en/latest/tutorials/scripting/singletons_autoload.html
 public partial class SceneManager : Node
 {
+    public static event Action<string> SceneChanged;
+
     private static SceneManager Instance     { get; set; }
     private static Node         CurrentScene { get; set; }
     private static SceneTree    Tree         { get; set; }
@@ -17,6 +19,8 @@ public partial class SceneManager : Node
 
     public static void SwitchScene(string name, TransType transType = TransType.None)
     {
+        SceneChanged?.Invoke(name);
+
         switch (transType)
         {
             case TransType.None:
