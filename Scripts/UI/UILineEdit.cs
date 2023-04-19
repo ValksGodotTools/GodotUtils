@@ -4,6 +4,8 @@ public partial class UILineEdit : UIElement
 {
     public Action<string> ValueChanged { get; set; }
 
+    public LineEdit LineEdit { get; set; }
+
     private LineEditOptions Options { get; set; }
     private string PrevText { get; set; } = "";
 
@@ -14,10 +16,10 @@ public partial class UILineEdit : UIElement
 
     public override void CreateUI(HBoxContainer hbox)
     {
-        var lineEdit = Options.LineEdit;
-        lineEdit.CustomMinimumSize = new Vector2(Options.MinElementSize, 0);
+        LineEdit = Options.LineEdit;
+        LineEdit.CustomMinimumSize = new Vector2(Options.MinElementSize, 0);
 
-        lineEdit.TextChanged += text =>
+        LineEdit.TextChanged += text =>
         {
             if (Options.Trimmed)
                 text = text.Trim();
@@ -38,7 +40,7 @@ public partial class UILineEdit : UIElement
             }
         };
 
-        hbox.AddChild(lineEdit);
+        hbox.AddChild(LineEdit);
     }
 }
 

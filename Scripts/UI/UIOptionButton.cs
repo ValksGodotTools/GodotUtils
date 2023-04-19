@@ -4,6 +4,10 @@ public partial class UIOptionButton : UIElement
 {
     public Action<long> ValueChanged { get; set; }
 
+    // Created because "Template" project needed to access a method from the
+    // OptionButton node
+    public OptionButton OptionButton { get; set; }
+    
     private OptionButtonOptions Options { get; set; }
 
     public UIOptionButton(OptionButtonOptions options) : 
@@ -14,16 +18,16 @@ public partial class UIOptionButton : UIElement
 
     public override void CreateUI(HBoxContainer hbox)
     {
-        var optionButton = Options.OptionButton;
-        optionButton.SizeFlagsHorizontal = SizeFlags.ShrinkBegin;
-        optionButton.CustomMinimumSize = new Vector2(Options.MinElementSize, 0);
+        OptionButton = Options.OptionButton;
+        OptionButton.SizeFlagsHorizontal = SizeFlags.ShrinkBegin;
+        OptionButton.CustomMinimumSize = new Vector2(Options.MinElementSize, 0);
 
         foreach (var item in Options.Items)
-            optionButton.AddItem(item.AddSpaceBeforeEachCapital());
+            OptionButton.AddItem(item.AddSpaceBeforeEachCapital());
 
-        optionButton.ItemSelected += item => ValueChanged?.Invoke(item);
+        OptionButton.ItemSelected += item => ValueChanged?.Invoke(item);
 
-        hbox.AddChild(optionButton);
+        hbox.AddChild(OptionButton);
     }
 }
 
