@@ -4,9 +4,10 @@ namespace GodotUtils;
 public partial class SceneManager : Node
 {
     public static event Action<string> SceneChanged;
+    
+    public  static Node         CurrentScene { get; set; }
 
     private static SceneManager Instance     { get; set; }
-    private static Node         CurrentScene { get; set; }
     private static SceneTree    Tree         { get; set; }
 
     public override void _Ready()
