@@ -1,6 +1,6 @@
 ﻿namespace GodotUtils;
 
-public class GAudioStreamPlayer
+public class GAudioPlayer
 {
     /// <summary>
     /// <para>
@@ -46,7 +46,7 @@ public class GAudioStreamPlayer
 
     public AudioStreamPlayer StreamPlayer { get; }
 
-    public GAudioStreamPlayer(Node parent, bool deleteOnFinished = false)
+    public GAudioPlayer(Node parent, bool deleteOnFinished = false)
     {
         StreamPlayer = new AudioStreamPlayer();
         
