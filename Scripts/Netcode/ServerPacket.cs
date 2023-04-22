@@ -1,6 +1,6 @@
-using GodotUtils.Netcode.Client;
-
 namespace GodotUtils.Netcode;
+
+using GodotUtils.Netcode.Client;
 
 public abstract class ServerPacket : GamePacket
 {

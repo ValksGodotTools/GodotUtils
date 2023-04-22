@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿namespace GodotUtils;
+
+using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System.Reflection;
-
-namespace GodotUtils;
 
 public static class ExtensionsJson
 {

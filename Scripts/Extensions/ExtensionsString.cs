@@ -1,7 +1,7 @@
+namespace GodotUtils;
+
 using System.Globalization;
 using System.Text.RegularExpressions;
-
-namespace GodotUtils;
 
 public static class ExtensionsString
 {

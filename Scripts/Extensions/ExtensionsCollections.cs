@@ -1,9 +1,9 @@
+namespace GodotUtils;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-
-namespace GodotUtils;
 
 public static class CollectionExtensions
 {

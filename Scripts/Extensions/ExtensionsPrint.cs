@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json.Serialization;
+﻿namespace GodotUtils;
+
+using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
 using System.Reflection;
-
-namespace GodotUtils;
 
 public static class ExtensionsPrint
 {

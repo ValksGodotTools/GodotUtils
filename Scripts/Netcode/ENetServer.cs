@@ -1,7 +1,7 @@
-﻿using ENet;
-using System.Net.Sockets;
+﻿namespace GodotUtils.Netcode.Server;
 
-namespace GodotUtils.Netcode.Server;
+using ENet;
+using System.Net.Sockets;
 
 // ENet API Reference: https://github.com/SoftwareGuy/ENet-CSharp/blob/master/DOCUMENTATION.md
 public abstract class ENetServer : ENetLow

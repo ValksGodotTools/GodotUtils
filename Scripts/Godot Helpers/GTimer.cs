@@ -1,6 +1,6 @@
-using Timer = Godot.Timer;
-
 namespace GodotUtils;
+
+using Timer = Godot.Timer;
 
 public class GTimer
 {

@@ -1,6 +1,6 @@
-﻿using System.Reflection;
+﻿namespace GodotUtils;
 
-namespace GodotUtils;
+using System.Reflection;
 
 /*
  * Create new Command classes that extend from this to create new commands for

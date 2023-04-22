@@ -1,6 +1,6 @@
-﻿using System.Runtime.InteropServices;
+﻿namespace GodotUtils;
 
-namespace GodotUtils;
+using System.Runtime.InteropServices;
 
 /// <summary>
 /// This script is like the Godot OS class in a way

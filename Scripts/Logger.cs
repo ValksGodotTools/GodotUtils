@@ -1,8 +1,7 @@
-﻿using System.Collections.Concurrent;
+﻿namespace GodotUtils;
+
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-
-namespace GodotUtils;
 
 /*
  * This is meant to replace all GD.Print(...) with Logger.Log(...) to make

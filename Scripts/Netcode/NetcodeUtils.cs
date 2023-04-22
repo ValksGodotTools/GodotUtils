@@ -1,7 +1,7 @@
+namespace GodotUtils;
+
 using System.Reflection;
 using GodotUtils.Netcode;
-
-namespace GodotUtils;
 
 public static class NetcodeUtils
 {
