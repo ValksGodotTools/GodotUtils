@@ -2,6 +2,12 @@
 
 public static class ExtensionsInputEventMouseButton
 {
+    public static bool IsZoomIn(this InputEventMouseButton @event) =>
+        @event.IsPressed(MouseButton.WheelUp);
+
+    public static bool IsZoomOut(this InputEventMouseButton @event) =>
+        @event.IsPressed(MouseButton.WheelDown);
+
     public static bool IsLeftClickPressed(this InputEventMouseButton @event) => 
         @event.IsPressed(MouseButton.Left);
 
