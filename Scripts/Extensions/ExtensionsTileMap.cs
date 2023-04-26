@@ -10,7 +10,7 @@ public static class ExtensionsTileMap
         uint result = 0;
 
         foreach (var layer in layers)
-            result += Math.UIntPow(2, layer - 1);
+            result += GUMath.UIntPow(2, layer - 1);
 
         tileMap.TileSet.SetPhysicsLayerCollisionLayer(0, result);
         tileMap.TileSet.SetPhysicsLayerCollisionMask(0, result);
