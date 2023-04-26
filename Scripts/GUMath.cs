@@ -5,7 +5,7 @@ public static class GUMath
 {
     /// <summary>
     /// <para>Returns the sum of the first n natural numbers</para>
-    /// <para>For example if n = 3 then this would return 1 + 2 + 3</para>
+    /// <para>For example if n = 4 then this would return 0 + 1 + 2 + 3</para>
     /// </summary>
     public static int SumNatrualNumbers(int n) => (n * (n - 1)) / 2;
 
