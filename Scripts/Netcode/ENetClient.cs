@@ -3,31 +3,32 @@
 // ENet API Reference: https://github.com/SoftwareGuy/ENet-CSharp/blob/master/DOCUMENTATION.md
 public abstract class ENetClient : ENetLow
 {
-    private   ConcurrentQueue<ENet.Packet>           Incoming     { get; } = new();
-    protected ConcurrentQueue<ClientPacket>          Outgoing     { get; } = new();
-    private   ConcurrentQueue<PacketData>            GodotPackets { get; } = new();
-    public    ConcurrentQueue<Cmd<GodotOpcode>>      GodotCmds    { get; } = new();
-    private   ConcurrentQueue<Cmd<ENetClientOpcode>> ENetCmds     { get; } = new();
+    public ConcurrentQueue<Cmd<GodotOpcode>> GodotCmds { get; } = new();
+    protected ConcurrentQueue<ClientPacket> Outgoing { get; } = new();
 
-    private ENetOptions Options            { get; set; }
-    private Peer        Peer               { get; set; }
-    private uint        PingInterval       { get; } = 1000;
-    private uint        PeerTimeout        { get; } = 5000;
-    private uint        PeerTimeoutMinimum { get; } = 5000;
-    private uint        PeerTimeoutMaximum { get; } = 5000;
+    private const uint PING_INTERVAL = 1000;
+    private const uint PEER_TIMEOUT = 5000;
+    private const uint PEER_TIMEOUT_MINIMUM = 5000;
+    private const uint PEER_TIMEOUT_MAXIMUM = 5000;
 
-    private long _connected;
+    private readonly ConcurrentQueue<PacketData> godotPackets = new();
+    private readonly ConcurrentQueue<ENet.Packet> incoming = new();
+    private readonly ConcurrentQueue<Cmd<ENetClientOpcode>> eNetCmds = new();
+
+    private ENetOptions options;
+    private Peer peer;
+    private long connected;
 
     static ENetClient()
     {
         ServerPacket.MapOpcodes();
     }
 
-    public bool IsConnected => Interlocked.Read(ref _connected) == 1;
+    public bool IsConnected => Interlocked.Read(ref connected) == 1;
 
     public async void Connect(string ip, ushort port, ENetOptions options = default, params Type[] ignoredPackets)
     {
-        Options = options;
+        this.options = options;
         Starting();
         InitIgnoredPackets(ignoredPackets);
 
@@ -47,7 +48,7 @@ public abstract class ENetClient : ENetLow
 
     public override void Stop()
     {
-        ENetCmds.Enqueue(new Cmd<ENetClientOpcode>(ENetClientOpcode.Disconnect));
+        eNetCmds.Enqueue(new Cmd<ENetClientOpcode>(ENetClientOpcode.Disconnect));
     }
 
     public void Send(ClientPacket packet, PacketFlags flags = PacketFlags.Reliable)
@@ -56,14 +57,14 @@ public abstract class ENetClient : ENetLow
             return;
 
         packet.Write();
-        packet.SetPeer(Peer);
+        packet.SetPeer(peer);
         Outgoing.Enqueue(packet);
     }
 
     protected override void ConcurrentQueues()
     {
         // ENetCmds
-        while (ENetCmds.TryDequeue(out Cmd<ENetClientOpcode> cmd))
+        while (eNetCmds.TryDequeue(out Cmd<ENetClientOpcode> cmd))
         {
             if (cmd.Opcode == ENetClientOpcode.Disconnect)
             {
@@ -73,13 +74,13 @@ public abstract class ENetClient : ENetLow
                     break;
                 }
 
-                Peer.Disconnect(0);
-                DisconnectCleanup(Peer);
+                peer.Disconnect(0);
+                DisconnectCleanup(peer);
             }
         }
 
         // Incoming
-        while (Incoming.TryDequeue(out var packet))
+        while (incoming.TryDequeue(out var packet))
         {
             var packetReader = new PacketReader(packet);
             var opcode = packetReader.ReadByte();
@@ -95,7 +96,7 @@ public abstract class ENetClient : ENetLow
             * the following issue will happen...
             * https://github.com/Valks-Games/Multiplayer-Template/issues/8
             */
-            GodotPackets.Enqueue(new PacketData
+            godotPackets.Enqueue(new PacketData
             {
                 Type = type,
                 PacketReader = packetReader,
@@ -108,9 +109,9 @@ public abstract class ENetClient : ENetLow
         {
             var type = clientPacket.GetType();
 
-            if (!IgnoredPackets.Contains(type) && Options.PrintPacketSent)
+            if (!IgnoredPackets.Contains(type) && options.PrintPacketSent)
                 Log($"Sent packet: {type.Name}" +
-                    $"{(Options.PrintPacketData ? $"\n{clientPacket.PrintFull()}" : "")}");
+                    $"{(options.PrintPacketData ? $"\n{clientPacket.PrintFull()}" : "")}");
 
             clientPacket.Send();
         }
@@ -118,7 +119,7 @@ public abstract class ENetClient : ENetLow
 
     public void HandlePackets()
     {
-        while (GodotPackets.TryDequeue(out PacketData packetData))
+        while (godotPackets.TryDequeue(out PacketData packetData))
         {
             var packetReader = packetData.PacketReader;
             var handlePacket = packetData.HandlePacket;
@@ -129,21 +130,21 @@ public abstract class ENetClient : ENetLow
 
             handlePacket.Handle();
 
-            if (!IgnoredPackets.Contains(type) && Options.PrintPacketReceived)
+            if (!IgnoredPackets.Contains(type) && options.PrintPacketReceived)
                 Log($"Received packet: {type.Name}" +
-                    $"{(Options.PrintPacketData ? $"\n{handlePacket.PrintFull()}" : "")}", LoggerColor.Deepskyblue);
+                    $"{(options.PrintPacketData ? $"\n{handlePacket.PrintFull()}" : "")}", LoggerColor.Deepskyblue);
         }
     }
 
     protected override void Connect(Event netEvent)
     {
-        _connected = 1;
+        connected = 1;
         Log("Client connected to server");
     }
 
     protected override void Disconnect(Event netEvent)
     {
-        DisconnectCleanup(Peer);
+        DisconnectCleanup(peer);
 
         var opcode = (DisconnectOpcode)netEvent.Data;
         Log($"Received disconnect opcode from server: {opcode.ToString().ToLower()}");
@@ -152,7 +153,7 @@ public abstract class ENetClient : ENetLow
 
     protected override void Timeout(Event netEvent)
     {
-        DisconnectCleanup(Peer);
+        DisconnectCleanup(peer);
         Log("Client connection timeout");
     }
 
@@ -166,7 +167,7 @@ public abstract class ENetClient : ENetLow
             return;
         }
 
-        Incoming.Enqueue(packet);
+        incoming.Enqueue(packet);
     }
 
     private void WorkerThread(string ip, ushort port)
@@ -179,9 +180,9 @@ public abstract class ENetClient : ENetLow
         address.SetHost(ip);
         Host.Create();
 
-        Peer = Host.Connect(address);
-        Peer.PingInterval(PingInterval);
-        Peer.Timeout(PeerTimeout, PeerTimeoutMinimum, PeerTimeoutMaximum);
+        peer = Host.Connect(address);
+        peer.PingInterval(PING_INTERVAL);
+        peer.Timeout(PEER_TIMEOUT, PEER_TIMEOUT_MINIMUM, PEER_TIMEOUT_MAXIMUM);
 
         WorkerLoop();
 
@@ -192,7 +193,7 @@ public abstract class ENetClient : ENetLow
     protected override void DisconnectCleanup(Peer peer)
     {
         base.DisconnectCleanup(peer);
-        _connected = 0;
+        connected = 0;
     }
 
     public override void Log(object message, LoggerColor color = LoggerColor.Aqua) => 

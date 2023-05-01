@@ -2,7 +2,6 @@
 
 public class PrevCurQueue<T>
 {
-    private List<T> Data { get; } = new();
     public float Progress { get; private set; }
 
     public T Previous { get; set; }
@@ -17,31 +16,32 @@ public class PrevCurQueue<T>
      */
     public bool KeepUpdating { get; set; }
 
-    private int Interval { get; set; }
+    private readonly List<T> data = new();
+    private int interval;
 
     public PrevCurQueue(int interval)
     {
-        Interval = interval;
+        this.interval = interval;
         Current = default(T);
     }
 
     public void Add(T data)
     {
         Progress = 0; // reset progress as this is new incoming data
-        Data.Add(data);
+        this.data.Add(data);
 
-        if (Data.Count > 2) // only keep track of previous and current
-            Data.RemoveAt(0);
+        if (this.data.Count > 2) // only keep track of previous and current
+            this.data.RemoveAt(0);
 
-        if (Data.Count == 1)
+        if (this.data.Count == 1)
         {
-            Previous = Data[0];
+            Previous = this.data[0];
         }
 
-        if (Data.Count == 2)
+        if (this.data.Count == 2)
         {
-            Previous = Data[0];
-            Current = Data[1];
+            Previous = this.data[0];
+            Current = this.data[1];
         }
     }
 
@@ -72,5 +72,5 @@ public class PrevCurQueue<T>
     }
 
     private void AddToProgress(double delta) =>
-        Progress += (float)delta * (1000f / Interval);
+        Progress += (float)delta * (1000f / interval);
 }

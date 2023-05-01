@@ -2,7 +2,7 @@
 
 public static class ExtensionsTextEdit
 {
-    private static Dictionary<ulong, string> PrevTexts { get; } = new();
+    private static readonly Dictionary<ulong, string> prevTexts = new();
 
     public static string Filter(this TextEdit textEdit, Func<string, bool> filter)
     {
@@ -10,21 +10,21 @@ public static class ExtensionsTextEdit
         var id = textEdit.GetInstanceId();
 
         if (string.IsNullOrWhiteSpace(text))
-            return PrevTexts.ContainsKey(id) ? PrevTexts[id] : null;
+            return prevTexts.ContainsKey(id) ? prevTexts[id] : null;
 
         if (!filter(text))
         {
-            if (!PrevTexts.ContainsKey(id))
+            if (!prevTexts.ContainsKey(id))
             {
                 textEdit.ChangeTextEditText("");
                 return null;
             }
 
-            textEdit.ChangeTextEditText(PrevTexts[id]);
-            return PrevTexts[id];
+            textEdit.ChangeTextEditText(prevTexts[id]);
+            return prevTexts[id];
         }
 
-        PrevTexts[id] = text;
+        prevTexts[id] = text;
         return text;
     }
     private static void ChangeTextEditText(this TextEdit textEdit, string text)

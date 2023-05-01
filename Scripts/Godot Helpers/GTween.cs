@@ -2,27 +2,27 @@
 
 public class GTween
 {
-    private Tween Tween { get; set; }
-    private Node  Node  { get; }
+    private Tween tween;
+    private Node node;
 
-    public GTween(Node node) => Node = node;
+    public GTween(Node node) => this.node = node;
 
     public void Create()
     {
         Kill();
-        Tween = Node.CreateTween();
+        tween = node.CreateTween();
     }
 
     public PropertyTweener Animate(NodePath prop, Variant finalValue, double duration, bool parallel = false)
     {
         if (parallel)
-            return Tween.Parallel().TweenProperty(Node, prop, finalValue, duration);
+            return tween.Parallel().TweenProperty(node, prop, finalValue, duration);
         else
-            return Tween.TweenProperty(Node, prop, finalValue, duration);
+            return tween.TweenProperty(node, prop, finalValue, duration);
     }
 
     public void Callback(Action callback) =>
-        Tween.TweenCallback(Callable.From(callback));
+        tween.TweenCallback(Callable.From(callback));
 
-    public void Kill() => Tween?.Kill();
+    public void Kill() => tween?.Kill();
 }

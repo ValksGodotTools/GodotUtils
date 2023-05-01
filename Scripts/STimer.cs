@@ -9,20 +9,20 @@ using Object = System.Object;
 /// </summary>
 public class STimer : IDisposable
 {
-    private Timer Timer { get; }
+    private readonly Timer timer;
 
     public STimer(double delayMs, Action action, bool enabled = true, bool autoreset = true)
     {
         void Callback(Object source, ElapsedEventArgs e) => action();
-        Timer = new Timer(delayMs);
-        Timer.Enabled = enabled;
-        Timer.AutoReset = autoreset;
-        Timer.Elapsed += Callback;
+        timer = new Timer(delayMs);
+        timer.Enabled = enabled;
+        timer.AutoReset = autoreset;
+        timer.Elapsed += Callback;
     }
 
-    public void Start() => Timer.Enabled = true;
-    public void Stop() => Timer.Enabled = false;
-    public void SetDelay(double delayMs) => Timer.Interval = delayMs;
+    public void Start() => timer.Enabled = true;
+    public void Stop() => timer.Enabled = false;
+    public void SetDelay(double delayMs) => timer.Interval = delayMs;
 
-    public void Dispose() => Timer.Dispose();
+    public void Dispose() => timer.Dispose();
 }

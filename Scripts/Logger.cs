@@ -11,13 +11,13 @@ using System.Runtime.CompilerServices;
  */
 public static class Logger
 {
-    private static ConcurrentQueue<LogInfo> Messages { get; } = new();
+    private static readonly ConcurrentQueue<LogInfo> messages = new();
 
     /// <summary>
     /// Log a message
     /// </summary>
     public static void Log(object message, LoggerColor color = LoggerColor.Gray) =>
-        Messages.Enqueue(new LogInfo(LoggerOpcode.Message, new LogMessage($"{message}"), color));
+        messages.Enqueue(new LogInfo(LoggerOpcode.Message, new LogMessage($"{message}"), color));
 
     /// <summary>
     /// Log a warning
@@ -70,14 +70,14 @@ public static class Logger
     /// <summary>
     /// Checks to see if there are any messages left in the queue
     /// </summary>
-    public static bool StillWorking() => !Messages.IsEmpty;
+    public static bool StillWorking() => !messages.IsEmpty;
 
     /// <summary>
     /// Dequeues a Requested Message and Logs it
     /// </summary>
     public static void Update()
     {
-        if (!Messages.TryDequeue(out LogInfo result))
+        if (!messages.TryDequeue(out LogInfo result))
             return;
 
         switch (result.Opcode)
@@ -130,7 +130,7 @@ public static class Logger
             tracePath = $"  at {elements[elements.Length - 1]}:{lineNumber}";
         }
 
-        Messages.Enqueue(
+        messages.Enqueue(
             new LogInfo(opcode, 
                 new LogMessageTrace(
                     message, 

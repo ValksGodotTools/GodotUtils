@@ -5,16 +5,16 @@ public partial class SceneManager : Node
 {
     public static event Action<string> SceneChanged;
     
-    public  static Node         CurrentScene { get; set; }
+    public static Node CurrentScene { get; set; }
 
-    private static SceneManager Instance     { get; set; }
-    private static SceneTree    Tree         { get; set; }
+    private static SceneManager instance;
+    private static SceneTree tree;
 
     public override void _Ready()
     {
-        Instance = this;
-        Tree = GetTree();
-        var root = Tree.Root;
+        instance = this;
+        tree = GetTree();
+        var root = tree.Root;
         CurrentScene = root.GetChild(root.GetChildCount() - 1);
     }
 
@@ -28,14 +28,14 @@ public partial class SceneManager : Node
                 ChangeScene(transType);
                 break;
             case TransType.Fade:
-                Instance.FadeTo(TransColor.Black, 2, () => ChangeScene(transType));
+                instance.FadeTo(TransColor.Black, 2, () => ChangeScene(transType));
                 break;
         }
         
         void ChangeScene(TransType transType)
         {
             // Wait for engine to be ready to switch scene
-            Instance.CallDeferred(nameof(DeferredSwitchScene), name, 
+            instance.CallDeferred(nameof(DeferredSwitchScene), name, 
                 Variant.From(transType));
         }
     }
@@ -52,10 +52,10 @@ public partial class SceneManager : Node
         CurrentScene = nextScene.Instantiate();
 
         // Add it to the active scene, as child of root.
-        Tree.Root.AddChild(CurrentScene);
+        tree.Root.AddChild(CurrentScene);
 
         // Optionally, to make it compatible with the SceneTree.change_scene_to_file() API.
-        Tree.CurrentScene = CurrentScene;
+        tree.CurrentScene = CurrentScene;
 
         var transType = transTypeVariant.As<TransType>();
 

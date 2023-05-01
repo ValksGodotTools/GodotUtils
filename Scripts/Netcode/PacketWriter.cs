@@ -5,40 +5,38 @@ using System.Reflection;
 
 public class PacketWriter : IDisposable
 {
-    public  MemoryStream Stream { get; } = new();
-    private BinaryWriter Writer { get; }
+    public MemoryStream Stream { get; } = new();
 
-    public PacketWriter()
-    {
-        Writer = new BinaryWriter(Stream);
-    }
+    private readonly BinaryWriter writer;
 
-    public void Write(byte v) => Writer.Write(v);
-    public void Write(sbyte v) => Writer.Write(v);
-    public void Write(char v) => Writer.Write(v);
-    public void Write(string v) => Writer.Write(v);
-    public void Write(bool v) => Writer.Write(v);
-    public void Write(short v) => Writer.Write(v);
-    public void Write(ushort v) => Writer.Write(v);
-    public void Write(int v) => Writer.Write(v);
-    public void Write(uint v) => Writer.Write(v);
-    public void Write(float v) => Writer.Write(v);
-    public void Write(double v) => Writer.Write(v);
-    public void Write(long v) => Writer.Write(v);
-    public void Write(ulong v) => Writer.Write(v);
+    public PacketWriter() => writer = new BinaryWriter(Stream);
+
+    public void Write(byte v) => writer.Write(v);
+    public void Write(sbyte v) => writer.Write(v);
+    public void Write(char v) => writer.Write(v);
+    public void Write(string v) => writer.Write(v);
+    public void Write(bool v) => writer.Write(v);
+    public void Write(short v) => writer.Write(v);
+    public void Write(ushort v) => writer.Write(v);
+    public void Write(int v) => writer.Write(v);
+    public void Write(uint v) => writer.Write(v);
+    public void Write(float v) => writer.Write(v);
+    public void Write(double v) => writer.Write(v);
+    public void Write(long v) => writer.Write(v);
+    public void Write(ulong v) => writer.Write(v);
 
     public void Write(byte[] v, bool header = true)
     {
         if (header)
             Write(v.Length);
 
-        Writer.Write(v);
+        writer.Write(v);
     }
 
     public void Write(Vector2 v)
     {
-        Writer.Write(v.X);
-        Writer.Write(v.Y);
+        writer.Write(v.X);
+        writer.Write(v.Y);
     }
 
     public void Write<T>(T v)
@@ -123,6 +121,6 @@ public class PacketWriter : IDisposable
     public void Dispose()
     {
         Stream.Dispose();
-        Writer.Dispose();
+        writer.Dispose();
     }
 }

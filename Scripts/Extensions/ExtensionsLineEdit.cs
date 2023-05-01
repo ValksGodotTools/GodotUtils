@@ -2,8 +2,8 @@ namespace GodotUtils;
 
 public static class ExtensionsLineEdit
 {
-    private static Dictionary<ulong, string> PrevTexts { get; } = new();
-    private static Dictionary<ulong, int> PrevNums { get; } = new();
+    private static readonly Dictionary<ulong, string> prevTexts = new();
+    private static readonly Dictionary<ulong, int> prevNums = new();
 
     public static string Filter(this LineEdit lineEdit, Func<string, bool> filter)
     {
@@ -11,21 +11,21 @@ public static class ExtensionsLineEdit
         var id = lineEdit.GetInstanceId();
 
         if (string.IsNullOrWhiteSpace(text))
-            return PrevTexts.ContainsKey(id) ? PrevTexts[id] : null;
+            return prevTexts.ContainsKey(id) ? prevTexts[id] : null;
 
         if (!filter(text))
         {
-            if (!PrevTexts.ContainsKey(id))
+            if (!prevTexts.ContainsKey(id))
             {
                 lineEdit.ChangeLineEditText("");
                 return null;
             }
 
-            lineEdit.ChangeLineEditText(PrevTexts[id]);
-            return PrevTexts[id];
+            lineEdit.ChangeLineEditText(prevTexts[id]);
+            return prevTexts[id];
         }
 
-        PrevTexts[id] = text;
+        prevTexts[id] = text;
         return text;
     }
 
@@ -45,7 +45,7 @@ public static class ExtensionsLineEdit
         if (!int.TryParse(text.Trim(), out int num))
         {
             // No keys are in the dictionary for the first case, so handle this by returning 0
-            if (!PrevNums.ContainsKey(id))
+            if (!prevNums.ContainsKey(id))
             {
                 lineEdit.ChangeLineEditText("");
                 return 0;
@@ -63,19 +63,19 @@ public static class ExtensionsLineEdit
             }
 
             // Text is '123', user types a letter -> returns "123"
-            lineEdit.ChangeLineEditText($"{PrevNums[id]}");
-            return PrevNums[id];
+            lineEdit.ChangeLineEditText($"{prevNums[id]}");
+            return prevNums[id];
         }
 
         // Not sure why this is here but I'm sure it's here for a good reason
         if (text.Length > maxRange.ToString().Length && num <= maxRange)
         {
             var spliced = text.Remove(text.Length - 1);
-            PrevNums[id] = int.Parse(spliced);
+            prevNums[id] = int.Parse(spliced);
 
             lineEdit.Text = spliced;
             lineEdit.CaretColumn = spliced.Length;
-            return PrevNums[id];
+            return prevNums[id];
         }
 
         // Text is at max range, return max range text if greater than max range
@@ -86,7 +86,7 @@ public static class ExtensionsLineEdit
         }
 
         // Keep track of the previous number
-        PrevNums[id] = num;
+        prevNums[id] = num;
         return num;
     }
 

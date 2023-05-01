@@ -2,6 +2,7 @@ namespace GodotUtils.World2D.Platformer;
 
 public partial class CameraController : Camera2D
 {
+    // Might convert these to [Export]s later thus they should stay as props
     private float ZoomIncrement      { get; set; } = 0.08f;
     private float MinZoom            { get; set; } = 1.5f;
     private float MaxZoom            { get; set; } = 3.0f;

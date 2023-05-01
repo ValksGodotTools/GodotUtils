@@ -22,20 +22,20 @@ public partial class CameraController : Node
     [Export(PropertyHint.Range, "0.01, 1")] 
     private float SmoothFactor { get; set; } = 0.25f;
 
-    private float ZoomIncrement { get; set; } = 0.02f;
-    private float TargetZoom { get; set; }
+    private float zoomIncrement = 0.02f;
+    private float targetZoom;
 
     // Panning
-    private Vector2 InitialPanPosition { get; set; }
-    private bool Panning { get; set; }
-    private Camera2D Camera { get; set; }
+    private Vector2 initialPanPosition;
+    private bool panning;
+    private Camera2D camera;
 
     public override void _Ready()
     {
-        Camera = GetParent<Camera2D>();
+        camera = GetParent<Camera2D>();
 
         // Set the initial target zoom value on game start
-        TargetZoom = Camera.Zoom.X;
+        targetZoom = camera.Zoom.X;
     }
 
     public override void _Process(double delta)
@@ -57,20 +57,20 @@ public partial class CameraController : Node
         if (GInput.IsMovingDown())
             dir.Y += 1;
         
-        if (Panning)
-            Camera.Position = InitialPanPosition - (GetViewport().GetMousePosition() / Camera.Zoom.X);
+        if (panning)
+            camera.Position = initialPanPosition - (GetViewport().GetMousePosition() / camera.Zoom.X);
 
         // Arrow keys and WASD movement are added onto the panning position changes
-        Camera.Position += dir.Normalized() * Speed;
+        camera.Position += dir.Normalized() * Speed;
     }
 
     public override void _PhysicsProcess(double delta)
     {
         // Prevent zoom from becoming too fast when zooming out
-        ZoomIncrement = ZoomIncrementDefault * Camera.Zoom.X;
+        zoomIncrement = ZoomIncrementDefault * camera.Zoom.X;
 
         // Lerp to the target zoom for a smooth effect
-        Camera.Zoom = Camera.Zoom.Lerp(new Vector2(TargetZoom, TargetZoom), SmoothFactor);
+        camera.Zoom = camera.Zoom.Lerp(new Vector2(targetZoom, targetZoom), SmoothFactor);
     }
 
     // Not sure if this should be done in _Input or _UnhandledInput
@@ -96,12 +96,12 @@ public partial class CameraController : Node
         if (@event.IsPressed())
         {
             // Save the intial position
-            InitialPanPosition = Camera.Position + (GetViewport().GetMousePosition() / Camera.Zoom.X);
-            Panning = true;
+            initialPanPosition = camera.Position + (GetViewport().GetMousePosition() / camera.Zoom.X);
+            panning = true;
         }
         else
             // Only stop panning once left click has been released
-            Panning = false;
+            panning = false;
     }
 
     private void HandleZoom(InputEventMouseButton @event)
@@ -112,13 +112,13 @@ public partial class CameraController : Node
 
         // Zoom in
         if (@event.ButtonIndex == MouseButton.WheelUp)
-            TargetZoom += ZoomIncrement;
+            targetZoom += zoomIncrement;
 
         // Zoom out
         if (@event.ButtonIndex == MouseButton.WheelDown)
-            TargetZoom -= ZoomIncrement;
+            targetZoom -= zoomIncrement;
 
         // Clamp the zoom
-        TargetZoom = Mathf.Clamp(TargetZoom, MinZoom, MaxZoom);
+        targetZoom = Mathf.Clamp(targetZoom, MinZoom, MaxZoom);
     }
 }

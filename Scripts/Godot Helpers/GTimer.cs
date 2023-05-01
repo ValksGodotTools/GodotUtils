@@ -4,18 +4,18 @@ using Timer = Godot.Timer;
 
 public class GTimer
 {
-    private Timer Timer { get; } = new();
-    private Callable Callable { get; }
+    private readonly Timer timer = new();
+    private Callable callable;
 
     public double TimeLeft
     {
-        get { return Timer.TimeLeft; }
+        get => timer.TimeLeft;
     }
 
     public bool Loop
     {
-        get { return !Timer.OneShot; }
-        set { Timer.OneShot = !value; }
+        get => !timer.OneShot;
+        set => timer.OneShot = !value;
     }
 
     public GTimer(Node node, double delayMs = 1000) =>
@@ -24,21 +24,21 @@ public class GTimer
     public GTimer(Node node, Action action, double delayMs = 1000)
     {
         Init(node, delayMs);
-        Callable = Callable.From(action);
-        Timer.Connect("timeout", Callable);
+        callable = Callable.From(action);
+        timer.Connect("timeout", callable);
     }
 
     private void Init(Node target, double delayMs)
     {
-        Timer.OneShot = true; // make non-looping by default
-        Timer.Autostart = false; // make non-auto-start by default
-        Timer.WaitTime = delayMs / 1000;
-        target.AddChild(Timer);
+        timer.OneShot = true; // make non-looping by default
+        timer.Autostart = false; // make non-auto-start by default
+        timer.WaitTime = delayMs / 1000;
+        target.AddChild(timer);
     }
 
-    public bool IsActive() => Timer.TimeLeft != 0;
+    public bool IsActive() => timer.TimeLeft != 0;
 
-    public void SetDelayMs(int delayMs) => Timer.WaitTime = delayMs / 1000f;
+    public void SetDelayMs(int delayMs) => timer.WaitTime = delayMs / 1000f;
 
     /// <summary>
     /// Start the timer. Starting the timer while it is active already will reset
@@ -47,18 +47,18 @@ public class GTimer
     public void StartMs(float delayMs = -1)
     {
         if (delayMs != -1)
-            Timer.WaitTime = delayMs / 1000;
+            timer.WaitTime = delayMs / 1000;
 
-        Timer.Start();
+        timer.Start();
     }
 
     public void Stop()
     {
-        Timer.Stop();
+        timer.Stop();
 
-        if (!Callable.Equals(default(Callable)))
-            Callable.Call();
+        if (!callable.Equals(default(Callable)))
+            callable.Call();
     }
 
-    public void QueueFree() => Timer.QueueFree();
+    public void QueueFree() => timer.QueueFree();
 }

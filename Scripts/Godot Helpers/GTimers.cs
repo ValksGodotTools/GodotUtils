@@ -2,14 +2,13 @@
 
 public class GTimers
 {
-    private Node Node { get; set; }
+    private Node node;
 
-    public GTimers(Node node) => Node = node;
+    public GTimers(Node node) => this.node = node;
 
-    public GTimer CreateTimer(int delayMS) =>
-        new GTimer(Node, delayMS);
+    public GTimer CreateTimer(int delayMS) => new GTimer(node, delayMS);
 
     public GTimer CreateTimer(Action action, int delayMS) =>
-        new GTimer(Node, action, delayMS);
+        new GTimer(node, action, delayMS);
 }
 

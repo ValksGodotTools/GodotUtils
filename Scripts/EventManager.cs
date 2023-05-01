@@ -30,7 +30,7 @@ namespace GodotUtils;
 /// <typeparam name="TEvent">The event type enum to be used. For example 'EventPlayer' enum.</typeparam>
 public class EventManager<TEvent>
 {
-    private Dictionary<TEvent, List<object>> Listeners { get; set; } = new();
+    private readonly Dictionary<TEvent, List<object>> listeners = new();
 
     /// <summary>
     /// The event type to be listened to (Action uses object[] params by default)
@@ -40,10 +40,10 @@ public class EventManager<TEvent>
 
     public void AddListener<T>(TEvent eventType, Action<T> action, string id = "")
     {
-        if (!Listeners.ContainsKey(eventType))
-            Listeners.Add(eventType, new List<object>());
+        if (!listeners.ContainsKey(eventType))
+            listeners.Add(eventType, new List<object>());
 
-        Listeners[eventType].Add(new Listener(action, id));
+        listeners[eventType].Add(new Listener(action, id));
     }
 
     /// <summary>
@@ -53,10 +53,10 @@ public class EventManager<TEvent>
     /// </summary>
     public void RemoveListeners(TEvent eventType, string id = "")
     {
-        if (!Listeners.ContainsKey(eventType))
+        if (!listeners.ContainsKey(eventType))
             throw new InvalidOperationException($"Tried to remove listener of event type '{eventType}' from an event type that has not even been defined yet");
 
-        foreach (var pair in Listeners)
+        foreach (var pair in listeners)
             for (int i = pair.Value.Count - 1; i >= 0; i--)
                 if (pair.Key.Equals(eventType) && ((Listener)pair.Value[i]).Id == id)
                     pair.Value.RemoveAt(i);
@@ -65,17 +65,17 @@ public class EventManager<TEvent>
     /// <summary>
     /// Remove ALL listeners from ALL event types
     /// </summary>
-    public void RemoveAllListeners() => Listeners.Clear();
+    public void RemoveAllListeners() => listeners.Clear();
 
     /// <summary>
     /// Notify all listeners
     /// </summary>
     public void Notify(TEvent eventType, params object[] args)
     {
-        if (!Listeners.ContainsKey(eventType))
+        if (!listeners.ContainsKey(eventType))
             return;
 
-        foreach (dynamic listener in Listeners[eventType].ToList()) // if ToList() is not here then issue #137 will occur
+        foreach (dynamic listener in listeners[eventType].ToList()) // if ToList() is not here then issue #137 will occur
             listener.Action(args);
     }
 }

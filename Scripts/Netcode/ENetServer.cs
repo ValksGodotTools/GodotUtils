@@ -6,13 +6,14 @@ using System.Net.Sockets;
 // ENet API Reference: https://github.com/SoftwareGuy/ENet-CSharp/blob/master/DOCUMENTATION.md
 public abstract class ENetServer : ENetLow
 {
-    private   ConcurrentQueue<(Packet, Peer)>        Incoming    { get; } = new();
-    private   ConcurrentQueue<ServerPacket>          Outgoing    { get; } = new();
-    private   ConcurrentQueue<Cmd<ENetServerOpcode>> ENetCmds    { get; } = new();
+    public Dictionary<uint, Peer> Peers { get; } = new();
+    protected STimer EmitLoop { get; set; }
+
+    private readonly ConcurrentQueue<(Packet, Peer)> incoming = new();
+    private readonly ConcurrentQueue<ServerPacket> outgoing = new();
+    private readonly ConcurrentQueue<Cmd<ENetServerOpcode>> enetCmds = new();
     
-    public    Dictionary<uint, Peer> Peers          { get; } = new();
-    protected STimer                 EmitLoop       { get; set; }
-    private   ENetOptions            Options        { get; set; }
+    private ENetOptions options;
 
     static ENetServer()
     {
@@ -28,7 +29,7 @@ public abstract class ENetServer : ENetLow
 
     public async void Start(ushort port, int maxClients, ENetOptions options, params Type[] ignoredPackets)
     {
-        Options = options;
+        this.options = options;
         Starting();
         InitIgnoredPackets(ignoredPackets);
         EmitLoop.Start();
@@ -49,16 +50,16 @@ public abstract class ENetServer : ENetLow
     public void Ban(uint id) => Kick(id, DisconnectOpcode.Banned);
     public void BanAll() => KickAll(DisconnectOpcode.Banned);
     public void KickAll(DisconnectOpcode opcode) => 
-        ENetCmds.Enqueue(new Cmd<ENetServerOpcode>(ENetServerOpcode.KickAll, opcode));
+        enetCmds.Enqueue(new Cmd<ENetServerOpcode>(ENetServerOpcode.KickAll, opcode));
     public void Kick(uint id, DisconnectOpcode opcode) =>
-        ENetCmds.Enqueue(new Cmd<ENetServerOpcode>(ENetServerOpcode.Kick, id, opcode));
+        enetCmds.Enqueue(new Cmd<ENetServerOpcode>(ENetServerOpcode.Kick, id, opcode));
 
     public override void Stop()
     {
         Stopping();
         EmitLoop.Stop();
         EmitLoop.Dispose();
-        ENetCmds.Enqueue(new Cmd<ENetServerOpcode>(ENetServerOpcode.Stop));
+        enetCmds.Enqueue(new Cmd<ENetServerOpcode>(ENetServerOpcode.Stop));
     }
 
     protected virtual void Stopping() { }
@@ -72,9 +73,9 @@ public abstract class ENetServer : ENetLow
 
         var type = packet.GetType();
 
-        if (!IgnoredPackets.Contains(type) && Options.PrintPacketSent)
-            Log($"Sending packet {type.Name} {(Options.PrintPacketByteSize ? $"({packet.GetSize()} bytes)" : "")}to peer {peer.ID}" +
-                $"{(Options.PrintPacketData ? $"\n{packet.PrintFull()}" : "")}");
+        if (!IgnoredPackets.Contains(type) && options.PrintPacketSent)
+            Log($"Sending packet {type.Name} {(options.PrintPacketByteSize ? $"({packet.GetSize()} bytes)" : "")}to peer {peer.ID}" +
+                $"{(options.PrintPacketData ? $"\n{packet.PrintFull()}" : "")}");
 
         packet.SetSendType(SendType.Peer);
         packet.SetPeer(peer);
@@ -94,11 +95,11 @@ public abstract class ENetServer : ENetLow
 
         var type = packet.GetType();
 
-        if (!IgnoredPackets.Contains(type) && Options.PrintPacketSent)
+        if (!IgnoredPackets.Contains(type) && options.PrintPacketSent)
         {
             // This is messy but I don't know how I will clean it up right now so
             // I'm leaving it as is for now..
-            var byteSize = Options.PrintPacketByteSize ? $"({packet.GetSize()} bytes)" 
+            var byteSize = options.PrintPacketByteSize ? $"({packet.GetSize()} bytes)" 
                 : "";
             
             var start = $"Broadcasting packet {type.Name} {byteSize}";
@@ -107,7 +108,7 @@ public abstract class ENetServer : ENetLow
 
             var middle = "";
 
-            var end = Options.PrintPacketData ? $"\n{packet.PrintFull()}" : "";
+            var end = options.PrintPacketData ? $"\n{packet.PrintFull()}" : "";
 
             if (peers.Count() == 0)
                 middle = "to everyone";
@@ -131,13 +132,13 @@ public abstract class ENetServer : ENetLow
 
     private void EnqueuePacket(ServerPacket packet)
     {
-        Outgoing.Enqueue(packet);
+        outgoing.Enqueue(packet);
     }
 
     protected override void ConcurrentQueues()
     {
         // ENet Cmds
-        while (ENetCmds.TryDequeue(out Cmd<ENetServerOpcode> cmd))
+        while (enetCmds.TryDequeue(out Cmd<ENetServerOpcode> cmd))
         {
             if (cmd.Opcode == ENetServerOpcode.Stop)
             {
@@ -196,7 +197,7 @@ public abstract class ENetServer : ENetLow
         }
 
         // Incoming
-        while (Incoming.TryDequeue(out (ENet.Packet, Peer) packetPeer))
+        while (incoming.TryDequeue(out (ENet.Packet, Peer) packetPeer))
         {
             var packetReader = new PacketReader(packetPeer.Item1);
             var opcode = packetReader.ReadByte();
@@ -222,13 +223,13 @@ public abstract class ENetServer : ENetLow
 
             handlePacket.Handle(packetPeer.Item2);
 
-            if (!IgnoredPackets.Contains(type) && Options.PrintPacketReceived)
+            if (!IgnoredPackets.Contains(type) && options.PrintPacketReceived)
                 Log($"Received packet: {type.Name} from peer {packetPeer.Item2.ID}" +
-                    $"{(Options.PrintPacketData ? $"\n{handlePacket.PrintFull()}" : "")}", LoggerColor.LightGreen);
+                    $"{(options.PrintPacketData ? $"\n{handlePacket.PrintFull()}" : "")}", LoggerColor.LightGreen);
         }
 
         // Outgoing
-        while (Outgoing.TryDequeue(out ServerPacket packet))
+        while (outgoing.TryDequeue(out ServerPacket packet))
         {
             var sendType = packet.GetSendType();
 
@@ -276,7 +277,7 @@ public abstract class ENetServer : ENetLow
             return;
         }
 
-        Incoming.Enqueue((packet, netEvent.Peer));
+        incoming.Enqueue((packet, netEvent.Peer));
     }
 
     private void WorkerThread(ushort port, int maxClients)
