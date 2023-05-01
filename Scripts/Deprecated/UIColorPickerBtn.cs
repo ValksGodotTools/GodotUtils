@@ -1,33 +1,34 @@
-﻿namespace GodotUtils;
+﻿namespace GodotUtils.Deprecated;
 
 public partial class UIColorPickerBtn : UIElement
 {
-    public Action<Color> ValueChanged { get; set; }
-    private ColorPickerBtnOptions Options { get; set; }
-    private Color Color { get; set; }
+    public event Action<Color> ValueChanged;
+
+    private ColorPickerBtnOptions options;
+    private Color color;
 
     public UIColorPickerBtn(ColorPickerBtnOptions options) : base(options)
     {
-        Options = options;
+        this.options = options;
     }
 
     public override void CreateUI(HBoxContainer hbox)
     {
-        var colorPicker = Options.ColorPickerButton;
+        var colorPicker = options.ColorPickerButton;
         colorPicker.CustomMinimumSize = new Vector2(100, 0);
 
         colorPicker.ColorChanged += color =>
         {
-            Color = color;
+            this.color = color;
 
-            if (!Options.OnlyUpdateOnPopupClosed)
+            if (!options.OnlyUpdateOnPopupClosed)
                 ValueChanged?.Invoke(color);
         };
 
         colorPicker.PopupClosed += () =>
         {
-            if (Options.OnlyUpdateOnPopupClosed)
-                ValueChanged?.Invoke(Color);
+            if (options.OnlyUpdateOnPopupClosed)
+                ValueChanged?.Invoke(color);
         };
 
         hbox.AddChild(colorPicker);

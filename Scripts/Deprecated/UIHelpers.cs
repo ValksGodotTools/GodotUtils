@@ -1,4 +1,4 @@
-﻿namespace GodotUtils;
+﻿namespace GodotUtils.Deprecated;
 
 public static class UIHelpers
 {

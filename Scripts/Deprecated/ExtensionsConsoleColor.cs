@@ -1,5 +1,6 @@
-﻿namespace GodotUtils;
+﻿namespace GodotUtils.Deprecated;
 
+// Even if it is useful, it looks like a eye sore.
 public static class ExtensionsConsoleColor
 {
     public static Color ConvertToGodotColor(this ConsoleColor color)

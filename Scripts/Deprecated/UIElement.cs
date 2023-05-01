@@ -1,4 +1,4 @@
-﻿namespace GodotUtils;
+﻿namespace GodotUtils.Deprecated;
 
 public abstract partial class UIElement : PanelContainer
 {

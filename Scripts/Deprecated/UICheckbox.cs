@@ -1,19 +1,19 @@
-﻿namespace GodotUtils;
+﻿namespace GodotUtils.Deprecated;
 
 public partial class UICheckbox : UIElement
 {
     public Action<bool> ValueChanged { get; set; }
 
-    private CheckboxOptions Options { get; set; }
+    private CheckboxOptions options;
 
     public UICheckbox(CheckboxOptions options) : base(options)
     {
-        Options = options;
+        this.options = options;
     }
 
     public override void CreateUI(HBoxContainer hbox)
     {
-        var checkbox = Options.CheckBox;
+        var checkbox = options.CheckBox;
 
         checkbox.Toggled += value => ValueChanged?.Invoke(value);
 
