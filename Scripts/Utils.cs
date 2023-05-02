@@ -2,6 +2,13 @@
 
 public static class Utils
 {
+    /// <summary>
+    /// <para>Returns a Godot.Color based off rgb ranging from 0 to 255</para>
+    /// <para>The alpha still ranges from 0.0 to 1.0</para>
+    /// </summary>
+    public static Godot.Color Color(int r, int g, int b, float a = 1)
+        => new Color(r / 255f, g / 255f, b / 255f, a);
+
     public static void ValidateNumber(this string value, LineEdit input, int min, int max, ref int prevNum)
     {
         // do NOT use text.Clear() as it will trigger _on_NumAttempts_text_changed and cause infinite loop -> stack overflow
