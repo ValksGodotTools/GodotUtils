@@ -92,9 +92,7 @@ public abstract class ENetClient : ENetLow
             * Instead of packets being handled client-side, they are handled
             * on the Godot thread.
             * 
-            * Note that handlePacket AND packetReader need to be sent over otherwise
-            * the following issue will happen...
-            * https://github.com/Valks-Games/Multiplayer-Template/issues/8
+            * Note that handlePacket AND packetReader need to be sent over
             */
             godotPackets.Enqueue(new PacketData
             {
