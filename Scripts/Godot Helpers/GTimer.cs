@@ -2,6 +2,9 @@ namespace GodotUtils;
 
 using Timer = Godot.Timer;
 
+/// <summary>
+/// Creates a timer that is non-looping and does not start right away by default
+/// </summary>
 public class GTimer
 {
     private readonly Timer timer = new();
@@ -38,13 +41,13 @@ public class GTimer
 
     public bool IsActive() => timer.TimeLeft != 0;
 
-    public void SetDelayMs(int delayMs) => timer.WaitTime = delayMs / 1000f;
+    public void SetDelay(int delayMs) => timer.WaitTime = delayMs / 1000f;
 
     /// <summary>
     /// Start the timer. Starting the timer while it is active already will reset
     /// the timer countdown.
     /// </summary>
-    public void StartMs(float delayMs = -1)
+    public void Start(float delayMs = -1)
     {
         if (delayMs != -1)
             timer.WaitTime = delayMs / 1000;
@@ -61,4 +64,40 @@ public class GTimer
     }
 
     public void QueueFree() => timer.QueueFree();
+}
+
+/// <summary>
+/// Creates a timer that only loops once and starts right away
+/// </summary>
+public class GOneShotTimer : GTimer
+{
+    public GOneShotTimer(Node node, double delayMs = 1000) : base(node, delayMs)
+    {
+        Loop = false;
+        Start();
+    }
+
+    public GOneShotTimer(Node node, Action action, double delayMs = 1000) : base(node, action, delayMs)
+    {
+        Loop = false;
+        Start();
+    }
+}
+
+/// <summary>
+/// Creates a timer that loops and starts right away
+/// </summary>
+public class GRepeatingTimer : GTimer
+{
+    public GRepeatingTimer(Node node, double delayMs = 1000) : base(node, delayMs)
+    {
+        Loop = true;
+        Start();
+    }
+
+    public GRepeatingTimer(Node node, Action action, double delayMs = 1000) : base(node, action, delayMs)
+    {
+        Loop = true;
+        Start();
+    }
 }
