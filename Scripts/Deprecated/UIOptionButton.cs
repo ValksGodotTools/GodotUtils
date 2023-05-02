@@ -4,8 +4,6 @@ public partial class UIOptionButton : UIElement
 {
     public Action<long> ValueChanged { get; set; }
 
-    // Created because "Template" project needed to access a method from the
-    // OptionButton node
     public OptionButton OptionButton { get; set; }
     
     private OptionButtonOptions Options { get; set; }
