@@ -1,6 +1,6 @@
 ﻿namespace GodotUtils;
 
-public static class Utils
+public static class GodotUtilities
 {
     /// <summary>
     /// <para>Returns a Godot.Color based off rgb ranging from 0 to 255</para>
