@@ -3,6 +3,18 @@
 public static class ExtensionsRayCast
 {
     /// <summary>
+    /// Set the provided mask values to true. Everything else will be set to be false.
+    /// </summary>
+    public static void SetCollisionMask(this RayCast2D node, params int[] values)
+    {
+        // Reset all mask values to 0
+        node.CollisionMask = 0;
+
+        foreach (var value in values)
+            node.SetCollisionMaskValue(value, true);
+    }
+
+    /// <summary>
     /// A convience function to tell the raycast to exlude all parents that
     /// are of type CollisionObject2D (for example a ground raycast should
     /// only check for the ground, not the player itself)
