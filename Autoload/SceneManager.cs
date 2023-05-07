@@ -93,7 +93,7 @@ public partial class SceneManager : Node
         // Animate color rect
         var tween = new GTween(colorRect);
         tween.Create();
-        tween.Animate("color", new Color(0, 0, 0, transColor == TransColor.Black ? 1 : 0), duration);
+        tween.AnimateColor(new Color(0, 0, 0, transColor == TransColor.Black ? 1 : 0), duration);
         tween.Callback(() =>
         {
             canvasLayer.QueueFree();
