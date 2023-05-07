@@ -1,5 +1,9 @@
 ﻿namespace GodotUtils;
 
+/// <summary>
+/// The created GTween should be defined in _Ready() if it is going to be re-used
+/// several times with GTween.Create()
+/// </summary>
 public class GTween
 {
     private Tween tween;
