@@ -13,16 +13,24 @@ public class GTween
         tween = node.CreateTween();
     }
 
-    public PropertyTweener Animate(NodePath prop, Variant finalValue, double duration, bool parallel = false)
+    public PropertyTweener AnimateColor(Color color, double duration, bool parallel = false)
     {
-        if (parallel)
-            return tween.Parallel().TweenProperty(node, prop, finalValue, duration);
+        if (node is ColorRect)
+            return Animate("color", color, duration, parallel);
         else
-            return tween.TweenProperty(node, prop, finalValue, duration);
+            return Animate("self_modulate", color, duration, parallel);
     }
 
-    public void Callback(Action callback) =>
+    public PropertyTweener Animate(NodePath prop, Variant finalValue, double duration, bool parallel = false) =>
+        parallel ? 
+            tween.Parallel().TweenProperty(node, prop, finalValue, duration) :
+            tween.TweenProperty(node, prop, finalValue, duration);
+
+    public CallbackTweener Callback(Action callback) =>
         tween.TweenCallback(Callable.From(callback));
 
+    public void Stop() => tween.Stop();
+    public void Pause() => tween.Pause();
+    public void Resume() => tween.Play();
     public void Kill() => tween?.Kill();
 }
