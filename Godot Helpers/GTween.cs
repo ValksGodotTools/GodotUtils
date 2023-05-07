@@ -13,12 +13,21 @@ public class GTween
         tween = node.CreateTween();
     }
 
-    public PropertyTweener AnimateColor(Color color, double duration, bool parallel = false)
+    public PropertyTweener AnimateColor(Color color, double duration, bool modulateChildren = false, bool parallel = false)
     {
         if (node is ColorRect)
             return Animate("color", color, duration, parallel);
         else
-            return Animate("self_modulate", color, duration, parallel);
+        {
+            if (modulateChildren)
+            {
+                return Animate("modulate", color, duration, parallel);
+            }
+            else
+            {
+                return Animate("self_modulate", color, duration, parallel);
+            }
+        }
     }
 
     public PropertyTweener Animate(NodePath prop, Variant finalValue, double duration, bool parallel = false) =>
