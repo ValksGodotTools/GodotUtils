@@ -29,6 +29,7 @@ public class GTween
     public CallbackTweener Callback(Action callback) =>
         tween.TweenCallback(Callable.From(callback));
 
+    public void Finished(Action callback) => tween.Finished += callback;
     public void Stop() => tween.Stop();
     public void Pause() => tween.Pause();
     public void Resume() => tween.Play();
