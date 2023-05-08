@@ -2,10 +2,10 @@
 
 public static class ExtensionsInputEventKey
 {
-    public static bool IsKeyJustPressed(this InputEventKey v, Key key) =>
+    public static bool IsJustPressed(this InputEventKey v, Key key) =>
         v.Keycode == key && v.Pressed && !v.Echo;
 
-    public static bool IsKeyJustReleased(this InputEventKey v, Key key) =>
+    public static bool IsJustReleased(this InputEventKey v, Key key) =>
         v.Keycode == key && !v.Pressed && !v.Echo;
 
     /// <summary>
