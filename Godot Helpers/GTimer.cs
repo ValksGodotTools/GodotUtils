@@ -59,8 +59,9 @@ public class GTimer
     {
         timer.Stop();
 
-        if (!callable.Equals(default(Callable)))
-            callable.Call();
+        // Why did I put this here? I can't remember..
+        //if (!callable.Equals(default(Callable)))
+        //    callable.Call();
     }
 
     public void QueueFree() => timer.QueueFree();
