@@ -36,16 +36,10 @@ public static class ExtensionsAnimatedSprite
     }
 
     public static int GetWidth(this AnimatedSprite2D sprite, string anim) =>
-        sprite.SpriteFrames.GetFrameTexture(anim, 0).GetWidth();
+        (int)(sprite.SpriteFrames.GetFrameTexture(anim, 0).GetWidth() * sprite.Scale.X);
 
     public static int GetHeight(this AnimatedSprite2D sprite, string anim) =>
-        sprite.SpriteFrames.GetFrameTexture(anim, 0).GetHeight();
-
-    public static int GetScaledWidth(this AnimatedSprite2D sprite, string anim) =>
-        (int)(GetWidth(sprite, anim) * sprite.Scale.X);
-
-    public static int GetScaledHeight(this AnimatedSprite2D sprite, string anim) =>
-        (int)(GetHeight(sprite, anim) * sprite.Scale.Y);
+        (int)(sprite.SpriteFrames.GetFrameTexture(anim, 0).GetHeight() * sprite.Scale.Y);
 
     public static Vector2 GetSize(this AnimatedSprite2D sprite, string anim) =>
         sprite.SpriteFrames.GetFrameTexture(anim, 0).GetSize();
