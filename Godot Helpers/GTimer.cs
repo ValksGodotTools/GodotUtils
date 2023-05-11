@@ -7,13 +7,9 @@ using Timer = Godot.Timer;
 /// </summary>
 public class GTimer
 {
-    private readonly Timer timer = new();
-    private Callable callable;
+    public event Action Finished;
 
-    public double TimeLeft
-    {
-        get => timer.TimeLeft;
-    }
+    public double TimeLeft => timer.TimeLeft;
 
     public bool Loop
     {
@@ -21,14 +17,12 @@ public class GTimer
         set => timer.OneShot = !value;
     }
 
-    public GTimer(Node node, double delayMs = 1000) =>
-        Init(node, delayMs);
+    private readonly Timer timer = new();
 
-    public GTimer(Node node, Action action, double delayMs = 1000)
+    public GTimer(Node node, double delayMs = 1000)
     {
         Init(node, delayMs);
-        callable = Callable.From(action);
-        timer.Connect("timeout", callable);
+        timer.Timeout += () => Finished?.Invoke();
     }
 
     private void Init(Node target, double delayMs)
@@ -62,6 +56,11 @@ public class GTimer
         // Why did I put this here? I can't remember..
         //if (!callable.Equals(default(Callable)))
         //    callable.Call();
+
+        // Now with new code, above is equivelent to Finished?.Invoke();
+        // I'm pretty sure anyways. Hard to know without knowing why I added
+        // the above in the first place. To call the callback when timer finished
+        // but why?
     }
 
     public void QueueFree() => timer.QueueFree();
@@ -77,12 +76,6 @@ public class GOneShotTimer : GTimer
         Loop = false;
         Start();
     }
-
-    public GOneShotTimer(Node node, Action action, double delayMs = 1000) : base(node, action, delayMs)
-    {
-        Loop = false;
-        Start();
-    }
 }
 
 /// <summary>
@@ -91,12 +84,6 @@ public class GOneShotTimer : GTimer
 public class GRepeatingTimer : GTimer
 {
     public GRepeatingTimer(Node node, double delayMs = 1000) : base(node, delayMs)
-    {
-        Loop = true;
-        Start();
-    }
-
-    public GRepeatingTimer(Node node, Action action, double delayMs = 1000) : base(node, action, delayMs)
     {
         Loop = true;
         Start();
