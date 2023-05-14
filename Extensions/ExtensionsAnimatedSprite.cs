@@ -42,9 +42,7 @@ public static class ExtensionsAnimatedSprite
     /// </summary>
     public static void PlayRandom(this AnimatedSprite2D sprite, string anim = "")
     {
-        if (string.IsNullOrWhiteSpace(anim))
-            anim = sprite.Animation;
-
+        anim = string.IsNullOrWhiteSpace(anim) ? sprite.Animation : anim;
         sprite.InstantPlay(anim);
         sprite.Frame = GD.RandRange(0, sprite.SpriteFrames.GetFrameCount(anim));
     }
@@ -54,10 +52,9 @@ public static class ExtensionsAnimatedSprite
     /// </summary>
     public static int GetWidth(this AnimatedSprite2D sprite, string anim = "")
     {
-        if (string.IsNullOrWhiteSpace(anim))
-            anim = sprite.Animation;
-
-        return (int)(sprite.SpriteFrames.GetFrameTexture(anim, 0).GetWidth() * sprite.Scale.X);
+        anim = string.IsNullOrWhiteSpace(anim) ? sprite.Animation : anim;
+        return (int)(sprite.SpriteFrames.GetFrameTexture(anim, 0).GetWidth() * 
+            sprite.Scale.X);
     }
 
     /// <summary>
@@ -65,10 +62,9 @@ public static class ExtensionsAnimatedSprite
     /// </summary>
     public static int GetHeight(this AnimatedSprite2D sprite, string anim = "")
     {
-        if (string.IsNullOrWhiteSpace(anim))
-            anim = sprite.Animation;
-
-        return (int)(sprite.SpriteFrames.GetFrameTexture(anim, 0).GetHeight() * sprite.Scale.Y);
+        anim = string.IsNullOrWhiteSpace(anim) ? sprite.Animation : anim;
+        return (int)(sprite.SpriteFrames.GetFrameTexture(anim, 0).GetHeight() * 
+            sprite.Scale.Y);
     }
 
     /// <summary>
@@ -76,9 +72,7 @@ public static class ExtensionsAnimatedSprite
     /// </summary>
     public static Vector2 GetSize(this AnimatedSprite2D sprite, string anim = "")
     {
-        if (string.IsNullOrWhiteSpace(anim))
-            anim = sprite.Animation;
-
+        anim = string.IsNullOrWhiteSpace(anim) ? sprite.Animation : anim;
         return new Vector2(GetWidth(sprite, anim), GetHeight(sprite, anim));
     }
 
@@ -95,9 +89,7 @@ public static class ExtensionsAnimatedSprite
     /// </summary>
     public static Vector2 GetPixelSize(this AnimatedSprite2D sprite, string anim = "")
     {
-        if (string.IsNullOrWhiteSpace(anim))
-            anim = sprite.Animation;
-
+        anim = string.IsNullOrWhiteSpace(anim) ? sprite.Animation : anim;
         return new Vector2(GetPixelWidth(sprite, anim), GetPixelHeight(sprite, anim));
     }
 
@@ -114,8 +106,7 @@ public static class ExtensionsAnimatedSprite
     /// </summary>
     public static int GetPixelWidth(this AnimatedSprite2D sprite, string anim = "")
     {
-        if (string.IsNullOrWhiteSpace(anim))
-            anim = sprite.Animation;
+        anim = string.IsNullOrWhiteSpace(anim) ? sprite.Animation : anim;
 
         var tex = sprite.SpriteFrames.GetFrameTexture(anim, 0);
         var img = tex.GetImage();
@@ -144,8 +135,7 @@ public static class ExtensionsAnimatedSprite
     /// </summary>
     public static int GetPixelHeight(this AnimatedSprite2D sprite, string anim = "")
     {
-        if (string.IsNullOrWhiteSpace(anim))
-            anim = sprite.Animation;
+        anim = string.IsNullOrWhiteSpace(anim) ? sprite.Animation : anim;
 
         var tex = sprite.SpriteFrames.GetFrameTexture(anim, 0);
         var img = tex.GetImage();
