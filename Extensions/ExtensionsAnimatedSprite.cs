@@ -40,8 +40,11 @@ public static class ExtensionsAnimatedSprite
     /// This is useful if making for example coin animations play at random frames
     /// </para>
     /// </summary>
-    public static void PlayRandom(this AnimatedSprite2D sprite, string anim)
+    public static void PlayRandom(this AnimatedSprite2D sprite, string anim = "")
     {
+        if (string.IsNullOrWhiteSpace(anim))
+            anim = sprite.Animation;
+
         sprite.InstantPlay(anim);
         sprite.Frame = GD.RandRange(0, sprite.SpriteFrames.GetFrameCount(anim));
     }
@@ -49,20 +52,35 @@ public static class ExtensionsAnimatedSprite
     /// <summary>
     /// Gets the scaled width of the specified sprite frame
     /// </summary>
-    public static int GetWidth(this AnimatedSprite2D sprite, string anim) =>
-        (int)(sprite.SpriteFrames.GetFrameTexture(anim, 0).GetWidth() * sprite.Scale.X);
+    public static int GetWidth(this AnimatedSprite2D sprite, string anim = "")
+    {
+        if (string.IsNullOrWhiteSpace(anim))
+            anim = sprite.Animation;
+
+        return (int)(sprite.SpriteFrames.GetFrameTexture(anim, 0).GetWidth() * sprite.Scale.X);
+    }
 
     /// <summary>
     /// Gets the scaled height of the specified sprite frame
     /// </summary>
-    public static int GetHeight(this AnimatedSprite2D sprite, string anim) =>
-        (int)(sprite.SpriteFrames.GetFrameTexture(anim, 0).GetHeight() * sprite.Scale.Y);
+    public static int GetHeight(this AnimatedSprite2D sprite, string anim = "")
+    {
+        if (string.IsNullOrWhiteSpace(anim))
+            anim = sprite.Animation;
+
+        return (int)(sprite.SpriteFrames.GetFrameTexture(anim, 0).GetHeight() * sprite.Scale.Y);
+    }
 
     /// <summary>
     /// Gets the scaled size of the specified sprite frame
     /// </summary>
-    public static Vector2 GetSize(this AnimatedSprite2D sprite, string anim) =>
-        new Vector2(GetWidth(sprite, anim), GetHeight(sprite, anim));
+    public static Vector2 GetSize(this AnimatedSprite2D sprite, string anim = "")
+    {
+        if (string.IsNullOrWhiteSpace(anim))
+            anim = sprite.Animation;
+
+        return new Vector2(GetWidth(sprite, anim), GetHeight(sprite, anim));
+    }
 
     /// <summary>
     /// <para>
@@ -75,8 +93,13 @@ public static class ExtensionsAnimatedSprite
     /// shapes at runtime.
     /// </para>
     /// </summary>
-    public static Vector2 GetPixelSize(this AnimatedSprite2D sprite, string anim) =>
-        new Vector2(GetPixelWidth(sprite, anim), GetPixelHeight(sprite, anim));
+    public static Vector2 GetPixelSize(this AnimatedSprite2D sprite, string anim = "")
+    {
+        if (string.IsNullOrWhiteSpace(anim))
+            anim = sprite.Animation;
+
+        return new Vector2(GetPixelWidth(sprite, anim), GetPixelHeight(sprite, anim));
+    }
 
     /// <summary>
     /// <para>
@@ -89,8 +112,11 @@ public static class ExtensionsAnimatedSprite
     /// shapes at runtime.
     /// </para>
     /// </summary>
-    public static int GetPixelWidth(this AnimatedSprite2D sprite, string anim)
+    public static int GetPixelWidth(this AnimatedSprite2D sprite, string anim = "")
     {
+        if (string.IsNullOrWhiteSpace(anim))
+            anim = sprite.Animation;
+
         var tex = sprite.SpriteFrames.GetFrameTexture(anim, 0);
         var img = tex.GetImage();
         var size = img.GetSize();
@@ -116,8 +142,11 @@ public static class ExtensionsAnimatedSprite
     /// shapes at runtime.
     /// </para>
     /// </summary>
-    public static int GetPixelHeight(this AnimatedSprite2D sprite, string anim)
+    public static int GetPixelHeight(this AnimatedSprite2D sprite, string anim = "")
     {
+        if (string.IsNullOrWhiteSpace(anim))
+            anim = sprite.Animation;
+
         var tex = sprite.SpriteFrames.GetFrameTexture(anim, 0);
         var img = tex.GetImage();
         var size = img.GetSize();
