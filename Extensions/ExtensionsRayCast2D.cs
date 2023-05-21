@@ -3,6 +3,27 @@
 public static class ExtensionsRayCast2D
 {
     /// <summary>
+    /// <para>Get the tile from a tilemap that a raycast is colliding with.</para>
+    /// <para>Useful if trying to detect what tile the player is standing on</para>
+    /// <para>To get the tile the player is currently in see TileMap.GetTileData(...)</para>
+    /// </summary>
+    public static Variant GetTileData(this RayCast2D raycast, string layerName)
+    {
+        if (!raycast.IsColliding() || raycast.GetCollider() is not TileMap tileMap)
+            return default;
+
+        var collisionPos = raycast.GetCollisionPoint();
+        var tilePos = tileMap.LocalToMap(tileMap.ToLocal(collisionPos));
+
+        var tileData = tileMap.GetCellTileData(0, tilePos);
+
+        if (tileData == null)
+            return default;
+
+        return tileData.GetCustomData(layerName);
+    }
+
+    /// <summary>
     /// Set the provided mask values to true. Everything else will be set to be false.
     /// </summary>
     public static void SetCollisionMask(this RayCast2D node, params int[] values)
