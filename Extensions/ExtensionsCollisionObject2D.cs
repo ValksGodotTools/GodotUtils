@@ -1,6 +1,6 @@
 ﻿namespace GodotUtils;
 
-public static class ExtensionsCollisionObject
+public static class ExtensionsCollisionObject2D
 {
     /// <summary>
     /// Set the specified layer and mask values to true. Everything else will 
