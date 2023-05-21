@@ -1,3 +1,5 @@
+using Godot;
+
 namespace GodotUtils;
 
 public static class ExtensionsTileMap 
@@ -14,6 +16,23 @@ public static class ExtensionsTileMap
 
         tileMap.TileSet.SetPhysicsLayerCollisionLayer(0, result);
         tileMap.TileSet.SetPhysicsLayerCollisionMask(0, result);
+    }
+
+    /// <summary>
+    /// <para>Get the tile data from the global world position.</para>
+    /// <para>Useful if trying to get the tile the player is currently inside.</para>
+    /// <para>To get the tile the player is standing on see RayCast2D.GetTileData(...)</para>
+    /// </summary>
+    public static Variant GetTileData(this TileMap tilemap, Vector2 pos, string layerName)
+    {
+        var tilePos = tilemap.LocalToMap(tilemap.ToLocal(pos));
+
+        var tileData = tilemap.GetCellTileData(0, tilePos);
+
+        if (tileData == null)
+            return default;
+
+        return tileData.GetCustomData(layerName);
     }
 
     public static string GetTileName(this TileMap tilemap, Vector2 pos, int layer = 0)
