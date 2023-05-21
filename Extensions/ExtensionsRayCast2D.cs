@@ -1,6 +1,6 @@
-﻿namespace GodotUtils;
+﻿namespace MyGame;
 
-public static class ExtensionsRayCast
+public static class ExtensionsRayCast2D
 {
     /// <summary>
     /// Set the provided mask values to true. Everything else will be set to be false.
@@ -19,7 +19,7 @@ public static class ExtensionsRayCast
     /// are of type CollisionObject2D (for example a ground raycast should
     /// only check for the ground, not the player itself)
     /// </summary>
-    public static void ExcludeRaycastParents(this RayCast2D raycast, Node parent) 
+    public static void ExcludeRaycastParents(this RayCast2D raycast, Node parent)
     {
         if (parent != null)
         {
@@ -27,20 +27,6 @@ public static class ExtensionsRayCast
                 raycast.AddException(collision);
 
             ExcludeRaycastParents(raycast, parent.GetParentOrNull<Node>());
-        }
-    }
-
-    public static void ExcludeRaycastParents(this RayCast3D raycast) =>
-        ExcludeParents(raycast, raycast.GetParent());
-
-    private static void ExcludeParents(RayCast3D raycast, Node parent)
-    {
-        if (parent != null)
-        {
-            if (parent is CollisionObject3D collision)
-                raycast.AddException(collision);
-
-            ExcludeParents(raycast, parent.GetParentOrNull<Node>());
         }
     }
 
