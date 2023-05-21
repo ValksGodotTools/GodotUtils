@@ -19,9 +19,18 @@ public static class ExtensionsTileMap
     }
 
     /// <summary>
-    /// <para>Get the tile data from the global world position.</para>
-    /// <para>Useful if trying to get the tile the player is currently inside.</para>
-    /// <para>To get the tile the player is standing on see RayCast2D.GetTileData(...)</para>
+    /// <para>
+    /// Get the tile data from a global position. Use 
+    /// tileData.Equals(default(Variant)) to check if no tile data exists here.
+    /// </para>
+    /// 
+    /// <para>
+    /// Useful if trying to get the tile the player is currently inside.
+    /// </para>
+    /// 
+    /// <para>
+    /// To get the tile the player is standing on see RayCast2D.GetTileData(...)
+    /// </para>
     /// </summary>
     public static Variant GetTileData(this TileMap tilemap, Vector2 pos, string layerName)
     {

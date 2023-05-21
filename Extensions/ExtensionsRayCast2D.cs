@@ -3,9 +3,19 @@
 public static class ExtensionsRayCast2D
 {
     /// <summary>
-    /// <para>Get the tile from a tilemap that a raycast is colliding with.</para>
-    /// <para>Useful if trying to detect what tile the player is standing on</para>
-    /// <para>To get the tile the player is currently in see TileMap.GetTileData(...)</para>
+    /// <para>
+    /// Get the tile from a tilemap that a raycast is colliding with.
+    /// Use tileData.Equals(default(Variant)) to check if no tile data exists
+    /// here.
+    /// </para>
+    /// 
+    /// <para>
+    /// Useful if trying to detect what tile the player is standing on
+    /// </para>
+    /// 
+    /// <para>
+    /// To get the tile the player is currently in see TileMap.GetTileData(...)
+    /// </para>
     /// </summary>
     public static Variant GetTileData(this RayCast2D raycast, string layerName)
     {
