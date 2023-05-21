@@ -17,6 +17,8 @@ public class GTween
         tween = node.CreateTween();
     }
 
+    public void Loop() => tween.SetLoops();
+
     public PropertyTweener AnimateColor(Color color, double duration, bool modulateChildren = false, bool parallel = false)
     {
         if (node is ColorRect)
