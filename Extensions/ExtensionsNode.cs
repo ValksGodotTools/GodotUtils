@@ -2,6 +2,9 @@ namespace GodotUtils;
 
 public static class ExtensionsNode 
 {
+    public static void AddChildDeferred(this Node node, Node child) =>
+        node.CallDeferred("add_child", child);
+
     public static void Reparent(this Node curParent, Node newParent, Node node)
     {
         // Remove node from current parent
