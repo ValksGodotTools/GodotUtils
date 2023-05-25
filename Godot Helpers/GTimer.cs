@@ -49,6 +49,10 @@ public class GTimer
         timer.Start();
     }
 
+    /// <summary>
+    /// Note that Start() resets the timer wait time so there is no need to worry
+    /// about queue freeing the timer
+    /// </summary>
     public void Stop()
     {
         timer.Stop();
