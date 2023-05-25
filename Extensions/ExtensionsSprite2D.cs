@@ -72,7 +72,7 @@ public static class ExtensionsSprite2D
         var size = img.GetSize();
 
         // Might not work with all sprites but works with ninja. The -2 offset that is
-        var diff = -2;
+        var diff = 0;
 
         for (int y = (int)size.Y - 1; y >= 0; y--)
         {
