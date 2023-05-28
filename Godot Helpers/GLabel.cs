@@ -2,7 +2,7 @@
 
 public partial class GLabel : Label
 {
-    public GLabel(string text, int fontSize = 16)
+    public GLabel(string text = "", int fontSize = 16)
     {
         Text = text;
         HorizontalAlignment = HorizontalAlignment.Center;
