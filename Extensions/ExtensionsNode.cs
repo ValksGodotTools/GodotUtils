@@ -2,6 +2,25 @@ namespace GodotUtils;
 
 public static class ExtensionsNode 
 {
+    public static void DisableChildren(this Node node)
+    {
+        foreach (var child in node.GetChildren())
+        {
+            child.SetProcess(false);
+            child.SetPhysicsProcess(false);
+        }
+    }
+        
+
+    public static void EnableChildren(this Node node)
+    {
+        foreach (var child in node.GetChildren())
+        {
+            child.SetProcess(true);
+            child.SetPhysicsProcess(true);
+        }
+    }
+
     public static void AddChildDeferred(this Node node, Node child) =>
         node.CallDeferred("add_child", child);
 
