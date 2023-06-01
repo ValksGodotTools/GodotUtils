@@ -225,7 +225,7 @@ public abstract class ENetServer : ENetLow
 
             if (!IgnoredPackets.Contains(type) && options.PrintPacketReceived)
                 Log($"Received packet: {type.Name} from peer {packetPeer.Item2.ID}" +
-                    $"{(options.PrintPacketData ? $"\n{handlePacket.PrintFull()}" : "")}", LoggerColor.LightGreen);
+                    $"{(options.PrintPacketData ? $"\n{handlePacket.PrintFull()}" : "")}", BBColor.LightGreen);
         }
 
         // Outgoing
@@ -308,7 +308,7 @@ public abstract class ENetServer : ENetLow
         Peers.Remove(peer.ID);
     }
 
-    public override void Log(object message, LoggerColor color = LoggerColor.Green) => 
+    public override void Log(object message, BBColor color = BBColor.Green) => 
         Logger.Log($"[Server] {message}", color);
 }
 

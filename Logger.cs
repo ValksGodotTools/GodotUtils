@@ -16,19 +16,19 @@ public static class Logger
     /// <summary>
     /// Log a message
     /// </summary>
-    public static void Log(object message, LoggerColor color = LoggerColor.Gray) =>
+    public static void Log(object message, BBColor color = BBColor.Gray) =>
         messages.Enqueue(new LogInfo(LoggerOpcode.Message, new LogMessage($"{message}"), color));
 
     /// <summary>
     /// Log a warning
     /// </summary>
-    public static void LogWarning(object message, LoggerColor color = LoggerColor.Yellow) =>
+    public static void LogWarning(object message, BBColor color = BBColor.Orange) =>
         Log($"[Warning] {message}", color);
 
     /// <summary>
     /// Log a todo
     /// </summary>
-    public static void LogTodo(object message, LoggerColor color = LoggerColor.White) =>
+    public static void LogTodo(object message, BBColor color = BBColor.White) =>
         Log($"[Todo] {message}", color);
 
     /// <summary>
@@ -38,7 +38,7 @@ public static class Logger
     (
         Exception e,
         string hint = default,
-        LoggerColor color = LoggerColor.Red,
+        BBColor color = BBColor.Red,
         [CallerFilePath] string filePath = default,
         [CallerLineNumber] int lineNumber = 0
     ) => LogDetailed(LoggerOpcode.Exception, $"[Error] {(string.IsNullOrWhiteSpace(hint) ? "" : $"'{hint}' ")}{e.Message}{e.StackTrace}", color, true, filePath, lineNumber);
@@ -49,7 +49,7 @@ public static class Logger
     public static void LogDebug
     (
         object message,
-        LoggerColor color = LoggerColor.Magenta,
+        BBColor color = BBColor.Magenta,
         bool trace = true,
         [CallerFilePath] string filePath = default,
         [CallerLineNumber] int lineNumber = 0
@@ -93,7 +93,7 @@ public static class Logger
                 PrintErr(result.Data.Message, result.Color);
 
                 if (result.Data is LogMessageTrace exceptionData && exceptionData.ShowTrace)
-                    PrintErr(exceptionData.TracePath, LoggerColor.DarkGray);
+                    PrintErr(exceptionData.TracePath, BBColor.DarkGray);
 
                 Console.ResetColor();
                 break;
@@ -103,7 +103,7 @@ public static class Logger
                 Print(result.Data.Message, result.Color);
 
                 if (result.Data is LogMessageTrace debugData && debugData.ShowTrace)
-                    Print(debugData.TracePath, LoggerColor.DarkGray);
+                    Print(debugData.TracePath, BBColor.DarkGray);
 
                 Console.ResetColor();
                 break;
@@ -113,7 +113,7 @@ public static class Logger
     /// <summary>
     /// Logs a message that may contain trace information
     /// </summary>
-    private static void LogDetailed(LoggerOpcode opcode, string message, LoggerColor color, bool trace, string filePath, int lineNumber)
+    private static void LogDetailed(LoggerOpcode opcode, string message, BBColor color, bool trace, string filePath, int lineNumber)
     {
         string tracePath;
 
@@ -141,7 +141,7 @@ public static class Logger
         ));
     }
 
-    private static void Print(object v, LoggerColor color)
+    private static void Print(object v, BBColor color)
     {
         //Console.ForegroundColor = color;
 
@@ -152,7 +152,7 @@ public static class Logger
             GD.PrintRich($"[color={color}]{v}");
     }
 
-    private static void PrintErr(object v, LoggerColor color)
+    private static void PrintErr(object v, BBColor color)
     {
         //Console.ForegroundColor = color;
         GD.PrintErr(v);
@@ -164,9 +164,9 @@ public class LogInfo
 {
     public LoggerOpcode Opcode { get; set; }
     public LogMessage Data { get; set; }
-    public LoggerColor Color { get; set; }
+    public BBColor Color { get; set; }
 
-    public LogInfo(LoggerOpcode opcode, LogMessage data, LoggerColor color = LoggerColor.Gray)
+    public LogInfo(LoggerOpcode opcode, LogMessage data, BBColor color = BBColor.Gray)
     {
         Opcode = opcode;
         Data = data;
@@ -201,7 +201,8 @@ public enum LoggerOpcode
     Debug
 }
 
-public enum LoggerColor
+// Full list of BBCode color tags: https://absitomen.com/index.php?topic=331.0
+public enum BBColor
 {
     Gray,
     DarkGray,
@@ -214,5 +215,6 @@ public enum LoggerColor
     Magenta,
     Red,
     White,
-    Yellow
+    Yellow,
+    Orange
 }
