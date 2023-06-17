@@ -2,6 +2,9 @@
 
 public static class GUtils
 {
+    public async static Task WaitOneFrame(Node parent) => 
+        await parent.ToSignal(parent.GetTree(), "process_frame");
+
     public static Vector2 GetMovementInput(string prefix = "")
     {
         if (!string.IsNullOrWhiteSpace(prefix))
