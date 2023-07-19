@@ -7,8 +7,8 @@ public partial class SceneManager : Node
     
     public static Node CurrentScene { get; set; }
 
-    private static SceneManager instance;
-    private static SceneTree tree;
+    static SceneManager instance;
+    static SceneTree tree;
 
     /// <summary>
     /// Scenes are loaded from the 'res://Scenes/' directory. For example a name with 
@@ -44,7 +44,7 @@ public partial class SceneManager : Node
         CurrentScene = root.GetChild(root.GetChildCount() - 1);
     }
 
-    private void DeferredSwitchScene(string name, Variant transTypeVariant)
+    void DeferredSwitchScene(string name, Variant transTypeVariant)
     {
         // Safe to remove scene now
         CurrentScene.Free();
@@ -73,7 +73,7 @@ public partial class SceneManager : Node
         }
     }
 
-    private void FadeTo(TransColor transColor, double duration, Action finished = null)
+    void FadeTo(TransColor transColor, double duration, Action finished = null)
     {
         // Add canvas layer to scene
         var canvasLayer = new CanvasLayer
@@ -111,7 +111,7 @@ public partial class SceneManager : Node
         Fade
     }
 
-    private enum TransColor
+    enum TransColor
     {
         Black,
         Transparent
