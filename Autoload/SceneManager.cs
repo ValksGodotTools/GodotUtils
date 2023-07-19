@@ -18,6 +18,10 @@ public partial class SceneManager : Node
         CurrentScene = root.GetChild(root.GetChildCount() - 1);
     }
 
+    /// <summary>
+    /// Scenes are loaded from the 'res://Scenes/' directory. For example a name with 
+    /// "level_1" would be 'res://Scenes/level_1.tscn'
+    /// </summary>
     public static void SwitchScene(string name, TransType transType = TransType.None)
     {
         SceneChanged?.Invoke(name);
