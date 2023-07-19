@@ -10,14 +10,6 @@ public partial class SceneManager : Node
     private static SceneManager instance;
     private static SceneTree tree;
 
-    public override void _Ready()
-    {
-        instance = this;
-        tree = GetTree();
-        var root = tree.Root;
-        CurrentScene = root.GetChild(root.GetChildCount() - 1);
-    }
-
     /// <summary>
     /// Scenes are loaded from the 'res://Scenes/' directory. For example a name with 
     /// "level_1" would be 'res://Scenes/level_1.tscn'
@@ -35,13 +27,21 @@ public partial class SceneManager : Node
                 instance.FadeTo(TransColor.Black, 2, () => ChangeScene(transType));
                 break;
         }
-        
+
         void ChangeScene(TransType transType)
         {
             // Wait for engine to be ready to switch scene
-            instance.CallDeferred(nameof(DeferredSwitchScene), name, 
+            instance.CallDeferred(nameof(DeferredSwitchScene), name,
                 Variant.From(transType));
         }
+    }
+
+    public override void _Ready()
+    {
+        instance = this;
+        tree = GetTree();
+        var root = tree.Root;
+        CurrentScene = root.GetChild(root.GetChildCount() - 1);
     }
 
     private void DeferredSwitchScene(string name, Variant transTypeVariant)
