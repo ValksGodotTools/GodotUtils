@@ -1,13 +1,51 @@
 ﻿namespace GodotUtils;
 
-public static class GodotUtilities
+public static class GUtils
 {
-    /// <summary>
-    /// <para>Returns a Godot.Color based off rgb ranging from 0 to 255</para>
-    /// <para>The alpha still ranges from 0.0 to 1.0</para>
-    /// </summary>
-    public static Godot.Color Color(int r, int g, int b, float a = 1)
-        => new Color(r / 255f, g / 255f, b / 255f, a);
+    public async static Task WaitOneFrame(Node parent) => 
+        await parent.ToSignal(parent.GetTree(), "process_frame");
+
+    public static Vector2 GetMovementInput(string prefix = "")
+    {
+        if (!string.IsNullOrWhiteSpace(prefix))
+            prefix += "_";
+
+        // GetActionStrength(...) supports controller sensitivity
+        var inputHorz = Input.GetActionStrength($"{prefix}move_right") - Input.GetActionStrength($"{prefix}move_left");
+        var inputVert = Input.GetActionStrength($"{prefix}move_down") - Input.GetActionStrength($"{prefix}move_up");
+
+        // Normalize vector to prevent fast diagonal strafing
+        return new Vector2(inputHorz, inputVert).Normalized();
+    }
+
+    public static Vector2 RandDir(float dist = 1)
+    {
+        var theta = RandAngle();
+        return new Vector2(Mathf.Cos(theta) * dist, Mathf.Sin(theta) * dist);
+    }
+
+    public static float RandAngle() => (float)GD.RandRange(0, Mathf.Pi * 2);
+
+    public static Area2D CreateAreaRect(Node parent, Vector2 size, string debugColor = "ff001300") =>
+        CreateArea(parent, new RectangleShape2D { Size = size }, debugColor);
+
+    public static Area2D CreateAreaCircle(Node parent, float radius, string debugColor = "ff001300") =>
+        CreateArea(parent, new CircleShape2D { Radius = radius }, debugColor);
+
+    public static Area2D CreateArea(Node parent, Shape2D shape, string debugColor = "ff001300")
+    {
+        var area = new Area2D();
+        var areaCollision = new CollisionShape2D
+        {
+            DebugColor = new Color(debugColor),
+            Shape = shape
+        };
+
+        area.AddChild(areaCollision);
+        parent.AddChild(area);
+
+        return area;
+    }
 
     public static void ValidateNumber(this string value, LineEdit input, int min, int max, ref int prevNum)
     {

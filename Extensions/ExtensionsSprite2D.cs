@@ -34,8 +34,8 @@ public static class ExtensionsSprite2D
         var img = sprite.Texture.GetImage();
         var size = img.GetSize();
 
-        var transColumnsLeft = GodotUtilities.GetTransparentColumnsLeft(img, size);
-        var transColumnsRight = GodotUtilities.GetTransparentColumnsRight(img, size);
+        var transColumnsLeft = GUtils.GetTransparentColumnsLeft(img, size);
+        var transColumnsRight = GUtils.GetTransparentColumnsRight(img, size);
 
         var pixelWidth = size.X - transColumnsLeft - transColumnsRight;
 
@@ -58,8 +58,8 @@ public static class ExtensionsSprite2D
         var img = sprite.Texture.GetImage();
         var size = img.GetSize();
 
-        var transRowsTop = GodotUtilities.GetTransparentRowsTop(img, size);
-        var transRowsBottom = GodotUtilities.GetTransparentRowsBottom(img, size);
+        var transRowsTop = GUtils.GetTransparentRowsTop(img, size);
+        var transRowsBottom = GUtils.GetTransparentRowsBottom(img, size);
 
         var pixelHeight = size.Y - transRowsTop - transRowsBottom;
 

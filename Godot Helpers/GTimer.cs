@@ -38,7 +38,8 @@ public class GTimer
     public void SetDelay(int delayMs) => timer.WaitTime = delayMs / 1000f;
 
     /// <summary>
-    /// Start the timer. Starting the timer while it is active already will reset
+    /// Start the timer. The delay can be optionally changed in ms. 
+    /// Starting the timer while it is active already will reset
     /// the timer countdown.
     /// </summary>
     public void Start(float delayMs = -1)
