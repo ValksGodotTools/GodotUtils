@@ -2,15 +2,15 @@
 An ever expanding utils library for Godot 4 C#. This is the library I am using across all my games, now open source for everyone else to enjoy as well.
 
 ## Features
-- [Autoloads](https://github.com/ValksGodotTools/GodotUtils/tree/main/Scripts/Autoload)
-- [Extensions](https://github.com/ValksGodotTools/GodotUtils/tree/main/Scripts/Extensions)
-- [Godot Helper Classes](https://github.com/ValksGodotTools/GodotUtils/tree/main/Scripts/Godot%20Helpers)
-- [Netcode](https://github.com/ValksGodotTools/GodotUtils/tree/main/Scripts/Netcode) ([multiplater template](https://github.com/ValksGodotTools/Multiplayer))
-- [2D Platformer Scripts](https://github.com/ValksGodotTools/GodotUtils/tree/main/Scripts/World2D/Platformer)
-- [2D Top Down Scripts](https://github.com/ValksGodotTools/GodotUtils/tree/main/Scripts/World2D/TopDown)
-- [EventManager](https://github.com/ValksGodotTools/GodotUtils/blob/main/Scripts/EventManager.cs)
-- [Thread Safe Logger](https://github.com/ValksGodotTools/GodotUtils/blob/main/Scripts/Logger.cs)
-- [State Pattern](https://github.com/ValksGodotTools/GodotUtils/blob/main/Scripts/State.cs)
+- [Autoloads](https://github.com/ValksGodotTools/GodotUtils/tree/main/Autoload)
+- [Extensions](https://github.com/ValksGodotTools/GodotUtils/tree/main/Extensions)
+- [Godot Helper Classes](https://github.com/ValksGodotTools/GodotUtils/tree/main/Godot%20Helpers)
+- [Netcode](https://github.com/ValksGodotTools/GodotUtils/tree/main/Netcode) ([multiplater template](https://github.com/ValksGodotTools/Multiplayer))
+- [2D Platformer Scripts](https://github.com/ValksGodotTools/GodotUtils/tree/main/World2D/Platformer)
+- [2D Top Down Scripts](https://github.com/ValksGodotTools/GodotUtils/tree/main/World2D/TopDown)
+- [EventManager](https://github.com/ValksGodotTools/GodotUtils/blob/main/EventManager.cs)
+- [Thread Safe Logger](https://github.com/ValksGodotTools/GodotUtils/blob/main/Logger.cs)
+- [State Pattern](https://github.com/ValksGodotTools/GodotUtils/blob/main/State.cs)
 
 ## Thinking of Adding
 - 3D Scripts
