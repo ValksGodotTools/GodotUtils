@@ -9,10 +9,9 @@ public class GTween
     private Tween tween;
     private Node node;
 
-    public GTween(Node node) => this.node = node;
-
-    public void Create()
+    public GTween(Node node)
     {
+        this.node = node;
         Kill();
         tween = node.CreateTween();
     }
