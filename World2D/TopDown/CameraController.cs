@@ -1,5 +1,7 @@
 namespace GodotUtils.World2D.TopDown;
 
+using Godot;
+
 /*
  * Attach this script to a child node of the Camera node
  */

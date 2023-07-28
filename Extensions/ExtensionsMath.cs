@@ -1,5 +1,7 @@
 namespace GodotUtils;
 
+using Godot;
+
 public static class ExtensionsMath
 {
     public static Color Lerp(this Color color1, Color color2, float t) =>

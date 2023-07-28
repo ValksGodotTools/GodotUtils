@@ -1,5 +1,7 @@
 ﻿namespace GodotUtils;
 
+using Godot;
+
 public partial class GCodeHighlighter : CodeHighlighter
 {
     public GCodeHighlighter()

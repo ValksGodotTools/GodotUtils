@@ -1,5 +1,7 @@
 namespace GodotUtils;
 
+using System;
+
 public class State
 {
     public Action Enter { get; set; } = () => { };

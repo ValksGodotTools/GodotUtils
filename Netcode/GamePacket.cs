@@ -1,5 +1,7 @@
 namespace GodotUtils.Netcode;
 
+using ENet;
+
 public abstract class GamePacket
 {
     public static int MaxSize { get; } = 8192;

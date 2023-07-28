@@ -1,5 +1,7 @@
 ﻿namespace GodotUtils;
 
+using Godot;
+
 public partial class GMarginContainer : MarginContainer
 {
     public GMarginContainer(int padding = 5) => SetMarginAll(5);

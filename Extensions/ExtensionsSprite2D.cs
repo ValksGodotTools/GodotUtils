@@ -1,5 +1,8 @@
 ﻿namespace MyGame;
 
+using Godot;
+using GodotUtils;
+
 public static class ExtensionsSprite2D
 {
     public static Vector2 GetSize(this Sprite2D sprite) => sprite.Texture.GetSize();

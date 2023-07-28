@@ -1,5 +1,9 @@
 namespace GodotUtils;
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
 /// <summary>
 /// This class was created to attempt to simplify the process of creating C# events for gamedev.
 /// 

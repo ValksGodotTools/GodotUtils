@@ -1,5 +1,8 @@
 ﻿namespace GodotUtils.Deprecated;
 
+using Godot;
+using System;
+
 public partial class UIOptionButton : UIElement
 {
     public Action<long> ValueChanged { get; set; }

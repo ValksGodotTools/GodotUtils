@@ -1,5 +1,8 @@
 namespace GodotUtils.Deprecated;
 
+using Godot;
+using System.Threading.Tasks;
+
 /*
  * I feel like I could do a much better job with creating a more generic util
  * for something like this so that is why this is being deprecated but not being

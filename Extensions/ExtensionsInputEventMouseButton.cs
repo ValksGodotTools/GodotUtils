@@ -1,5 +1,7 @@
 ﻿namespace GodotUtils;
 
+using Godot;
+
 public static class ExtensionsInputEventMouseButton
 {
     public static bool IsZoomIn(this InputEventMouseButton @event) =>

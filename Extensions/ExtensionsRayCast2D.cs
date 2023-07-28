@@ -1,5 +1,8 @@
 ﻿namespace MyGame;
 
+using Godot;
+using System.Collections.Generic;
+
 public static class ExtensionsRayCast2D
 {
     /// <summary>

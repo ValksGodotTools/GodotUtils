@@ -1,5 +1,7 @@
 ﻿namespace GodotUtils;
 
+using Godot;
+
 public static class GInput
 {
     public static bool IsMovingLeft() =>

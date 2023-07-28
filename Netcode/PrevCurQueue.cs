@@ -1,5 +1,7 @@
 ﻿namespace GodotUtils.Netcode;
 
+using System.Collections.Generic;
+
 public class PrevCurQueue<T>
 {
     public float Progress { get; private set; }

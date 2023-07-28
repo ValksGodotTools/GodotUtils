@@ -1,5 +1,7 @@
 namespace GodotUtils.World2D.Platformer;
 
+using Godot;
+
 public partial class CameraController : Camera2D
 {
     // Might convert these to [Export]s later thus they should stay as props

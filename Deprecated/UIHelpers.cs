@@ -1,5 +1,9 @@
 ﻿namespace GodotUtils.Deprecated;
 
+using Godot;
+using System;
+using System.Linq;
+
 public static class UIHelpers
 {
     /// <summary>

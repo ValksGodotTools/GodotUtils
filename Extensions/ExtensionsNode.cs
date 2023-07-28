@@ -1,5 +1,7 @@
 namespace GodotUtils;
 
+using Godot;
+
 public static class ExtensionsNode 
 {
     public static void DisableChildren(this Node node)
