@@ -22,6 +22,7 @@ public class GTimer
     public GTimer(Node node, double delayMs = 1000)
     {
         Init(node, delayMs);
+        timer.ProcessCallback = Timer.TimerProcessCallback.Physics;
         timer.Timeout += () => Finished?.Invoke();
     }
 
