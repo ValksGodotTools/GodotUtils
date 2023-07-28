@@ -1,5 +1,7 @@
 ﻿namespace GodotUtils;
 
+using Godot;
+
 public static class GWindow
 {
     public static void SetTitle(string title) => DisplayServer.WindowSetTitle(title);

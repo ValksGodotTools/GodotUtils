@@ -1,5 +1,9 @@
 ﻿namespace GodotUtils;
 
+using Godot;
+using System;
+using System.Collections.Generic;
+
 public static class ExtensionsTextEdit
 {
     private static readonly Dictionary<ulong, string> prevTexts = new();

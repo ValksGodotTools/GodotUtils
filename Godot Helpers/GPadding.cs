@@ -1,5 +1,7 @@
 ﻿namespace GodotUtils;
 
+using Godot;
+
 public partial class GPadding : Control
 {
     public GPadding(int paddingX = 0, int paddingY = 0)

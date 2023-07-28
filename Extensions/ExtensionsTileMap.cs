@@ -1,5 +1,7 @@
 namespace GodotUtils;
 
+using Godot;
+
 public static class ExtensionsTileMap 
 {
     // enable a layer with Mathf.Pow(2, x - 1) where x is the layer you want enabled

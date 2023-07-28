@@ -1,5 +1,8 @@
 ﻿namespace GodotUtils.Deprecated;
 
+using Godot;
+using System;
+
 public partial class UICheckbox : UIElement
 {
     public Action<bool> ValueChanged { get; set; }

@@ -1,5 +1,7 @@
 ﻿namespace GodotUtils;
 
+using Godot;
+
 public static class ExtensionsInputEventKey
 {
     public static bool IsJustPressed(this InputEventKey v, Key key) =>

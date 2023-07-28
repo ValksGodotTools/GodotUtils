@@ -1,5 +1,7 @@
 ﻿namespace GodotUtils;
 
+using Godot;
+
 public partial class GLinkButton : LinkButton
 {
     public GLinkButton(string text, int fontSize = 16)

@@ -1,5 +1,8 @@
 ﻿namespace GodotUtils.Deprecated;
 
+using Godot;
+using System;
+
 public partial class UIColorPickerBtn : UIElement
 {
     public event Action<Color> ValueChanged;

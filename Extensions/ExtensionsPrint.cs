@@ -1,7 +1,10 @@
 ﻿namespace GodotUtils;
 
+using Godot;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 using System.Reflection;
 
 public static class ExtensionsPrint

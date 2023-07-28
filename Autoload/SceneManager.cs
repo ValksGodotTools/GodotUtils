@@ -1,5 +1,8 @@
 namespace GodotUtils;
 
+using Godot;
+using System;
+
 // About Scene Switching: https://docs.godotengine.org/en/latest/tutorials/scripting/singletons_autoload.html
 public partial class SceneManager : Node
 {

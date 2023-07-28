@@ -1,5 +1,8 @@
 ﻿namespace GodotUtils.Deprecated;
 
+using Godot;
+using System;
+
 public partial class UILineEdit : UIElement
 {
     public Action<string> ValueChanged { get; set; }

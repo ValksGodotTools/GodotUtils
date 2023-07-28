@@ -1,5 +1,7 @@
 ﻿namespace GodotUtils;
 
+using Godot;
+
 public partial class GLabel : Label
 {
     public GLabel(string text = "", int fontSize = 16)

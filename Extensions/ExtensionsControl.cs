@@ -1,5 +1,7 @@
 ﻿namespace GodotUtils;
 
+using Godot;
+
 public static class ExtensionsControl
 {
     public static void CoverEntireRect(this Control control) =>

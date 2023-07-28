@@ -1,5 +1,7 @@
 ﻿namespace GodotUtils.Deprecated;
 
+using Godot;
+
 /*
  * No longer being used because Bezier Curves are built into the Godot Game Engine
  * There is no need to re-invent the wheel. I won't delete this class because I did

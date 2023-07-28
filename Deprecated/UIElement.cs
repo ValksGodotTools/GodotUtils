@@ -1,5 +1,7 @@
 ﻿namespace GodotUtils.Deprecated;
 
+using Godot;
+
 public abstract partial class UIElement : PanelContainer
 {
     private ElementOptions Options { get; set; }

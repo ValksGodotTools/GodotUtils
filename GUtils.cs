@@ -1,5 +1,8 @@
 ﻿namespace GodotUtils;
 
+using Godot;
+using System.Threading.Tasks;
+
 public static class GUtils
 {
     public async static Task WaitOneFrame(Node parent) => 

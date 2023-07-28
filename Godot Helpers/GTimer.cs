@@ -1,5 +1,7 @@
 namespace GodotUtils;
 
+using Godot;
+using System;
 using Timer = Godot.Timer;
 
 /// <summary>

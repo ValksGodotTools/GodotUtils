@@ -1,5 +1,7 @@
 ﻿namespace GodotUtils;
 
+using Godot;
+
 public class GAudioPlayer
 {
     /// <summary>

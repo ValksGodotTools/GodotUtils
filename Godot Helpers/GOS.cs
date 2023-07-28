@@ -1,5 +1,6 @@
 ﻿namespace GodotUtils;
 
+using Godot;
 using System.Runtime.InteropServices;
 
 /// <summary>

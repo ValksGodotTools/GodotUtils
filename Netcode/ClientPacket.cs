@@ -1,5 +1,8 @@
 namespace GodotUtils.Netcode;
 
+using System;
+using System.Collections.Generic;
+
 public abstract class ClientPacket : GamePacket
 {
     public static Dictionary<Type, PacketInfo<ClientPacket>> PacketMap { get; } = NetcodeUtils.MapPackets<ClientPacket>();

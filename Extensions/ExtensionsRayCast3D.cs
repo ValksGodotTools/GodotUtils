@@ -1,5 +1,7 @@
 ﻿namespace MyGame;
 
+using Godot;
+
 public static class ExtensionsRayCast3D
 {
     public static void ExcludeRaycastParents(this RayCast3D raycast) =>
