@@ -19,7 +19,7 @@ public class GTimer
         set => timer.OneShot = !value;
     }
 
-    private readonly Timer timer = new();
+    readonly Timer timer = new();
 
     public GTimer(Node node, double delayMs = 1000)
     {
@@ -28,7 +28,7 @@ public class GTimer
         timer.Timeout += () => Finished?.Invoke();
     }
 
-    private void Init(Node target, double delayMs)
+    void Init(Node target, double delayMs)
     {
         timer.OneShot = true; // make non-looping by default
         timer.Autostart = false; // make non-auto-start by default

@@ -10,7 +10,7 @@ using Object = System.Object;
 /// </summary>
 public class STimer : IDisposable
 {
-    private readonly Timer timer;
+    readonly Timer timer;
 
     public STimer(double delayMs, Action action, bool enabled = true, bool autoreset = true)
     {

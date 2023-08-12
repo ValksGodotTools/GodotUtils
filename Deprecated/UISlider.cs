@@ -9,7 +9,7 @@ public partial class UISlider : UIElement
 
     public HSlider Slider { get; set; }
 
-    private SliderOptions Options { get; set; }
+    SliderOptions Options { get; set; }
 
     public UISlider(SliderOptions options) : base(options)
     {

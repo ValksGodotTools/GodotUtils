@@ -7,7 +7,7 @@ public partial class UICheckbox : UIElement
 {
     public Action<bool> ValueChanged { get; set; }
 
-    private CheckboxOptions options;
+    CheckboxOptions options;
 
     public UICheckbox(CheckboxOptions options) : base(options)
     {

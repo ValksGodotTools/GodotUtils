@@ -6,8 +6,8 @@ using System.Collections.Generic;
 
 public static class ExtensionsLineEdit
 {
-    private static readonly Dictionary<ulong, string> prevTexts = new();
-    private static readonly Dictionary<ulong, int> prevNums = new();
+    static readonly Dictionary<ulong, string> prevTexts = new();
+    static readonly Dictionary<ulong, int> prevNums = new();
 
     public static string Filter(this LineEdit lineEdit, Func<string, bool> filter)
     {
@@ -94,7 +94,7 @@ public static class ExtensionsLineEdit
         return num;
     }
 
-    private static void ChangeLineEditText(this LineEdit lineEdit, string text)
+    static void ChangeLineEditText(this LineEdit lineEdit, string text)
     {
         lineEdit.Text = text;
         lineEdit.CaretColumn = text.Length;

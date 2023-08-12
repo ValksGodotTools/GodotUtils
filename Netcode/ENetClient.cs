@@ -12,18 +12,18 @@ public abstract class ENetClient : ENetLow
     public ConcurrentQueue<Cmd<GodotOpcode>> GodotCmds { get; } = new();
     protected ConcurrentQueue<ClientPacket> Outgoing { get; } = new();
 
-    private const uint PING_INTERVAL = 1000;
-    private const uint PEER_TIMEOUT = 5000;
-    private const uint PEER_TIMEOUT_MINIMUM = 5000;
-    private const uint PEER_TIMEOUT_MAXIMUM = 5000;
+    const uint PING_INTERVAL = 1000;
+    const uint PEER_TIMEOUT = 5000;
+    const uint PEER_TIMEOUT_MINIMUM = 5000;
+    const uint PEER_TIMEOUT_MAXIMUM = 5000;
 
-    private readonly ConcurrentQueue<PacketData> godotPackets = new();
-    private readonly ConcurrentQueue<ENet.Packet> incoming = new();
-    private readonly ConcurrentQueue<Cmd<ENetClientOpcode>> eNetCmds = new();
+    readonly ConcurrentQueue<PacketData> godotPackets = new();
+    readonly ConcurrentQueue<ENet.Packet> incoming = new();
+    readonly ConcurrentQueue<Cmd<ENetClientOpcode>> eNetCmds = new();
 
-    private ENetOptions options;
-    private Peer peer;
-    private long connected;
+    ENetOptions options;
+    Peer peer;
+    long connected;
 
     static ENetClient()
     {
@@ -174,7 +174,7 @@ public abstract class ENetClient : ENetLow
         incoming.Enqueue(packet);
     }
 
-    private void WorkerThread(string ip, ushort port)
+    void WorkerThread(string ip, ushort port)
     {
         Host = new Host();
         var address = new Address {

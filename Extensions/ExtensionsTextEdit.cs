@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 public static class ExtensionsTextEdit
 {
-    private static readonly Dictionary<ulong, string> prevTexts = new();
+    static readonly Dictionary<ulong, string> prevTexts = new();
 
     public static string Filter(this TextEdit textEdit, Func<string, bool> filter)
     {
@@ -31,7 +31,7 @@ public static class ExtensionsTextEdit
         prevTexts[id] = text;
         return text;
     }
-    private static void ChangeTextEditText(this TextEdit textEdit, string text)
+    static void ChangeTextEditText(this TextEdit textEdit, string text)
     {
         textEdit.Text = text;
         //textEdit.CaretColumn = text.Length;

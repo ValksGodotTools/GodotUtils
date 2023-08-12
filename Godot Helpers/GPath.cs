@@ -17,19 +17,19 @@ public partial class GPath : Path2D
         set => pathFollow.Rotates = value; 
     }
 
-    private PathFollow2D pathFollow;
-    private Vector2[] points;
-    private Sprite2D sprite;
+    PathFollow2D pathFollow;
+    Vector2[] points;
+    Sprite2D sprite;
 
-    private GTween tween;
-    private float[] tweenValues;
-    private int tweenIndex;
-    private TransType transType = TransType.Sine;
-    private EaseType easeType = EaseType.Out;
-    private double animSpeed;
-    private Color color;
-    private float width;
-    private int dashes;
+    GTween tween;
+    float[] tweenValues;
+    int tweenIndex;
+    TransType transType = TransType.Sine;
+    EaseType easeType = EaseType.Out;
+    double animSpeed;
+    Color color;
+    float width;
+    int dashes;
 
     public GPath(Vector2[] points, Color color, int width = 5, int dashes = 0, double animSpeed = 1)
     {
@@ -146,21 +146,21 @@ public partial class GPath : Path2D
         CalculateTweenValues();
     }
 
-    private void CalculateTweenValues()
+    void CalculateTweenValues()
     {
         tweenValues = new float[points.Length];
         for (int i = 0; i < points.Length; i++)
             tweenValues[i] = Curve.GetClosestOffset(points[i]);
     }
 
-    private void Animate(bool forwards)
+    void Animate(bool forwards)
     {
         tween = new(this);
         tween.Animate("progress", tweenValues[tweenIndex], 
             CalculateDuration(forwards)).SetTrans(transType).SetEase(easeType);
     }
 
-    private double CalculateDuration(bool forwards)
+    double CalculateDuration(bool forwards)
     {
         // The remaining distance left to go from the current sprites progress
         var remainingDistance = Mathf.Abs(

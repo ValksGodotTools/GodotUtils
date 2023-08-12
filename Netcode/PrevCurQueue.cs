@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class PrevCurQueue<T>
 {
-    public float Progress { get; private set; }
+    public float Progress { get; set; }
 
     public T Previous { get; set; }
     public T Current { get; set; }
@@ -18,8 +18,8 @@ public class PrevCurQueue<T>
      */
     public bool KeepUpdating { get; set; }
 
-    private readonly List<T> data = new();
-    private int interval;
+    readonly List<T> data = new();
+    int interval;
 
     public PrevCurQueue(int interval)
     {
@@ -73,6 +73,6 @@ public class PrevCurQueue<T>
         }
     }
 
-    private void AddToProgress(double delta) =>
+    void AddToProgress(double delta) =>
         Progress += (float)delta * (1000f / interval);
 }

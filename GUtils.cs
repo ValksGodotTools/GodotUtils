@@ -155,7 +155,7 @@ public static class GUtils
         return rows;
     }
 
-    private static void EditInputText(LineEdit input, string text)
+    static void EditInputText(LineEdit input, string text)
     {
         input.Text = text;
         input.CaretColumn = input.Text.Length;

@@ -12,8 +12,8 @@ using System.Threading.Tasks;
  */
 public class GTween 
 {
-    private Tween Tween { get; }
-    private Node Target { get; }
+    Tween Tween { get; }
+    Node Target { get; }
 
     public GTween(Node target)
     {

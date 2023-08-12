@@ -5,13 +5,13 @@ using Godot;
 public partial class CameraController : Camera2D
 {
     // Might convert these to [Export]s later thus they should stay as props
-    private float ZoomIncrement      { get; set; } = 0.08f;
-    private float MinZoom            { get; set; } = 1.5f;
-    private float MaxZoom            { get; set; } = 3.0f;
-    private float SmoothFactor       { get; set; } = 0.25f;
-    private float HorizontalPanSpeed { get; } = 8;
+    float ZoomIncrement      { get; set; } = 0.08f;
+    float MinZoom            { get; set; } = 1.5f;
+    float MaxZoom            { get; set; } = 3.0f;
+    float SmoothFactor       { get; set; } = 0.25f;
+    float HorizontalPanSpeed { get; } = 8;
 
-    private float TargetZoom         { get; set; }
+    float TargetZoom         { get; set; }
 
     public override void _Ready()
     {
@@ -36,7 +36,7 @@ public partial class CameraController : Camera2D
             InputEventMouseButton(mouseEvent);
     }
 
-    private void Panning(float camLeftPos, float camRightPos)
+    void Panning(float camLeftPos, float camRightPos)
     {
         if (Input.IsActionPressed("move_left"))
         {
@@ -53,13 +53,13 @@ public partial class CameraController : Camera2D
         }
     }
 
-    private void Zooming()
+    void Zooming()
     {
         // Lerp to the target zoom for a smooth effect
         Zoom = Zoom.Lerp(new Vector2(TargetZoom, TargetZoom), SmoothFactor);
     }
 
-    private void Boundaries(float camLeftPos, float camRightPos)
+    void Boundaries(float camLeftPos, float camRightPos)
     {
         if (camLeftPos < LimitLeft)
         {
@@ -80,12 +80,12 @@ public partial class CameraController : Camera2D
         }
     }
 
-    private void InputEventMouseButton(InputEventMouseButton @event)
+    void InputEventMouseButton(InputEventMouseButton @event)
     {
         InputZoom(@event);
     }
 
-    private void InputZoom(InputEventMouseButton @event)
+    void InputZoom(InputEventMouseButton @event)
     {
         // Not sure why or if this is required
         if (!@event.IsPressed())

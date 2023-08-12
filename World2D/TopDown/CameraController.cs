@@ -9,28 +9,28 @@ public partial class CameraController : Node
 {
     // Inspector
     [Export] 
-    private float Speed { get; set; } = 100;
+    float Speed { get; set; } = 100;
 
     [ExportGroup("Zoom")]
     [Export(PropertyHint.Range, "0.02, 0.16")] 
-    private float ZoomIncrementDefault { get; set; } = 0.02f;
+    float ZoomIncrementDefault { get; set; } = 0.02f;
 
     [Export(PropertyHint.Range, "0.01, 10")] 
-    private float MinZoom { get; set; } = 0.01f;
+    float MinZoom { get; set; } = 0.01f;
 
     [Export(PropertyHint.Range, "0.1, 10")] 
-    private float MaxZoom { get; set; } = 1.0f;
+    float MaxZoom { get; set; } = 1.0f;
 
     [Export(PropertyHint.Range, "0.01, 1")] 
-    private float SmoothFactor { get; set; } = 0.25f;
+    float SmoothFactor { get; set; } = 0.25f;
 
-    private float zoomIncrement = 0.02f;
-    private float targetZoom;
+    float zoomIncrement = 0.02f;
+    float targetZoom;
 
     // Panning
-    private Vector2 initialPanPosition;
-    private bool panning;
-    private Camera2D camera;
+    Vector2 initialPanPosition;
+    bool panning;
+    Camera2D camera;
 
     public override void _Ready()
     {
@@ -87,13 +87,13 @@ public partial class CameraController : Node
             InputEventMouseButton(mouseButton);
     }
 
-    private void InputEventMouseButton(InputEventMouseButton @event)
+    void InputEventMouseButton(InputEventMouseButton @event)
     {
         HandlePan(@event);
         HandleZoom(@event);
     }
 
-    private void HandlePan(InputEventMouseButton @event)
+    void HandlePan(InputEventMouseButton @event)
     {
         // Left click to start panning the camera
         if (@event.ButtonIndex != MouseButton.Left)
@@ -111,7 +111,7 @@ public partial class CameraController : Node
             panning = false;
     }
 
-    private void HandleZoom(InputEventMouseButton @event)
+    void HandleZoom(InputEventMouseButton @event)
     {
         // Not sure why or if this is required
         if (!@event.IsPressed())

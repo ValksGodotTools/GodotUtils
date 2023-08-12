@@ -9,7 +9,7 @@ public class State
     public Action Transitions { get; set; } = () => { };
     public Action Exit { get; set; } = () => { };
 
-    private string name;
+    string name;
 
     public State(string name = "")
     {

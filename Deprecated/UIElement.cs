@@ -4,8 +4,8 @@ using Godot;
 
 public abstract partial class UIElement : PanelContainer
 {
-    private ElementOptions Options { get; set; }
-    private GMarginContainer MarginContainer { get; set; }
+    ElementOptions Options { get; set; }
+    GMarginContainer MarginContainer { get; set; }
 
     public UIElement()
     {
@@ -26,7 +26,7 @@ public abstract partial class UIElement : PanelContainer
 
     public abstract void CreateUI(HBoxContainer hbox);
 
-    private void InitUI()
+    void InitUI()
     {
         if (Options.HideBackPanel)
             AddThemeStyleboxOverride("panel", new StyleBoxEmpty());

@@ -34,7 +34,7 @@ using System.Linq;
 /// <typeparam name="TEvent">The event type enum to be used. For example 'EventPlayer' enum.</typeparam>
 public class EventManager<TEvent>
 {
-    private readonly Dictionary<TEvent, List<object>> listeners = new();
+    readonly Dictionary<TEvent, List<object>> listeners = new();
 
     /// <summary>
     /// The event type to be listened to (Action uses object[] params by default)

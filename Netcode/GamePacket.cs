@@ -10,9 +10,9 @@ public abstract class GamePacket
     protected byte ChannelId { get; }
 
     // Packets are reliable by default
-    private readonly PacketFlags packetFlags = PacketFlags.Reliable;
-    private long size;
-    private byte[] data;
+    readonly PacketFlags packetFlags = PacketFlags.Reliable;
+    long size;
+    byte[] data;
 
     public void Write()
     {

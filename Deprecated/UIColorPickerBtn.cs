@@ -7,8 +7,8 @@ public partial class UIColorPickerBtn : UIElement
 {
     public event Action<Color> ValueChanged;
 
-    private ColorPickerBtnOptions options;
-    private Color color;
+    ColorPickerBtnOptions options;
+    Color color;
 
     public UIColorPickerBtn(ColorPickerBtnOptions options) : base(options)
     {

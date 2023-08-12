@@ -31,7 +31,7 @@ public static class ExtensionsPrint
     /// Used when doing JsonConvert.SerializeObject to ignore Godot properties
     /// as these are massive.
     /// </summary>
-    private class IgnorePropsResolver : DefaultContractResolver
+    class IgnorePropsResolver : DefaultContractResolver
     {
         protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
         {

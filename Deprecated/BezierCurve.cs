@@ -37,7 +37,7 @@ public static class BezierCurve
     }
 
     // Yoinked from https://www.icode.com/c-function-for-a-bezier-curve/
-    private static Vector2 GetPoint(float t, Vector2 p0, Vector2 p1, Vector2 p2, Vector2 p3)
+    static Vector2 GetPoint(float t, Vector2 p0, Vector2 p1, Vector2 p2, Vector2 p3)
     {
         var cx = 3 * (p1.X - p0.X);
         var cy = 3 * (p1.Y - p0.Y);

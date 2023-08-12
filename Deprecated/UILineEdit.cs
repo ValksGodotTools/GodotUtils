@@ -9,8 +9,8 @@ public partial class UILineEdit : UIElement
 
     public LineEdit LineEdit { get; set; }
 
-    private LineEditOptions Options { get; set; }
-    private string PrevText { get; set; } = "";
+    LineEditOptions Options { get; set; }
+    string PrevText { get; set; } = "";
 
     public UILineEdit(LineEditOptions options) : base(options)
     {

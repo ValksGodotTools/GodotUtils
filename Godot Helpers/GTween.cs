@@ -9,8 +9,8 @@ using System;
 /// </summary>
 public class GTween
 {
-    private Tween tween;
-    private Node node;
+    Tween tween;
+    Node node;
 
     public GTween(Node node)
     {

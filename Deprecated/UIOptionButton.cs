@@ -9,7 +9,7 @@ public partial class UIOptionButton : UIElement
 
     public OptionButton OptionButton { get; set; }
     
-    private OptionButtonOptions Options { get; set; }
+    OptionButtonOptions Options { get; set; }
 
     public UIOptionButton(OptionButtonOptions options) : 
         base(options)

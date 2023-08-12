@@ -16,11 +16,11 @@ public abstract class ENetServer : ENetLow
     public Dictionary<uint, Peer> Peers { get; } = new();
     protected STimer EmitLoop { get; set; }
 
-    private readonly ConcurrentQueue<(Packet, Peer)> incoming = new();
-    private readonly ConcurrentQueue<ServerPacket> outgoing = new();
-    private readonly ConcurrentQueue<Cmd<ENetServerOpcode>> enetCmds = new();
+    readonly ConcurrentQueue<(Packet, Peer)> incoming = new();
+    readonly ConcurrentQueue<ServerPacket> outgoing = new();
+    readonly ConcurrentQueue<Cmd<ENetServerOpcode>> enetCmds = new();
     
-    private ENetOptions options;
+    ENetOptions options;
 
     static ENetServer()
     {
@@ -137,7 +137,7 @@ public abstract class ENetServer : ENetLow
         EnqueuePacket(packet);
     }
 
-    private void EnqueuePacket(ServerPacket packet)
+    void EnqueuePacket(ServerPacket packet)
     {
         outgoing.Enqueue(packet);
     }
@@ -287,7 +287,7 @@ public abstract class ENetServer : ENetLow
         incoming.Enqueue((packet, netEvent.Peer));
     }
 
-    private void WorkerThread(ushort port, int maxClients)
+    void WorkerThread(ushort port, int maxClients)
     {
         Host = new Host();
 

@@ -68,7 +68,7 @@ public static class ExtensionsTileMap
 
     public static bool TileExists(this TileMap tilemap, Vector2 pos, int layer = 0) => tilemap.GetCellSourceId(layer, tilemap.LocalToMap(pos)) != -1;
 
-    private static int GetCurrentTileId(this TileMap tilemap, Vector2 pos)
+    static int GetCurrentTileId(this TileMap tilemap, Vector2 pos)
     {
         var cellPos = tilemap.LocalToMap(pos);
         return 0;

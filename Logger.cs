@@ -14,7 +14,7 @@ using System.Runtime.CompilerServices;
  */
 public static class Logger
 {
-    private static readonly ConcurrentQueue<LogInfo> messages = new();
+    static readonly ConcurrentQueue<LogInfo> messages = new();
 
     /// <summary>
     /// Log a message
@@ -116,7 +116,7 @@ public static class Logger
     /// <summary>
     /// Logs a message that may contain trace information
     /// </summary>
-    private static void LogDetailed(LoggerOpcode opcode, string message, BBColor color, bool trace, string filePath, int lineNumber)
+    static void LogDetailed(LoggerOpcode opcode, string message, BBColor color, bool trace, string filePath, int lineNumber)
     {
         string tracePath;
 
@@ -144,7 +144,7 @@ public static class Logger
         ));
     }
 
-    private static void Print(object v, BBColor color)
+    static void Print(object v, BBColor color)
     {
         //Console.ForegroundColor = color;
 
@@ -155,7 +155,7 @@ public static class Logger
             GD.PrintRich($"[color={color}]{v}");
     }
 
-    private static void PrintErr(object v, BBColor color)
+    static void PrintErr(object v, BBColor color)
     {
         //Console.ForegroundColor = color;
         GD.PrintErr(v);

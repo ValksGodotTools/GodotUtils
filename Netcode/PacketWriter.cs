@@ -11,7 +11,7 @@ public class PacketWriter : IDisposable
 {
     public MemoryStream Stream { get; } = new();
 
-    private readonly BinaryWriter writer;
+    readonly BinaryWriter writer;
 
     public PacketWriter() => writer = new BinaryWriter(Stream);
 
