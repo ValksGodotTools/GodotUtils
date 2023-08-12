@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 public static class GUtils
 {
     public async static Task WaitOneFrame(Node parent) => 
-        await parent.ToSignal(parent.GetTree(), "process_frame");
+        await parent.ToSignal(
+            source: parent.GetTree(), 
+            signal: SceneTree.SignalName.ProcessFrame);
 
     public static Vector2 GetMovementInput(string prefix = "")
     {
