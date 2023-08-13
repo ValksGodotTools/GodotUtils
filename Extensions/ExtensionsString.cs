@@ -32,4 +32,15 @@ public static class ExtensionsString
 
         return string.Join(" ", words);
     }
+
+    public static bool IsDigitsOnly(this string v)
+    {
+        foreach (char c in v)
+        {
+            if (c < '0' || c > '9')
+                return false;
+        }
+
+        return true;
+    }
 }
