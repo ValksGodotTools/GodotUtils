@@ -4,9 +4,21 @@ using Godot;
 
 public static class ExtensionsInputEventMouseButton
 {
+    public static bool IsWheelUp(this InputEventMouseButton @event) =>
+        IsZoomIn(@event);
+
+    public static bool IsWheelDown(this InputEventMouseButton @event) =>
+        IsZoomOut(@event);
+
+    /// <summary>
+    /// Returns true if a mouse WheelUp event was detected
+    /// </summary>
     public static bool IsZoomIn(this InputEventMouseButton @event) =>
         @event.IsPressed(MouseButton.WheelUp);
 
+    /// <summary>
+    /// Returns true if a mouse WheelDown event was detected
+    /// </summary>
     public static bool IsZoomOut(this InputEventMouseButton @event) =>
         @event.IsPressed(MouseButton.WheelDown);
 
