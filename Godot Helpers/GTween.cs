@@ -44,8 +44,13 @@ public class GTween
             tween.Parallel().TweenProperty(node, prop, finalValue, duration) :
             tween.TweenProperty(node, prop, finalValue, duration);
 
-    public CallbackTweener Callback(Action callback) =>
-        tween.TweenCallback(Callable.From(callback));
+    public CallbackTweener Callback(Action callback, bool parallel = false)
+    {
+        if (!parallel)
+            return tween.TweenCallback(Callable.From(callback));
+        else
+            return tween.Parallel().TweenCallback(Callable.From(callback));
+    }
 
     public void Finished(Action callback) => tween.Finished += callback;
     public bool IsRunning() => tween.IsRunning();
