@@ -9,20 +9,20 @@ public partial class CameraController : Node
 {
     // Inspector
     [Export] 
-    float Speed { get; set; } = 100;
+    float speed = 100;
 
     [ExportGroup("Zoom")]
     [Export(PropertyHint.Range, "0.02, 0.16")] 
-    float ZoomIncrementDefault { get; set; } = 0.02f;
+    float zoomIncrementDefault = 0.02f;
 
     [Export(PropertyHint.Range, "0.01, 10")] 
-    float MinZoom { get; set; } = 0.01f;
+    float minZoom = 0.01f;
 
     [Export(PropertyHint.Range, "0.1, 10")] 
-    float MaxZoom { get; set; } = 1.0f;
+    float maxZoom = 1.0f;
 
     [Export(PropertyHint.Range, "0.01, 1")] 
-    float SmoothFactor { get; set; } = 0.25f;
+    float smoothFactor = 0.25f;
 
     float zoomIncrement = 0.02f;
     float targetZoom;
@@ -38,7 +38,7 @@ public partial class CameraController : Node
 
         // Make sure the camera zoom does not go past MinZoom
         // Note that a higher MinZoom value means the camera can zoom out more
-        var maxZoom = Mathf.Max(camera.Zoom.X, MinZoom);
+        var maxZoom = Mathf.Max(camera.Zoom.X, minZoom);
         camera.Zoom = Vector2.One * maxZoom;
 
         // Set the initial target zoom value on game start
@@ -68,16 +68,16 @@ public partial class CameraController : Node
             camera.Position = initialPanPosition - (GetViewport().GetMousePosition() / camera.Zoom.X);
 
         // Arrow keys and WASD movement are added onto the panning position changes
-        camera.Position += dir.Normalized() * Speed;
+        camera.Position += dir.Normalized() * speed;
     }
 
     public override void _PhysicsProcess(double delta)
     {
         // Prevent zoom from becoming too fast when zooming out
-        zoomIncrement = ZoomIncrementDefault * camera.Zoom.X;
+        zoomIncrement = zoomIncrementDefault * camera.Zoom.X;
 
         // Lerp to the target zoom for a smooth effect
-        camera.Zoom = camera.Zoom.Lerp(new Vector2(targetZoom, targetZoom), SmoothFactor);
+        camera.Zoom = camera.Zoom.Lerp(new Vector2(targetZoom, targetZoom), smoothFactor);
     }
 
     // Not sure if this should be done in _Input or _UnhandledInput
@@ -126,6 +126,6 @@ public partial class CameraController : Node
             targetZoom -= zoomIncrement;
 
         // Clamp the zoom
-        targetZoom = Mathf.Clamp(targetZoom, MinZoom, MaxZoom);
+        targetZoom = Mathf.Clamp(targetZoom, minZoom, maxZoom);
     }
 }
