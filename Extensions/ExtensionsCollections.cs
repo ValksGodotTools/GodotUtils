@@ -14,7 +14,7 @@ public static class CollectionExtensions
     /// </summary>
     public static void ForEach<T>(this IEnumerable<T> value, Action<T> action)
     {
-        foreach (var element in value)
+        foreach (T element in value)
             action(element);
     }
 

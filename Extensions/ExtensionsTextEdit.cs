@@ -10,8 +10,8 @@ public static class ExtensionsTextEdit
 
     public static string Filter(this TextEdit textEdit, Func<string, bool> filter)
     {
-        var text = textEdit.Text;
-        var id = textEdit.GetInstanceId();
+        string text = textEdit.Text;
+        ulong id = textEdit.GetInstanceId();
 
         if (string.IsNullOrWhiteSpace(text))
             return prevTexts.ContainsKey(id) ? prevTexts[id] : null;

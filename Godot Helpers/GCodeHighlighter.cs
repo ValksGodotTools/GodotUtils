@@ -30,7 +30,7 @@ public partial class GCodeHighlighter : CodeHighlighter
             "void"
         };
 
-        foreach (var keyword in keywords)
+        foreach (string keyword in keywords)
             KeywordColors.Add(keyword, new Color("a59fff"));
     }
 }

@@ -24,9 +24,9 @@ public static class ExtensionsString
 
     public static string SmallWordsToUpper(this string v, int maxLength = 2, Func<string, bool> filter = null)
     {
-        var words = v.Split(' ');
+        string[] words = v.Split(' ');
 
-        for (var i = 0; i < words.Length; i++)
+        for (int i = 0; i < words.Length; i++)
             if (words[i].Length <= maxLength && (filter == null || filter(words[i])))
                 words[i] = words[i].ToUpper();
 

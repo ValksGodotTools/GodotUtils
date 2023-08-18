@@ -25,10 +25,10 @@ public static class ExtensionsRayCast2D
         if (!raycast.IsColliding() || raycast.GetCollider() is not TileMap tileMap)
             return default;
 
-        var collisionPos = raycast.GetCollisionPoint();
-        var tilePos = tileMap.LocalToMap(tileMap.ToLocal(collisionPos));
+        Vector2 collisionPos = raycast.GetCollisionPoint();
+        Vector2I tilePos = tileMap.LocalToMap(tileMap.ToLocal(collisionPos));
 
-        var tileData = tileMap.GetCellTileData(0, tilePos);
+        TileData tileData = tileMap.GetCellTileData(0, tilePos);
 
         if (tileData == null)
             return default;
@@ -44,7 +44,7 @@ public static class ExtensionsRayCast2D
         // Reset all mask values to 0
         node.CollisionMask = 0;
 
-        foreach (var value in values)
+        foreach (int value in values)
             node.SetCollisionMaskValue(value, true);
     }
 
@@ -71,7 +71,7 @@ public static class ExtensionsRayCast2D
     /// <returns>True if any ray cast is colliding, else false</returns>
     public static bool IsAnyRayCastColliding(this List<RayCast2D> raycasts)
     {
-        foreach (var raycast in raycasts)
+        foreach (RayCast2D raycast in raycasts)
             if (raycast.IsColliding())
                 return true;
 
@@ -85,7 +85,7 @@ public static class ExtensionsRayCast2D
     /// <returns>Raycast which is colliding, else default</returns>
     public static RayCast2D GetAnyRayCastCollider(this List<RayCast2D> raycasts)
     {
-        foreach (var raycast in raycasts)
+        foreach (RayCast2D raycast in raycasts)
             if (raycast.IsColliding())
                 return raycast;
 

@@ -35,7 +35,8 @@ public static class ExtensionsPrint
     {
         protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
         {
-            var prop = base.CreateProperty(member, memberSerialization);
+            JsonProperty prop = 
+                base.CreateProperty(member, memberSerialization);
 
             // Ignored properties (prevents crashes)
             var ignoredProps = new Type[]
@@ -46,7 +47,7 @@ public static class ExtensionsPrint
                 typeof(ENet.Packet)
             };
 
-            foreach (var ignoredProp in ignoredProps)
+            foreach (Type ignoredProp in ignoredProps)
             {
                 if (ignoredProp.GetProperties().Contains(member))
                     prop.Ignored = true;

@@ -6,7 +6,7 @@ public static class ExtensionsNode
 {
     public static void DisableChildren(this Node node)
     {
-        foreach (var child in node.GetChildren())
+        foreach (Node child in node.GetChildren())
         {
             child.SetProcess(false);
             child.SetPhysicsProcess(false);
@@ -16,7 +16,7 @@ public static class ExtensionsNode
 
     public static void EnableChildren(this Node node)
     {
-        foreach (var child in node.GetChildren())
+        foreach (Node child in node.GetChildren())
         {
             child.SetProcess(true);
             child.SetPhysicsProcess(true);
@@ -40,8 +40,8 @@ public static class ExtensionsNode
     /// </summary>
     public static TNode[] GetChildren<TNode>(this Node parent) where TNode : Node
     {
-        var children = parent.GetChildren();
-        var arr = new TNode[children.Count];
+        Godot.Collections.Array<Node> children = parent.GetChildren();
+        TNode[] arr = new TNode[children.Count];
 
         for (int i = 0; i < children.Count; i++)
             try
@@ -67,7 +67,7 @@ public static class ExtensionsNode
 
     public static void RemoveAllGroups(this Node node)
     {
-        var groups = node.GetGroups();
+        Godot.Collections.Array<StringName> groups = node.GetGroups();
         for (int i = 0; i < groups.Count; i++)
             node.RemoveFromGroup(groups[i]);
     }

@@ -14,7 +14,7 @@ public static class ExtensionsCollisionObject2D
         node.CollisionLayer = 0;
         node.CollisionMask = 0;
 
-        foreach (var value in values)
+        foreach (int value in values)
         {
             node.SetCollisionLayerValue(value, true);
             node.SetCollisionMaskValue(value, true);
@@ -30,7 +30,7 @@ public static class ExtensionsCollisionObject2D
         // Reset all mask values to 0
         node.CollisionMask = 0;
 
-        foreach (var value in values)
+        foreach (int value in values)
         {
             node.SetCollisionMaskValue(value, true);
         }
@@ -45,7 +45,7 @@ public static class ExtensionsCollisionObject2D
         // Reset all layer values to 0
         node.CollisionLayer = 0;
 
-        foreach (var value in values)
+        foreach (int value in values)
         {
             node.SetCollisionLayerValue(value, true);
         }

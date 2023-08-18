@@ -60,19 +60,19 @@ public class PacketReader : IDisposable
 
         if (t.IsGenericType)
         {
-            var g = t.GetGenericTypeDefinition();
+            Type g = t.GetGenericTypeDefinition();
 
             if (g == typeof(IList<>) || g == typeof(List<>))
             {
-                var vt = t.GetGenericArguments()[0];
+                Type vt = t.GetGenericArguments()[0];
 
-                var count = ReadInt();
+                int count = ReadInt();
 
                 dynamic list = Activator
                     .CreateInstance(typeof(List<>)
                     .MakeGenericType(vt));
 
-                for (var i = 0; i < count; i++)
+                for (int i = 0; i < count; i++)
                     list.Add(Read(vt));
 
                 return list;
@@ -80,16 +80,16 @@ public class PacketReader : IDisposable
 
             if (g == typeof(IDictionary<,>) || g == typeof(Dictionary<,>))
             {
-                var kt = t.GetGenericArguments()[0];
-                var vt = t.GetGenericArguments()[1];
+                Type kt = t.GetGenericArguments()[0];
+                Type vt = t.GetGenericArguments()[1];
 
-                var count = ReadInt();
+                int count = ReadInt();
 
                 dynamic dict = Activator
                     .CreateInstance(typeof(Dictionary<,>)
                     .MakeGenericType(kt, vt));
 
-                for (var i = 0; i < count; i++)
+                for (int i = 0; i < count; i++)
                     dict.Add(Read(kt), Read(vt));
 
                 return dict;
@@ -98,25 +98,26 @@ public class PacketReader : IDisposable
 
         if (t.IsEnum)
         {
-            var v = ReadByte();
+            byte v = ReadByte();
             return Enum.ToObject(t, v);
         }
 
         if (t.IsValueType)
         {
-            var v = Activator.CreateInstance(t);
+            object v = Activator.CreateInstance(t);
 
-            var fields = t
+            IOrderedEnumerable<FieldInfo> fields = t
                 .GetFields(BindingFlags.Public | BindingFlags.Instance)
                 .OrderBy(field => field.MetadataToken);
 
-            foreach (var f in fields)
+            foreach (FieldInfo f in fields)
                 f.SetValue(v, Read(f.FieldType));
 
             return v;
         }
 
-        throw new NotImplementedException("PacketReader: " + t + " is not a supported type.");
+        throw new NotImplementedException(
+            "PacketReader: " + t + " is not a supported type.");
     }
 
     public T Read<T>() =>

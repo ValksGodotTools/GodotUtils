@@ -15,7 +15,7 @@ public partial class GMarginContainer : MarginContainer
 
     public void SetMarginAll(int padding)
     {
-        foreach (var margin in new string[] { "left", "right", "top", "bottom" })
+        foreach (string margin in new string[] { "left", "right", "top", "bottom" })
             AddThemeConstantOverride($"margin_{margin}", padding);
     }
 

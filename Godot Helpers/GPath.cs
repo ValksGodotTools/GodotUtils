@@ -53,12 +53,12 @@ public partial class GPath : Path2D
 
     public override void _Draw()
     {
-        var points = Curve.GetBakedPoints();
+        Vector2[] points = Curve.GetBakedPoints();
 
         for (int i = 0; i < points.Length - 1; i += (dashes + 1))
         {
-            var A = points[i];
-            var B = points[i + 1];
+            Vector2 A = points[i];
+            Vector2 B = points[i + 1];
 
             DrawLine(A, B, color, width, true);
         }
@@ -101,16 +101,16 @@ public partial class GPath : Path2D
     public void AddCurves(int curveSize = 50, int curveDistance = 50)
     {
         // Add aditional points to make each line be curved
-        var invert = 1;
+        int invert = 1;
 
         for (int i = 0; i < points.Length - 1; i++)
         {
-            var A = points[i];
-            var B = points[i + 1];
+            Vector2 A = points[i];
+            Vector2 B = points[i + 1];
 
-            var center = (A + B) / 2;
-            var offset = ((B - A).Orthogonal().Normalized() * curveDistance * invert);
-            var newPos = center + offset;
+            Vector2 center = (A + B) / 2;
+            Vector2 offset = ((B - A).Orthogonal().Normalized() * curveDistance * invert);
+            Vector2 newPos = center + offset;
 
             // Switch between sides so curves flow more naturally
             invert *= -1;
@@ -134,7 +134,7 @@ public partial class GPath : Path2D
                 // Next point is over and after first point
                 v = new Vector4(-1, 1, 1, -1);
 
-            var index = 1 + i * 2;
+            int index = 1 + i * 2;
 
             // Insert the curved point at the index in the curve
             Curve.AddPoint(newPos,
@@ -163,10 +163,10 @@ public partial class GPath : Path2D
     double CalculateDuration(bool forwards)
     {
         // The remaining distance left to go from the current sprites progress
-        var remainingDistance = Mathf.Abs(
+        float remainingDistance = Mathf.Abs(
             tweenValues[tweenIndex] - pathFollow.Progress);
 
-        var startIndex = 0;
+        int startIndex = 0;
 
         // Dynamically calculate the start index
         for (int i = 0; i < tweenValues.Length; i++)
@@ -177,9 +177,9 @@ public partial class GPath : Path2D
             }
 
         // The number of level icons left to pass
-        var levelIconsLeft = Mathf.Max(1, Mathf.Abs(tweenIndex - startIndex));
+        int levelIconsLeft = Mathf.Max(1, Mathf.Abs(tweenIndex - startIndex));
         
-        var duration = remainingDistance / 150 / animSpeed / levelIconsLeft;
+        double duration = remainingDistance / 150 / animSpeed / levelIconsLeft;
 
         return duration;
     }

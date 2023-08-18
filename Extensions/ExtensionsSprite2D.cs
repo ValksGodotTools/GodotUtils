@@ -34,13 +34,13 @@ public static class ExtensionsSprite2D
     /// </summary>
     public static int GetPixelWidth(this Sprite2D sprite)
     {
-        var img = sprite.Texture.GetImage();
-        var size = img.GetSize();
+        Image img = sprite.Texture.GetImage();
+        Vector2I size = img.GetSize();
 
-        var transColumnsLeft = GUtils.GetTransparentColumnsLeft(img, size);
-        var transColumnsRight = GUtils.GetTransparentColumnsRight(img, size);
+        int transColumnsLeft = GUtils.GetTransparentColumnsLeft(img, size);
+        int transColumnsRight = GUtils.GetTransparentColumnsRight(img, size);
 
-        var pixelWidth = size.X - transColumnsLeft - transColumnsRight;
+        int pixelWidth = size.X - transColumnsLeft - transColumnsRight;
 
         return (int)(pixelWidth * sprite.Scale.X);
     }
@@ -58,24 +58,25 @@ public static class ExtensionsSprite2D
     /// </summary>
     public static int GetPixelHeight(this Sprite2D sprite)
     {
-        var img = sprite.Texture.GetImage();
-        var size = img.GetSize();
+        Image img = sprite.Texture.GetImage();
+        Vector2I size = img.GetSize();
 
-        var transRowsTop = GUtils.GetTransparentRowsTop(img, size);
-        var transRowsBottom = GUtils.GetTransparentRowsBottom(img, size);
+        int transRowsTop = GUtils.GetTransparentRowsTop(img, size);
+        int transRowsBottom = GUtils.GetTransparentRowsBottom(img, size);
 
-        var pixelHeight = size.Y - transRowsTop - transRowsBottom;
+        int pixelHeight = size.Y - transRowsTop - transRowsBottom;
 
         return (int)(pixelHeight * sprite.Scale.Y);
     }
 
     public static int GetPixelBottomY(this Sprite2D sprite)
     {
-        var img = sprite.Texture.GetImage();
-        var size = img.GetSize();
+        Image img = sprite.Texture.GetImage();
+        Vector2I size = img.GetSize();
 
-        // Might not work with all sprites but works with ninja. The -2 offset that is
-        var diff = 0;
+        // Might not work with all sprites but works with ninja.
+        // The -2 offset that is
+        int diff = 0;
 
         for (int y = (int)size.Y - 1; y >= 0; y--)
         {

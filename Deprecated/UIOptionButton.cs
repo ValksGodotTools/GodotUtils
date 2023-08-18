@@ -23,7 +23,7 @@ public partial class UIOptionButton : UIElement
         OptionButton.SizeFlagsHorizontal = SizeFlags.ShrinkBegin;
         OptionButton.CustomMinimumSize = new Vector2(Options.MinElementSize, 0);
 
-        foreach (var item in Options.Items)
+        foreach (string item in Options.Items)
             OptionButton.AddItem(item.AddSpaceBeforeEachCapital());
 
         OptionButton.ItemSelected += item => ValueChanged?.Invoke(item);

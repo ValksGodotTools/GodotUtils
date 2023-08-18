@@ -16,7 +16,7 @@ public abstract class ClientPacket : GamePacket
 
     public void Send()
     {
-        var enetPacket = CreateENetPacket();
+        ENet.Packet enetPacket = CreateENetPacket();
         Peers[0].Send(ChannelId, ref enetPacket);
     }
 

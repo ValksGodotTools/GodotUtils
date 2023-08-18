@@ -129,7 +129,7 @@ public static class Logger
         else
         {
             // Main.cs:23
-            var elements = filePath.Split('\\');
+            string[] elements = filePath.Split('\\');
             tracePath = $"  at {elements[elements.Length - 1]}:{lineNumber}";
         }
 

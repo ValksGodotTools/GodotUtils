@@ -17,7 +17,7 @@ public static class ExtensionsInputEventKey
     public static string Readable(this InputEventKey v)
     {
         // If Keycode is not set than use PhysicalKeycode
-        var keyWithModifiers = v.Keycode == Key.None ?
+        Key keyWithModifiers = v.Keycode == Key.None ?
             v.GetPhysicalKeycodeWithModifiers() :
             v.GetKeycodeWithModifiers();
 

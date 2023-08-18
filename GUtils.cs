@@ -16,8 +16,13 @@ public static class GUtils
             prefix += "_";
 
         // GetActionStrength(...) supports controller sensitivity
-        var inputHorz = Input.GetActionStrength($"{prefix}move_right") - Input.GetActionStrength($"{prefix}move_left");
-        var inputVert = Input.GetActionStrength($"{prefix}move_down") - Input.GetActionStrength($"{prefix}move_up");
+        float inputHorz = 
+            Input.GetActionStrength($"{prefix}move_right") - 
+            Input.GetActionStrength($"{prefix}move_left");
+        
+        float inputVert = 
+            Input.GetActionStrength($"{prefix}move_down") - 
+            Input.GetActionStrength($"{prefix}move_up");
 
         // Normalize vector to prevent fast diagonal strafing
         return new Vector2(inputHorz, inputVert).Normalized();
@@ -25,7 +30,7 @@ public static class GUtils
 
     public static Vector2 RandDir(float dist = 1)
     {
-        var theta = RandAngle();
+        float theta = RandAngle();
         return new Vector2(Mathf.Cos(theta) * dist, Mathf.Sin(theta) * dist);
     }
 
@@ -70,7 +75,7 @@ public static class GUtils
 
         if (value.Length > max.ToString().Length && num <= max)
         {
-            var spliced = value.Remove(value.Length - 1);
+            string spliced = value.Remove(value.Length - 1);
             prevNum = int.Parse(spliced);
             EditInputText(input, spliced);
             return;
@@ -93,7 +98,7 @@ public static class GUtils
 
     public static int GetTransparentColumnsLeft(Image img, Vector2 size)
     {
-        var columns = 0;
+        int columns = 0;
 
         for (int x = 0; x < size.X; x++)
         {
@@ -109,7 +114,7 @@ public static class GUtils
 
     public static int GetTransparentColumnsRight(Image img, Vector2 size)
     {
-        var columns = 0;
+        int columns = 0;
 
         for (int x = (int)size.X - 1; x >= 0; x--)
         {
@@ -125,7 +130,7 @@ public static class GUtils
 
     public static int GetTransparentRowsTop(Image img, Vector2 size)
     {
-        var rows = 0;
+        int rows = 0;
 
         for (int y = 0; y < size.Y; y++)
         {
@@ -141,7 +146,7 @@ public static class GUtils
 
     public static int GetTransparentRowsBottom(Image img, Vector2 size)
     {
-        var rows = 0;
+        int rows = 0;
 
         for (int y = (int)size.Y - 1; y >= 0; y--)
         {

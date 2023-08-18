@@ -11,7 +11,7 @@ public static class ExtensionsTileMap
     {
         uint result = 0;
 
-        foreach (var layer in layers)
+        foreach (uint layer in layers)
             result += GUMath.UIntPow(2, layer - 1);
 
         tileMap.TileSet.SetPhysicsLayerCollisionLayer(0, result);
@@ -34,9 +34,9 @@ public static class ExtensionsTileMap
     /// </summary>
     public static Variant GetTileData(this TileMap tilemap, Vector2 pos, string layerName)
     {
-        var tilePos = tilemap.LocalToMap(tilemap.ToLocal(pos));
+        Vector2I tilePos = tilemap.LocalToMap(tilemap.ToLocal(pos));
 
-        var tileData = tilemap.GetCellTileData(0, tilePos);
+        TileData tileData = tilemap.GetCellTileData(0, tilePos);
 
         if (tileData == null)
             return default;
@@ -46,7 +46,7 @@ public static class ExtensionsTileMap
 
     public static bool InTileMap(this TileMap tilemap, Vector2 pos)
     {
-        var tilePos = tilemap.LocalToMap(tilemap.ToLocal(pos));
+        Vector2I tilePos = tilemap.LocalToMap(tilemap.ToLocal(pos));
 
         return tilemap.GetCellSourceId(0, tilePos) != -1;
     }
@@ -56,12 +56,12 @@ public static class ExtensionsTileMap
         if (!tilemap.TileExists(pos))
             return "";
 
-        var tileData = tilemap.GetCellTileData(layer, tilemap.LocalToMap(pos));
+        TileData tileData = tilemap.GetCellTileData(layer, tilemap.LocalToMap(pos));
 
         if (tileData == null)
             return "";
 
-        var data = tileData.GetCustomData("Name");
+        Variant data = tileData.GetCustomData("Name");
 
         return data.AsString();
     }
@@ -70,7 +70,7 @@ public static class ExtensionsTileMap
 
     static int GetCurrentTileId(this TileMap tilemap, Vector2 pos)
     {
-        var cellPos = tilemap.LocalToMap(pos);
+        Vector2I cellPos = tilemap.LocalToMap(pos);
         return 0;
         //return tilemap.GetCellv(cellPos); // TODO: Godot 4 conversion
     }

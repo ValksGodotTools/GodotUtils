@@ -64,18 +64,18 @@ public class PacketWriter : IDisposable
             case Vector2 k: Write(k); return;
         }
 
-        var t = v.GetType();
+        Type t = v.GetType();
         dynamic d = v;
 
         if (t.IsGenericType)
         {
-            var g = t.GetGenericTypeDefinition();
+            Type g = t.GetGenericTypeDefinition();
 
             if (g == typeof(IList<>) || g == typeof(List<>))
             {
                 Write(d.Count);
 
-                foreach (var item in d)
+                foreach (dynamic item in d)
                     Write<dynamic>(item);
 
                 return;
@@ -85,7 +85,7 @@ public class PacketWriter : IDisposable
             {
                 Write(d.Count);
 
-                foreach (var item in d)
+                foreach (dynamic item in d)
                 {
                     Write<dynamic>(item.Key);
                     Write<dynamic>(item.Value);
@@ -103,11 +103,11 @@ public class PacketWriter : IDisposable
 
         if (t.IsValueType)
         {
-            var fields = t
+            IOrderedEnumerable<FieldInfo> fields = t
                 .GetFields(BindingFlags.Public | BindingFlags.Instance)
                 .OrderBy(field => field.MetadataToken);
 
-            foreach (var field in fields)
+            foreach (FieldInfo field in fields)
                 Write<dynamic>(field.GetValue(d));
 
             return;
@@ -118,7 +118,7 @@ public class PacketWriter : IDisposable
 
     public void WriteAll(params dynamic[] values)
     {
-        foreach (var value in values)
+        foreach (dynamic value in values)
             Write<dynamic>(value);
     }
 

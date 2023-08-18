@@ -11,8 +11,8 @@ public static class ExtensionsLineEdit
 
     public static string Filter(this LineEdit lineEdit, Func<string, bool> filter)
     {
-        var text = lineEdit.Text;
-        var id = lineEdit.GetInstanceId();
+        string text = lineEdit.Text;
+        ulong id = lineEdit.GetInstanceId();
 
         if (string.IsNullOrWhiteSpace(text))
             return prevTexts.ContainsKey(id) ? prevTexts[id] : null;
@@ -35,8 +35,8 @@ public static class ExtensionsLineEdit
 
     public static int FilterRange(this LineEdit lineEdit, int maxRange)
     {
-        var text = lineEdit.Text;
-        var id = lineEdit.GetInstanceId();
+        string text = lineEdit.Text;
+        ulong id = lineEdit.GetInstanceId();
 
         // Ignore blank spaces
         if (string.IsNullOrWhiteSpace(text))
@@ -74,7 +74,7 @@ public static class ExtensionsLineEdit
         // Not sure why this is here but I'm sure it's here for a good reason
         if (text.Length > maxRange.ToString().Length && num <= maxRange)
         {
-            var spliced = text.Remove(text.Length - 1);
+            string spliced = text.Remove(text.Length - 1);
             prevNums[id] = int.Parse(spliced);
 
             lineEdit.Text = spliced;

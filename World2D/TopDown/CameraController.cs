@@ -38,7 +38,7 @@ public partial class CameraController : Node
 
         // Make sure the camera zoom does not go past MinZoom
         // Note that a higher MinZoom value means the camera can zoom out more
-        var maxZoom = Mathf.Max(camera.Zoom.X, minZoom);
+        float maxZoom = Mathf.Max(camera.Zoom.X, minZoom);
         camera.Zoom = Vector2.One * maxZoom;
 
         // Set the initial target zoom value on game start

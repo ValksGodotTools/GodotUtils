@@ -46,7 +46,7 @@ public partial class SceneManager : Node
     {
         instance = this;
         tree = GetTree();
-        var root = tree.Root;
+        Window root = tree.Root;
         CurrentScene = root.GetChild(root.GetChildCount() - 1);
     }
 

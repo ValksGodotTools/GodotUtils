@@ -19,7 +19,7 @@ public class GAudioPlayer
         get => StreamPlayer.VolumeDb.Remap(-40, 0, 0, 100);
         set
         {
-            var v = value.Remap(0, 100, -40, 0);
+            float v = value.Remap(0, 100, -40, 0);
 
             if (value == 0)
                 v = -80;

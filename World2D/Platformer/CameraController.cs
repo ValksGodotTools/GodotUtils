@@ -20,9 +20,9 @@ public partial class CameraController : Camera2D
 
     public override void _PhysicsProcess(double delta)
     {
-        var cameraWidth = GetViewportRect().Size.X / base.Zoom.X;
-        var camLeftPos = Position.X - (cameraWidth / 2);
-        var camRightPos = Position.X + (cameraWidth / 2);
+        float cameraWidth = GetViewportRect().Size.X / base.Zoom.X;
+        float camLeftPos = Position.X - (cameraWidth / 2);
+        float camRightPos = Position.X + (cameraWidth / 2);
 
         Panning(camLeftPos, camRightPos);
         Zooming();
@@ -63,7 +63,7 @@ public partial class CameraController : Camera2D
         if (camLeftPos < LimitLeft)
         {
             // Travelled this many pixels too far
-            var gapDifference = Mathf.Abs(camLeftPos - LimitLeft);
+            float gapDifference = Mathf.Abs(camLeftPos - LimitLeft);
 
             // Correct position
             Position += new Vector2(gapDifference, 0);
@@ -72,7 +72,7 @@ public partial class CameraController : Camera2D
         if (camRightPos > LimitRight)
         {
             // Travelled this many pixels too far
-            var gapDifference = Mathf.Abs(camRightPos - LimitRight);
+            float gapDifference = Mathf.Abs(camRightPos - LimitRight);
 
             // Correct position
             Position -= new Vector2(gapDifference, 0);

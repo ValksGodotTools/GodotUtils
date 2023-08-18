@@ -42,7 +42,7 @@ public abstract class ENetServer : ENetLow
         EmitLoop.Start();
         _running = 1;
         CTS = new CancellationTokenSource();
-        using var task = Task.Run(() => WorkerThread(port, maxClients), CTS.Token);
+        using Task task = Task.Run(() => WorkerThread(port, maxClients), CTS.Token);
 
         try
         {
@@ -78,7 +78,7 @@ public abstract class ENetServer : ENetLow
     {
         packet.Write();
 
-        var type = packet.GetType();
+        Type type = packet.GetType();
 
         if (!IgnoredPackets.Contains(type) && options.PrintPacketSent)
             Log($"Sending packet {type.Name} {(options.PrintPacketByteSize ? $"({packet.GetSize()} bytes)" : "")}to peer {peer.ID}" +
@@ -100,22 +100,23 @@ public abstract class ENetServer : ENetLow
     {
         packet.Write();
 
-        var type = packet.GetType();
+        Type type = packet.GetType();
 
         if (!IgnoredPackets.Contains(type) && options.PrintPacketSent)
         {
-            // This is messy but I don't know how I will clean it up right now so
-            // I'm leaving it as is for now..
-            var byteSize = options.PrintPacketByteSize ? $"({packet.GetSize()} bytes)" 
-                : "";
+            // This is messy but I don't know how I will clean it up right
+            // now so I'm leaving it as is for now..
+            string byteSize = options.PrintPacketByteSize ? 
+                $"({packet.GetSize()} bytes)" : "";
             
-            var start = $"Broadcasting packet {type.Name} {byteSize}";
+            string start = $"Broadcasting packet {type.Name} {byteSize}";
 
-            var peerArr = peers.Select(x => x.ID).Print();
+            string peerArr = peers.Select(x => x.ID).Print();
 
-            var middle = "";
+            string middle = "";
 
-            var end = options.PrintPacketData ? $"\n{packet.PrintFull()}" : "";
+            string end = options.PrintPacketData ? 
+                $"\n{packet.PrintFull()}" : "";
 
             if (peers.Count() == 0)
                 middle = "to everyone";
@@ -126,7 +127,7 @@ public abstract class ENetServer : ENetLow
             else
                 middle = $"to peers {peerArr}";
 
-            var message = start + middle + end;
+            string message = start + middle + end;
 
             Log(message);
         }
@@ -207,7 +208,7 @@ public abstract class ENetServer : ENetLow
         while (incoming.TryDequeue(out (ENet.Packet, Peer) packetPeer))
         {
             var packetReader = new PacketReader(packetPeer.Item1);
-            var opcode = packetReader.ReadByte();
+            byte opcode = packetReader.ReadByte();
 
             if (!ClientPacket.PacketMapBytes.ContainsKey(opcode))
             {
@@ -215,8 +216,8 @@ public abstract class ENetServer : ENetLow
                 return;
             }
 
-            var type = ClientPacket.PacketMapBytes[opcode];
-            var handlePacket = ClientPacket.PacketMap[type].Instance;
+            Type type = ClientPacket.PacketMapBytes[opcode];
+            ClientPacket handlePacket = ClientPacket.PacketMap[type].Instance;
             try
             {
                 handlePacket.Read(packetReader);
@@ -238,7 +239,7 @@ public abstract class ENetServer : ENetLow
         // Outgoing
         while (outgoing.TryDequeue(out ServerPacket packet))
         {
-            var sendType = packet.GetSendType();
+            SendType sendType = packet.GetSendType();
 
             if (sendType == SendType.Peer)
             {
@@ -275,7 +276,7 @@ public abstract class ENetServer : ENetLow
 
     protected override void Receive(Event netEvent)
     {
-        var packet = netEvent.Packet;
+        ENet.Packet packet = netEvent.Packet;
 
         if (packet.Length > GamePacket.MaxSize)
         {

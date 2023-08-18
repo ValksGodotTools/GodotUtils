@@ -10,7 +10,7 @@ public static class NetcodeUtils
 {
     public static Dictionary<Type, PacketInfo<T>> MapPackets<T>()
     {
-        var types = Assembly.GetExecutingAssembly()
+        List<Type> types = Assembly.GetExecutingAssembly()
             .GetTypes()
             .Where(x => typeof(T).IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract)
             .OrderBy(x => x.Name)

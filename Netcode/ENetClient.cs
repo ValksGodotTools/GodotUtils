@@ -40,7 +40,7 @@ public abstract class ENetClient : ENetLow
 
         _running = 1;
         CTS = new CancellationTokenSource();
-        using var task = Task.Run(() => WorkerThread(ip, port), CTS.Token);
+        using Task task = Task.Run(() => WorkerThread(ip, port), CTS.Token);
 
         try
         {
@@ -86,13 +86,13 @@ public abstract class ENetClient : ENetLow
         }
 
         // Incoming
-        while (incoming.TryDequeue(out var packet))
+        while (incoming.TryDequeue(out ENet.Packet packet))
         {
             var packetReader = new PacketReader(packet);
-            var opcode = packetReader.ReadByte();
+            byte opcode = packetReader.ReadByte();
 
-            var type = ServerPacket.PacketMapBytes[opcode];
-            var handlePacket = ServerPacket.PacketMap[type].Instance;
+            Type type = ServerPacket.PacketMapBytes[opcode];
+            ServerPacket handlePacket = ServerPacket.PacketMap[type].Instance;
 
             /*
             * Instead of packets being handled client-side, they are handled
@@ -109,9 +109,9 @@ public abstract class ENetClient : ENetLow
         }
 
         // Outgoing
-        while (Outgoing.TryDequeue(out var clientPacket))
+        while (Outgoing.TryDequeue(out ClientPacket clientPacket))
         {
-            var type = clientPacket.GetType();
+            Type type = clientPacket.GetType();
 
             if (!IgnoredPackets.Contains(type) && options.PrintPacketSent)
                 Log($"Sent packet: {type.Name}" +
@@ -125,9 +125,9 @@ public abstract class ENetClient : ENetLow
     {
         while (godotPackets.TryDequeue(out PacketData packetData))
         {
-            var packetReader = packetData.PacketReader;
-            var handlePacket = packetData.HandlePacket;
-            var type = packetData.Type;
+            PacketReader packetReader = packetData.PacketReader;
+            ServerPacket handlePacket = packetData.HandlePacket;
+            Type type = packetData.Type;
 
             handlePacket.Read(packetReader);
             packetReader.Dispose();
@@ -151,8 +151,12 @@ public abstract class ENetClient : ENetLow
         DisconnectCleanup(peer);
 
         var opcode = (DisconnectOpcode)netEvent.Data;
-        Log($"Received disconnect opcode from server: {opcode.ToString().ToLower()}");
-        GodotCmds.Enqueue(new Cmd<GodotOpcode>(GodotOpcode.Disconnected, opcode));
+        
+        Log($"Received disconnect opcode from server: " +
+            $"{opcode.ToString().ToLower()}");
+
+        GodotCmds.Enqueue(
+            new Cmd<GodotOpcode>(GodotOpcode.Disconnected, opcode));
     }
 
     protected override void Timeout(Event netEvent)
@@ -163,10 +167,13 @@ public abstract class ENetClient : ENetLow
 
     protected override void Receive(Event netEvent)
     {
-        var packet = netEvent.Packet;
+        ENet.Packet packet = netEvent.Packet;
         if (packet.Length > GamePacket.MaxSize)
         {
-            Log($"Tried to read packet from server of size {packet.Length} when max packet size is {GamePacket.MaxSize}");
+            Log($"Tried to read packet from server of size " +
+                $"{packet.Length} when max packet size is " +
+                $"{GamePacket.MaxSize}");
+
             packet.Dispose();
             return;
         }
