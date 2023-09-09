@@ -10,17 +10,17 @@ using System;
 public partial class SceneManager : Node
 {
     public static event Action<string> SceneChanged;
+    public static SceneManager Instance { get; private set; }
     
-    public static Node CurrentScene { get; set; }
+    public Node CurrentScene { get; set; }
 
-    static SceneManager instance;
-    static SceneTree tree;
+    SceneTree tree;
 
     /// <summary>
     /// Scenes are loaded from the 'res://Scenes/' directory. For example a name with 
     /// "level_1" would be 'res://Scenes/level_1.tscn'
     /// </summary>
-    public static void SwitchScene(string name, TransType transType = TransType.None)
+    public void SwitchScene(string name, TransType transType = TransType.None)
     {
         SceneChanged?.Invoke(name);
 
@@ -30,21 +30,21 @@ public partial class SceneManager : Node
                 ChangeScene(transType);
                 break;
             case TransType.Fade:
-                instance.FadeTo(TransColor.Black, 2, () => ChangeScene(transType));
+                Instance.FadeTo(TransColor.Black, 2, () => ChangeScene(transType));
                 break;
         }
 
         void ChangeScene(TransType transType)
         {
             // Wait for engine to be ready to switch scene
-            instance.CallDeferred(nameof(DeferredSwitchScene), name,
+            Instance.CallDeferred(nameof(DeferredSwitchScene), name,
                 Variant.From(transType));
         }
     }
 
     public override void _Ready()
     {
-        instance = this;
+        Instance = this;
         tree = GetTree();
         Window root = tree.Root;
         CurrentScene = root.GetChild(root.GetChildCount() - 1);
