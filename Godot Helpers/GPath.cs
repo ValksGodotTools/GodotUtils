@@ -2,8 +2,8 @@
 
 using Godot;
 using System.Linq;
+using EaseType = Godot.Tween.EaseType;
 using TransType = Godot.Tween.TransitionType;
-using EaseType  = Godot.Tween.EaseType;
 
 /*
  * Create a path from a set of points with options to add curvature and
@@ -11,10 +11,10 @@ using EaseType  = Godot.Tween.EaseType;
  */
 public partial class GPath : Path2D
 {
-    public bool Rotates 
-    { 
-        get => pathFollow.Rotates; 
-        set => pathFollow.Rotates = value; 
+    public bool Rotates
+    {
+        get => pathFollow.Rotates;
+        set => pathFollow.Rotates = value;
     }
 
     PathFollow2D pathFollow;
@@ -156,7 +156,7 @@ public partial class GPath : Path2D
     void Animate(bool forwards)
     {
         tween = new(this);
-        tween.Animate("progress", tweenValues[tweenIndex], 
+        tween.Animate("progress", tweenValues[tweenIndex],
             CalculateDuration(forwards)).SetTrans(transType).SetEase(easeType);
     }
 
@@ -178,7 +178,7 @@ public partial class GPath : Path2D
 
         // The number of level icons left to pass
         int levelIconsLeft = Mathf.Max(1, Mathf.Abs(tweenIndex - startIndex));
-        
+
         double duration = remainingDistance / 150 / animSpeed / levelIconsLeft;
 
         return duration;

@@ -63,12 +63,12 @@ public abstract partial class UIElement : PanelContainer
 
 public class ElementOptions
 {
-    public string Name           { get; set; } = "Placeholder";
-    public float  MinLabelSize   { get; set; } = 200;
-    public float  MinElementSize { get; set; } = 200;
-    public int    MarginLeft     { get; set; } = 10;
-    public int    MarginRight    { get; set; } = 5;
-    public int    MarginTop      { get; set; } = 5;
-    public int    MarginBottom   { get; set; } = 5;
-    public bool   HideBackPanel  { get; set; } = true;
+    public string Name { get; set; } = "Placeholder";
+    public float MinLabelSize { get; set; } = 200;
+    public float MinElementSize { get; set; } = 200;
+    public int MarginLeft { get; set; } = 10;
+    public int MarginRight { get; set; } = 5;
+    public int MarginTop { get; set; } = 5;
+    public int MarginBottom { get; set; } = 5;
+    public bool HideBackPanel { get; set; } = true;
 }

@@ -49,7 +49,7 @@ public partial class UILineEdit : UIElement
 
 public class LineEditOptions : ElementOptions
 {
-    public bool     IgnoreEmpty { get; set; } = true;
-    public bool     Trimmed     { get; set; } = true;
-    public LineEdit LineEdit    { get; set; } = new LineEdit();
+    public bool IgnoreEmpty { get; set; } = true;
+    public bool Trimmed { get; set; } = true;
+    public LineEdit LineEdit { get; set; } = new LineEdit();
 }

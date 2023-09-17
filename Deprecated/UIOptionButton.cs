@@ -8,10 +8,10 @@ public partial class UIOptionButton : UIElement
     public Action<long> ValueChanged { get; set; }
 
     public OptionButton OptionButton { get; set; }
-    
+
     OptionButtonOptions Options { get; set; }
 
-    public UIOptionButton(OptionButtonOptions options) : 
+    public UIOptionButton(OptionButtonOptions options) :
         base(options)
     {
         Options = options;
@@ -35,7 +35,7 @@ public partial class UIOptionButton : UIElement
 public class OptionButtonOptions : ElementOptions
 {
     public OptionButton OptionButton { get; set; } = new OptionButton();
-    public string[]     Items        { get; set; }
+    public string[] Items { get; set; }
 
     public OptionButtonOptions(params string[] items)
     {

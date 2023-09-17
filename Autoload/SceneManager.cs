@@ -11,7 +11,7 @@ public partial class SceneManager : Node
 {
     public static event Action<string> SceneChanged;
     public static SceneManager Instance { get; private set; }
-    
+
     public Node CurrentScene { get; set; }
 
     SceneTree tree;

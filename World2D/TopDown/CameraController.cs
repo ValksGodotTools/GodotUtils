@@ -8,20 +8,20 @@ using Godot;
 public partial class CameraController : Node
 {
     // Inspector
-    [Export] 
+    [Export]
     float speed = 100;
 
     [ExportGroup("Zoom")]
-    [Export(PropertyHint.Range, "0.02, 0.16")] 
+    [Export(PropertyHint.Range, "0.02, 0.16")]
     float zoomIncrementDefault = 0.02f;
 
-    [Export(PropertyHint.Range, "0.01, 10")] 
+    [Export(PropertyHint.Range, "0.01, 10")]
     float minZoom = 0.01f;
 
-    [Export(PropertyHint.Range, "0.1, 10")] 
+    [Export(PropertyHint.Range, "0.1, 10")]
     float maxZoom = 1.0f;
 
-    [Export(PropertyHint.Range, "0.01, 1")] 
+    [Export(PropertyHint.Range, "0.01, 1")]
     float smoothFactor = 0.25f;
 
     float zoomIncrement = 0.02f;
@@ -63,7 +63,7 @@ public partial class CameraController : Node
 
         if (GInput.IsMovingDown())
             dir.Y += 1;
-        
+
         if (panning)
             camera.Position = initialPanPosition - (GetViewport().GetMousePosition() / camera.Zoom.X);
 
@@ -98,7 +98,7 @@ public partial class CameraController : Node
         // Left click to start panning the camera
         if (@event.ButtonIndex != MouseButton.Left)
             return;
-        
+
         // Is this the start of a left click or is this releasing a left click?
         if (@event.IsPressed())
         {

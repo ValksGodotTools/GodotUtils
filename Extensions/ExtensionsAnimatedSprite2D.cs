@@ -55,7 +55,7 @@ public static class ExtensionsAnimatedSprite2D
     public static int GetWidth(this AnimatedSprite2D sprite, string anim = "")
     {
         anim = string.IsNullOrWhiteSpace(anim) ? sprite.Animation : anim;
-        return (int)(sprite.SpriteFrames.GetFrameTexture(anim, 0).GetWidth() * 
+        return (int)(sprite.SpriteFrames.GetFrameTexture(anim, 0).GetWidth() *
             sprite.Scale.X);
     }
 
@@ -65,7 +65,7 @@ public static class ExtensionsAnimatedSprite2D
     public static int GetHeight(this AnimatedSprite2D sprite, string anim = "")
     {
         anim = string.IsNullOrWhiteSpace(anim) ? sprite.Animation : anim;
-        return (int)(sprite.SpriteFrames.GetFrameTexture(anim, 0).GetHeight() * 
+        return (int)(sprite.SpriteFrames.GetFrameTexture(anim, 0).GetHeight() *
             sprite.Scale.Y);
     }
 

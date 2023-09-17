@@ -151,7 +151,7 @@ public abstract class ENetClient : ENetLow
         DisconnectCleanup(peer);
 
         var opcode = (DisconnectOpcode)netEvent.Data;
-        
+
         Log($"Received disconnect opcode from server: " +
             $"{opcode.ToString().ToLower()}");
 
@@ -184,7 +184,8 @@ public abstract class ENetClient : ENetLow
     void WorkerThread(string ip, ushort port)
     {
         Host = new Host();
-        var address = new Address {
+        var address = new Address
+        {
             Port = port
         };
 
@@ -207,7 +208,7 @@ public abstract class ENetClient : ENetLow
         connected = 0;
     }
 
-    public override void Log(object message, BBColor color = BBColor.Aqua) => 
+    public override void Log(object message, BBColor color = BBColor.Aqua) =>
         Logger.Log($"[Client] {message}", color);
 }
 

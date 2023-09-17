@@ -2,8 +2,8 @@ namespace GodotUtils;
 
 using System;
 using System.Timers;
-using Timer = System.Timers.Timer;
 using Object = System.Object;
+using Timer = System.Timers.Timer;
 
 /// <summary>
 /// If for whatever reason a Timer is needed on a non-Godot thread, this is what you should use.

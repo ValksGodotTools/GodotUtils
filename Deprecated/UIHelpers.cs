@@ -9,7 +9,7 @@ public static class UIHelpers
     /// <summary>
     /// Create several sliders for debugging purposes
     /// </summary>
-    public static void CreateDebugSliders(Node parent, 
+    public static void CreateDebugSliders(Node parent,
         Action<float>[] valueChanged, int minValue = -1000, int maxValue = 1000)
     {
         var vbox = new VBoxContainer();

@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 public static class GUtils
 {
-    public async static Task WaitOneFrame(Node parent) => 
+    public async static Task WaitOneFrame(Node parent) =>
         await parent.ToSignal(
-            source: parent.GetTree(), 
+            source: parent.GetTree(),
             signal: SceneTree.SignalName.ProcessFrame);
 
     public static Vector2 GetMovementInput(string prefix = "")
@@ -16,12 +16,12 @@ public static class GUtils
             prefix += "_";
 
         // GetActionStrength(...) supports controller sensitivity
-        float inputHorz = 
-            Input.GetActionStrength($"{prefix}move_right") - 
+        float inputHorz =
+            Input.GetActionStrength($"{prefix}move_right") -
             Input.GetActionStrength($"{prefix}move_left");
-        
-        float inputVert = 
-            Input.GetActionStrength($"{prefix}move_down") - 
+
+        float inputVert =
+            Input.GetActionStrength($"{prefix}move_down") -
             Input.GetActionStrength($"{prefix}move_up");
 
         // Normalize vector to prevent fast diagonal strafing

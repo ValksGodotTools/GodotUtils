@@ -5,7 +5,7 @@ using ENet;
 public abstract class GamePacket
 {
     public static int MaxSize { get; } = 8192;
-                                     
+
     protected Peer[] Peers { get; set; }
     protected byte ChannelId { get; }
 

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
  * like I'm going to spend a long time trying to figure out what I did to make the
  * code work.
  */
-public class GTween 
+public class GTween
 {
     Tween Tween { get; }
     Node Target { get; }
@@ -29,8 +29,8 @@ public class GTween
     /// </summary>
     public PropertyTweener InterpolateProperty
     (
-        NodePath property, 
-        Variant finalValue, 
+        NodePath property,
+        Variant finalValue,
         float duration,
         float delay = 0,
         bool parallel = false,
@@ -52,14 +52,14 @@ public class GTween
 
     public async Task AnimatePlatform
     (
-        Vector2 initialValue, 
-        Vector2 finalValue, 
+        Vector2 initialValue,
+        Vector2 finalValue,
         float width,
         float duration,
         int startDelay,
         Tween.TransitionType transType = Tween.TransitionType.Cubic,
         Tween.EaseType easeType = Tween.EaseType.InOut
-    ) 
+    )
     {
         Tween.SetLoops(); // Run forever
         InterpolateProperty("position", finalValue, duration);

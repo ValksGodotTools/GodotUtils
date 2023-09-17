@@ -1,8 +1,8 @@
 ﻿namespace GodotUtils;
 
 using Godot;
-using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -35,7 +35,7 @@ public static class ExtensionsPrint
     {
         protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
         {
-            JsonProperty prop = 
+            JsonProperty prop =
                 base.CreateProperty(member, memberSerialization);
 
             // Ignored properties (prevents crashes)

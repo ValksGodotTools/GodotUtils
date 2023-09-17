@@ -51,7 +51,7 @@ public class GAudioPlayer
     public GAudioPlayer(Node parent, bool deleteOnFinished = false)
     {
         StreamPlayer = new AudioStreamPlayer();
-        
+
         if (deleteOnFinished)
             StreamPlayer.Finished += () => StreamPlayer.QueueFree();
 

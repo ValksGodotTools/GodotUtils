@@ -41,7 +41,7 @@ public static class ExtensionsLineEdit
         // Ignore blank spaces
         if (string.IsNullOrWhiteSpace(text))
         {
-            lineEdit.ChangeLineEditText("");    
+            lineEdit.ChangeLineEditText("");
             return 0;
         }
 

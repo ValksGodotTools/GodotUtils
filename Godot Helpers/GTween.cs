@@ -40,7 +40,7 @@ public class GTween
     }
 
     public PropertyTweener Animate(NodePath prop, Variant finalValue, double duration, bool parallel = false) =>
-        parallel ? 
+        parallel ?
             tween.Parallel().TweenProperty(node, prop, finalValue, duration) :
             tween.TweenProperty(node, prop, finalValue, duration);
 

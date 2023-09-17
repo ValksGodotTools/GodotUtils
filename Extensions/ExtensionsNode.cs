@@ -2,7 +2,7 @@ namespace GodotUtils;
 
 using Godot;
 
-public static class ExtensionsNode 
+public static class ExtensionsNode
 {
     public static void DisableChildren(this Node node)
     {
@@ -12,7 +12,7 @@ public static class ExtensionsNode
             child.SetPhysicsProcess(false);
         }
     }
-        
+
 
     public static void EnableChildren(this Node node)
     {

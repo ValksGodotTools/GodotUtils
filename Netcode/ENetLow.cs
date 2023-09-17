@@ -99,10 +99,10 @@ public abstract class ENetLow
 
 public class ENetOptions
 {
-    public bool PrintPacketData     { get; set; } = false;
+    public bool PrintPacketData { get; set; } = false;
     public bool PrintPacketByteSize { get; set; } = false;
     public bool PrintPacketReceived { get; set; } = true;
-    public bool PrintPacketSent     { get; set; } = true;
+    public bool PrintPacketSent { get; set; } = true;
 }
 
 public enum DisconnectOpcode

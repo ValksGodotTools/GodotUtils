@@ -6,7 +6,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,7 +18,7 @@ public abstract class ENetServer : ENetLow
     readonly ConcurrentQueue<(Packet, Peer)> incoming = new();
     readonly ConcurrentQueue<ServerPacket> outgoing = new();
     readonly ConcurrentQueue<Cmd<ENetServerOpcode>> enetCmds = new();
-    
+
     ENetOptions options;
 
     static ENetServer()
@@ -47,7 +46,7 @@ public abstract class ENetServer : ENetLow
         try
         {
             await task;
-        } 
+        }
         catch (Exception e)
         {
             Logger.LogErr(e, "Server");
@@ -56,7 +55,7 @@ public abstract class ENetServer : ENetLow
 
     public void Ban(uint id) => Kick(id, DisconnectOpcode.Banned);
     public void BanAll() => KickAll(DisconnectOpcode.Banned);
-    public void KickAll(DisconnectOpcode opcode) => 
+    public void KickAll(DisconnectOpcode opcode) =>
         enetCmds.Enqueue(new Cmd<ENetServerOpcode>(ENetServerOpcode.KickAll, opcode));
     public void Kick(uint id, DisconnectOpcode opcode) =>
         enetCmds.Enqueue(new Cmd<ENetServerOpcode>(ENetServerOpcode.Kick, id, opcode));
@@ -106,16 +105,16 @@ public abstract class ENetServer : ENetLow
         {
             // This is messy but I don't know how I will clean it up right
             // now so I'm leaving it as is for now..
-            string byteSize = options.PrintPacketByteSize ? 
+            string byteSize = options.PrintPacketByteSize ?
                 $"({packet.GetSize()} bytes)" : "";
-            
+
             string start = $"Broadcasting packet {type.Name} {byteSize}";
 
             string peerArr = peers.Select(x => x.ID).Print();
 
             string middle = "";
 
-            string end = options.PrintPacketData ? 
+            string end = options.PrintPacketData ?
                 $"\n{packet.PrintFull()}" : "";
 
             if (peers.Count() == 0)
@@ -316,7 +315,7 @@ public abstract class ENetServer : ENetLow
         Peers.Remove(peer.ID);
     }
 
-    public override void Log(object message, BBColor color = BBColor.Green) => 
+    public override void Log(object message, BBColor color = BBColor.Green) =>
         Logger.Log($"[Server] {message}", color);
 }
 

@@ -40,6 +40,6 @@ public partial class UIColorPickerBtn : UIElement
 
 public class ColorPickerBtnOptions : ElementOptions
 {
-    public ColorPickerButton ColorPickerButton       { get; set; } = new ColorPickerButton();
-    public bool              OnlyUpdateOnPopupClosed { get; set; }
+    public ColorPickerButton ColorPickerButton { get; set; } = new ColorPickerButton();
+    public bool OnlyUpdateOnPopupClosed { get; set; }
 }

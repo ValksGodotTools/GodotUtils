@@ -22,13 +22,13 @@ public static class ExtensionsInputEventMouseButton
     public static bool IsZoomOut(this InputEventMouseButton @event) =>
         @event.IsPressed(MouseButton.WheelDown);
 
-    public static bool IsLeftClickPressed(this InputEventMouseButton @event) => 
+    public static bool IsLeftClickPressed(this InputEventMouseButton @event) =>
         @event.IsPressed(MouseButton.Left);
 
     public static bool IsLeftClickReleased(this InputEventMouseButton @event) =>
         @event.IsReleased(MouseButton.Left);
 
-    public static bool IsRightClickPressed(this InputEventMouseButton @event) => 
+    public static bool IsRightClickPressed(this InputEventMouseButton @event) =>
         @event.IsPressed(MouseButton.Right);
 
     public static bool IsRightClickReleased(this InputEventMouseButton @event) =>

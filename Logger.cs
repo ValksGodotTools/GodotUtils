@@ -134,12 +134,12 @@ public static class Logger
         }
 
         messages.Enqueue(
-            new LogInfo(opcode, 
+            new LogInfo(opcode,
                 new LogMessageTrace(
-                    message, 
+                    message,
                     trace,
                     tracePath
-                ), 
+                ),
             color
         ));
     }
