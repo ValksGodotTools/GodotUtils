@@ -47,6 +47,9 @@ public class GTimer
     /// </summary>
     public void Start(float delayMs = -1)
     {
+        if (!timer.IsInsideTree())
+            return;
+
         if (delayMs != -1)
             timer.WaitTime = delayMs / 1000;
 
