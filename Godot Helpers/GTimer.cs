@@ -72,6 +72,8 @@ public class GTimer
     }
 
     public void QueueFree() => timer.QueueFree();
+
+    public bool IsInsideTree() => timer.IsInsideTree();
 }
 
 /// <summary>
