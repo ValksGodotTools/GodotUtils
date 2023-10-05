@@ -1,4 +1,4 @@
-﻿namespace MyGame;
+﻿namespace GodotUtils;
 
 using Godot;
 using System.Collections.Generic;

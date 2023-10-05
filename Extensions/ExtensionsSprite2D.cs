@@ -1,7 +1,6 @@
-﻿namespace MyGame;
+﻿namespace GodotUtils;
 
 using Godot;
-using GodotUtils;
 
 public static class ExtensionsSprite2D
 {
