@@ -21,37 +21,37 @@ public class GTimer
 
     readonly Timer timer = new();
 
-    public GTimer(Node node, double delayMs = 1000)
+    public GTimer(Node node, double delaySeconds = 1)
     {
-        Init(node, delayMs);
+        Init(node, delaySeconds);
         timer.ProcessCallback = Timer.TimerProcessCallback.Physics;
         timer.Timeout += () => Finished?.Invoke();
     }
 
-    void Init(Node target, double delayMs)
+    void Init(Node target, double delaySeconds)
     {
         timer.OneShot = true; // make non-looping by default
         timer.Autostart = false; // make non-auto-start by default
-        timer.WaitTime = delayMs / 1000;
+        timer.WaitTime = delaySeconds;
         target.AddChild(timer);
     }
 
     public bool IsActive() => timer.TimeLeft != 0;
 
-    public void SetDelay(int delayMs) => timer.WaitTime = delayMs / 1000f;
+    public void SetDelay(int delaySeconds) => timer.WaitTime = delaySeconds;
 
     /// <summary>
     /// Start the timer. The delay can be optionally changed in ms. 
     /// Starting the timer while it is active already will reset
     /// the timer countdown.
     /// </summary>
-    public void Start(float delayMs = -1)
+    public void Start(float delaySeconds = -1)
     {
         if (!timer.IsInsideTree())
             return;
 
-        if (delayMs != -1)
-            timer.WaitTime = delayMs / 1000;
+        if (delaySeconds != -1)
+            timer.WaitTime = delaySeconds;
 
         timer.Start();
     }
@@ -84,7 +84,7 @@ public class GTimer
 /// </summary>
 public class GOneShotTimer : GTimer
 {
-    public GOneShotTimer(Node node, double delayMs = 1000) : base(node, delayMs)
+    public GOneShotTimer(Node node, double delaySeconds = 1) : base(node, delaySeconds)
     {
         Loop = false;
         Start();
@@ -96,7 +96,7 @@ public class GOneShotTimer : GTimer
 /// </summary>
 public class GRepeatingTimer : GTimer
 {
-    public GRepeatingTimer(Node node, double delayMs = 1000) : base(node, delayMs)
+    public GRepeatingTimer(Node node, double delaySeconds = 1) : base(node, delaySeconds)
     {
         Loop = true;
         Start();
