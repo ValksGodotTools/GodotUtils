@@ -5,7 +5,7 @@ using System;
 public class State
 {
     public Action Enter { get; set; } = () => { };
-    public Action Update { get; set; } = () => { };
+    public Action<double> Update { get; set; } = delta => { };
     public Action Transitions { get; set; } = () => { };
     public Action Exit { get; set; } = () => { };
 
