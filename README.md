@@ -32,6 +32,16 @@ Add the following to your `.csproj`
 </ItemGroup>
 ```
 
+Add the following somewhere in your game.
+```cs
+public static ServiceProvider Services { get; } = new ServiceProvider();
+
+public override void _Ready()
+{
+    GodotUtils.GU.Init(Services);
+}
+```
+
 ## Credits
 - Shaders are from https://godotshaders.com/
 - Thank you to everyone in the Godot Discord for helping me (especially [the31](https://github.com/31)), without you guys I would not have got as far as I've come today
