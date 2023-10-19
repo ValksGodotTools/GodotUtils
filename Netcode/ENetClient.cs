@@ -48,7 +48,7 @@ public abstract class ENetClient : ENetLow
         }
         catch (Exception e)
         {
-            Logger.LogErr(e, "Client");
+            GU.Services.Get<Logger>().LogErr(e, "Client");
         }
     }
 
@@ -209,7 +209,7 @@ public abstract class ENetClient : ENetLow
     }
 
     public override void Log(object message, BBColor color = BBColor.Aqua) =>
-        Logger.Log($"[Client] {message}", color);
+        GU.Services.Get<Logger>().Log($"[Client] {message}", color);
 }
 
 public enum ENetClientOpcode

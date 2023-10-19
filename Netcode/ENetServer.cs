@@ -1,7 +1,6 @@
 ﻿namespace GodotUtils.Netcode.Server;
 
 using ENet;
-using GodotUtils;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -49,7 +48,7 @@ public abstract class ENetServer : ENetLow
         }
         catch (Exception e)
         {
-            Logger.LogErr(e, "Server");
+            GU.Services.Get<Logger>().LogErr(e, "Server");
         }
     }
 
@@ -316,7 +315,7 @@ public abstract class ENetServer : ENetLow
     }
 
     public override void Log(object message, BBColor color = BBColor.Green) =>
-        Logger.Log($"[Server] {message}", color);
+        GU.Services.Get<Logger>().Log($"[Server] {message}", color);
 }
 
 public enum ENetServerOpcode

@@ -12,32 +12,34 @@ using System.Runtime.CompilerServices;
  * _PhysicsProcess(double delta) otherwise you will be wondering why Logger.Log(...)
  * is printing nothing to the console.
  */
-public static class Logger
+public class Logger
 {
-    static readonly ConcurrentQueue<LogInfo> messages = new();
+    public event Action<string> MessageLogged;
+
+    readonly ConcurrentQueue<LogInfo> messages = new();
 
     /// <summary>
     /// Log a message
     /// </summary>
-    public static void Log(object message, BBColor color = BBColor.Gray) =>
+    public void Log(object message, BBColor color = BBColor.Gray) =>
         messages.Enqueue(new LogInfo(LoggerOpcode.Message, new LogMessage($"{message}"), color));
 
     /// <summary>
     /// Log a warning
     /// </summary>
-    public static void LogWarning(object message, BBColor color = BBColor.Orange) =>
+    public void LogWarning(object message, BBColor color = BBColor.Orange) =>
         Log($"[Warning] {message}", color);
 
     /// <summary>
     /// Log a todo
     /// </summary>
-    public static void LogTodo(object message, BBColor color = BBColor.White) =>
+    public void LogTodo(object message, BBColor color = BBColor.White) =>
         Log($"[Todo] {message}", color);
 
     /// <summary>
     /// Logs an exception with trace information. Optionally allows logging a human readable hint
     /// </summary>
-    public static void LogErr
+    public void LogErr
     (
         Exception e,
         string hint = default,
@@ -49,7 +51,7 @@ public static class Logger
     /// <summary>
     /// Logs a debug message that optionally contains trace information
     /// </summary>
-    public static void LogDebug
+    public void LogDebug
     (
         object message,
         BBColor color = BBColor.Magenta,
@@ -61,7 +63,7 @@ public static class Logger
     /// <summary>
     /// Log the time it takes to do a section of code
     /// </summary>
-    public static void LogMs(Action code)
+    public void LogMs(Action code)
     {
         var watch = new Stopwatch();
         watch.Start();
@@ -73,12 +75,12 @@ public static class Logger
     /// <summary>
     /// Checks to see if there are any messages left in the queue
     /// </summary>
-    public static bool StillWorking() => !messages.IsEmpty;
+    public bool StillWorking() => !messages.IsEmpty;
 
     /// <summary>
     /// Dequeues a Requested Message and Logs it
     /// </summary>
-    public static void Update()
+    public void Update()
     {
         if (!messages.TryDequeue(out LogInfo result))
             return;
@@ -86,13 +88,11 @@ public static class Logger
         switch (result.Opcode)
         {
             case LoggerOpcode.Message:
-                //UIConsole.Instance.AddMessage(result.Data.Message);
                 Print(result.Data.Message, result.Color);
                 Console.ResetColor();
                 break;
 
             case LoggerOpcode.Exception:
-                //UIConsole.Instance.AddMessage(result.Data.Message);
                 PrintErr(result.Data.Message, result.Color);
 
                 if (result.Data is LogMessageTrace exceptionData && exceptionData.ShowTrace)
@@ -102,7 +102,6 @@ public static class Logger
                 break;
 
             case LoggerOpcode.Debug:
-                //UIConsole.Instance.AddMessage(result.Data.Message);
                 Print(result.Data.Message, result.Color);
 
                 if (result.Data is LogMessageTrace debugData && debugData.ShowTrace)
@@ -111,12 +110,14 @@ public static class Logger
                 Console.ResetColor();
                 break;
         }
+
+        MessageLogged?.Invoke(result.Data.Message);
     }
 
     /// <summary>
     /// Logs a message that may contain trace information
     /// </summary>
-    static void LogDetailed(LoggerOpcode opcode, string message, BBColor color, bool trace, string filePath, int lineNumber)
+    void LogDetailed(LoggerOpcode opcode, string message, BBColor color, bool trace, string filePath, int lineNumber)
     {
         string tracePath;
 
@@ -144,7 +145,7 @@ public static class Logger
         ));
     }
 
-    static void Print(object v, BBColor color)
+    void Print(object v, BBColor color)
     {
         //Console.ForegroundColor = color;
 
@@ -155,7 +156,7 @@ public static class Logger
             GD.PrintRich($"[color={color}]{v}");
     }
 
-    static void PrintErr(object v, BBColor color)
+    void PrintErr(object v, BBColor color)
     {
         //Console.ForegroundColor = color;
         GD.PrintErr(v);

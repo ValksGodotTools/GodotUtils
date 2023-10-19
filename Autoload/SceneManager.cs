@@ -9,8 +9,7 @@ using System;
 // using these functions anywhere at anytime.
 public partial class SceneManager : Node
 {
-    public static event Action<string> SceneChanged;
-    public static SceneManager Instance { get; private set; }
+    public event Action<string> SceneChanged;
 
     public Node CurrentScene { get; set; }
 
@@ -30,21 +29,20 @@ public partial class SceneManager : Node
                 ChangeScene(transType);
                 break;
             case TransType.Fade:
-                Instance.FadeTo(TransColor.Black, 2, () => ChangeScene(transType));
+                FadeTo(TransColor.Black, 2, () => ChangeScene(transType));
                 break;
         }
 
         void ChangeScene(TransType transType)
         {
             // Wait for engine to be ready to switch scene
-            Instance.CallDeferred(nameof(DeferredSwitchScene), name,
+            CallDeferred(nameof(DeferredSwitchScene), name,
                 Variant.From(transType));
         }
     }
 
     public override void _Ready()
     {
-        Instance = this;
         tree = GetTree();
         Window root = tree.Root;
         CurrentScene = root.GetChild(root.GetChildCount() - 1);

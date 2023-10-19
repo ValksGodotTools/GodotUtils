@@ -19,7 +19,7 @@ public abstract class ENetLow
         }
         catch (DllNotFoundException e)
         {
-            Logger.LogErr(e);
+            GU.Services.Get<Logger>().LogErr(e);
             ENetInitialized = false;
         }
     }

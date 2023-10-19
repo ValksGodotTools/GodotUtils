@@ -27,7 +27,7 @@ public static class ExtensionsAnimatedSprite2D
         if (frameCount - 1 >= frame)
             sprite.Frame = frame;
         else
-            Logger.LogWarning($"The frame '{frame}' specified for {sprite.Name} is" +
+            GU.Services.Get<Logger>().LogWarning($"The frame '{frame}' specified for {sprite.Name} is" +
                 $"lower than the frame count '{frameCount}'");
 
         sprite.Play(anim);
