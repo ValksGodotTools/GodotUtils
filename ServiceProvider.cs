@@ -1,6 +1,5 @@
 ﻿namespace GodotUtils;
 
-// Solves the need for 'static'
 public class ServiceProvider
 {
     Dictionary<Type, object> services = new();
