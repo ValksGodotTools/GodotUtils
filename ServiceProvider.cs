@@ -10,7 +10,8 @@ public class ServiceProvider
     /// </summary>
     public void Add(object service)
     {
-        services.Add(service.GetType(), service);
+        // Overwrite service if it exists already
+        services[service.GetType()] = service;
     }
 
     /// <summary>
