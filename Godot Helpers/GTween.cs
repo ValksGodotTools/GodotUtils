@@ -52,6 +52,9 @@ public class GTween
             return tween.Parallel().TweenCallback(Callable.From(callback));
     }
 
+    public void Delay(double duration) =>
+        tween.TweenCallback(Callable.From(() => { /* Empty Action */ })).SetDelay(duration);
+
     public void Finished(Action callback) => tween.Finished += callback;
     public bool IsRunning() => tween.IsRunning();
     public void Stop() => tween.Stop();
