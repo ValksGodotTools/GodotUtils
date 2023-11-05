@@ -17,6 +17,9 @@ public class GTween
         this.node = node;
         Kill();
         tween = node.CreateTween();
+
+        // This helps to prevent the camera from lagging behind the players movement
+        tween.SetProcessMode(Tween.TweenProcessMode.Physics);
     }
 
     public void StopLooping() => tween.SetLoops(1);
