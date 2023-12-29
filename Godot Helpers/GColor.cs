@@ -15,4 +15,16 @@ public class GColor
     {
         return Color.FromHsv(hue / 359f, saturation / 100f, value / 100f, alpha / 255f);
     }
+
+    /// <summary>
+    /// Generate a random color
+    /// </summary>
+    public static Color Random(int alpha = 255)
+    {
+        float r = (float)GD.RandRange(0.0, 1.0);
+        float g = (float)GD.RandRange(0.0, 1.0);
+        float b = (float)GD.RandRange(0.0, 1.0);
+
+        return new Color(r, g, b, alpha / 255f);
+    }
 }
