@@ -33,6 +33,8 @@ public partial class CameraController : Camera2D
     {
         if (@event is InputEventMouseButton mouseEvent)
             InputEventMouseButton(mouseEvent);
+
+        @event.Dispose();
     }
 
     void Panning(float camLeftPos, float camRightPos)

@@ -85,6 +85,8 @@ public partial class CameraController : Node
     {
         if (@event is InputEventMouseButton mouseButton)
             InputEventMouseButton(mouseButton);
+
+        @event.Dispose();
     }
 
     void InputEventMouseButton(InputEventMouseButton @event)
