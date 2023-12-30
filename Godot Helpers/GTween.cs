@@ -22,6 +22,9 @@ public class GTween
         tween.SetProcessMode(Tween.TweenProcessMode.Physics);
     }
 
+    public void SetProcessMode(Tween.TweenProcessMode mode) =>
+        tween.SetProcessMode(mode);
+
     public void StopLooping() => tween.SetLoops(1);
     public void Loop() => tween.SetLoops();
 
