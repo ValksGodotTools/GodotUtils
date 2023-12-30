@@ -86,7 +86,7 @@ public partial class CameraController : Node
         if (@event is InputEventMouseButton mouseButton)
             InputEventMouseButton(mouseButton);
 
-        @event.Dispose();
+        @event.Dispose(); // Object count was increasing a lot when this function was executed
     }
 
     void InputEventMouseButton(InputEventMouseButton @event)

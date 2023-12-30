@@ -34,7 +34,7 @@ public partial class CameraController : Camera2D
         if (@event is InputEventMouseButton mouseEvent)
             InputEventMouseButton(mouseEvent);
 
-        @event.Dispose();
+        @event.Dispose(); // Object count was increasing a lot when this function was executed
     }
 
     void Panning(float camLeftPos, float camRightPos)
