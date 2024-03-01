@@ -43,4 +43,17 @@ public static class ExtensionsString
 
         return true;
     }
+
+    /// <summary>
+    /// Strips all BBCode from a given string. Note that this means you can no
+    /// longer use square brackets '[]' for stylish purposes.
+    /// </summary>
+    /// <param name="source">The string to strip the BBCode from</param>
+    /// <returns>The string without the BBCode</returns>
+    public static string StripBBCode(this string source)
+    {
+        RegEx regex = new RegEx();
+        regex.Compile("\\[.+?\\]");
+        return regex.Sub(source, replacement: "", all: true);
+    }
 }
