@@ -19,6 +19,9 @@ public static class GU
             source: parent.GetTree(),
             signal: SceneTree.SignalName.ProcessFrame);
 
+    public static float RandRange(double min, double max) =>
+        (float)GD.RandRange(min, max);
+
     public static Vector2 GetMovementInput(string prefix = "")
     {
         if (!string.IsNullOrWhiteSpace(prefix))
