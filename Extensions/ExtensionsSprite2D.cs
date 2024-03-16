@@ -36,8 +36,8 @@ public static class ExtensionsSprite2D
         Image img = sprite.Texture.GetImage();
         Vector2I size = img.GetSize();
 
-        int transColumnsLeft = GUtils.GetTransparentColumnsLeft(img, size);
-        int transColumnsRight = GUtils.GetTransparentColumnsRight(img, size);
+        int transColumnsLeft = GU.GetTransparentColumnsLeft(img, size);
+        int transColumnsRight = GU.GetTransparentColumnsRight(img, size);
 
         int pixelWidth = size.X - transColumnsLeft - transColumnsRight;
 
@@ -60,8 +60,8 @@ public static class ExtensionsSprite2D
         Image img = sprite.Texture.GetImage();
         Vector2I size = img.GetSize();
 
-        int transRowsTop = GUtils.GetTransparentRowsTop(img, size);
-        int transRowsBottom = GUtils.GetTransparentRowsBottom(img, size);
+        int transRowsTop = GU.GetTransparentRowsTop(img, size);
+        int transRowsBottom = GU.GetTransparentRowsBottom(img, size);
 
         int pixelHeight = size.Y - transRowsTop - transRowsBottom;
 
