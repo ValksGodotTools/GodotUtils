@@ -22,6 +22,8 @@ public static class GU
     public static float RandRange(double min, double max) =>
         (float)GD.RandRange(min, max);
 
+    public static int RandRange(int min, int max) => GD.RandRange(min, max);
+
     public static Vector2 GetMovementInput(string prefix = "")
     {
         if (!string.IsNullOrWhiteSpace(prefix))
@@ -46,7 +48,7 @@ public static class GU
         return new Vector2(Mathf.Cos(theta) * dist, Mathf.Sin(theta) * dist);
     }
 
-    public static float RandAngle() => (float)GD.RandRange(0, Mathf.Pi * 2);
+    public static float RandAngle() => GU.RandRange(0, Mathf.Pi * 2);
 
     public static Area2D CreateAreaRect(Node parent, Vector2 size, string debugColor = "ff001300") =>
         CreateArea(parent, new RectangleShape2D { Size = size }, debugColor);
