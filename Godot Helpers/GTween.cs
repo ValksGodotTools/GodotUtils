@@ -26,7 +26,7 @@ public class GTween
         tween.SetProcessMode(mode);
 
     public void StopLooping() => tween.SetLoops(1);
-    public void Loop() => tween.SetLoops();
+    public void Loop(int loops = 0) => tween.SetLoops(loops);
 
     public PropertyTweener AnimateColor(Color color, double duration, bool modulateChildren = false, bool parallel = false)
     {
