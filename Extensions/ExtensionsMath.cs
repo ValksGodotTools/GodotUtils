@@ -14,7 +14,7 @@ public static class ExtensionsMath
         sprite.Rotation = Mathf.LerpAngle(sprite.Rotation, (target - sprite.GlobalPosition).Angle(), t);
 
     public static float ToRadians(this float degrees) => degrees * (Mathf.Pi / 180);
-    public static float ToAngles(this float radians) => radians * (180 / Mathf.Pi);
+    public static float ToDegrees(this float radians) => radians * (180 / Mathf.Pi);
 
     public static int Clamp(this int v, int min, int max) => Mathf.Clamp(v, min, max);
     public static float Clamp(this float v, float min, float max) => Mathf.Clamp(v, min, max);
