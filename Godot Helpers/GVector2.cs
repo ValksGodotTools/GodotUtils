@@ -1,4 +1,5 @@
-﻿namespace SpaceGame;
+﻿namespace GodotUtils;
+
 using Godot;
 
 public static class GVector2
