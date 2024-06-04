@@ -1,4 +1,5 @@
 ﻿namespace SpaceGame;
+using Godot;
 
 public static class GVector2
 {

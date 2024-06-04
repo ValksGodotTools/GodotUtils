@@ -1,5 +1,8 @@
 ﻿namespace GodotUtils;
 
+using System;
+using System.Collections.Generic;
+
 public class ServiceProvider
 {
     public class Service

@@ -1,6 +1,7 @@
 namespace GodotUtils;
 
 using Godot;
+using System;
 
 public static class ExtensionsNode
 {
