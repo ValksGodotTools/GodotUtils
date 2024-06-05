@@ -29,6 +29,12 @@ public static class ExtensionsPrint
         });
 
     /// <summary>
+    /// Similar to the PrintFull() function except the contents are printed with GD.Print()
+    /// </summary>
+    public static void GDPrintFull(this object v) =>
+        GD.Print(v.PrintFull());
+
+    /// <summary>
     /// Used when doing JsonConvert.SerializeObject to ignore Godot properties
     /// as these are massive.
     /// </summary>
