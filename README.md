@@ -2,7 +2,6 @@
 An ever expanding utils library for Godot 4 C#. This is the library I am using across all my games, now open source for everyone else to enjoy as well.
 
 ## Features
-- [Autoloads](https://github.com/ValksGodotTools/GodotUtils/tree/main/Autoload)
 - [Extensions](https://github.com/ValksGodotTools/GodotUtils/tree/main/Extensions)
 - [Godot Helper Classes](https://github.com/ValksGodotTools/GodotUtils/tree/main/Godot%20Helpers)
 - [Netcode](https://github.com/ValksGodotTools/GodotUtils/tree/main/Netcode) ([multiplater template](https://github.com/ValksGodotTools/Multiplayer))
