@@ -160,8 +160,8 @@ public abstract class ENetServer : ENetLow
             }
             else if (cmd.Opcode == ENetServerOpcode.Kick)
             {
-                var id = (uint)cmd.Data[0];
-                var opcode = (DisconnectOpcode)cmd.Data[1];
+                uint id = (uint)cmd.Data[0];
+                DisconnectOpcode opcode = (DisconnectOpcode)cmd.Data[1];
 
                 if (!Peers.ContainsKey(id))
                 {
@@ -183,7 +183,7 @@ public abstract class ENetServer : ENetLow
             }
             else if (cmd.Opcode == ENetServerOpcode.KickAll)
             {
-                var opcode = (DisconnectOpcode)cmd.Data[0];
+                DisconnectOpcode opcode = (DisconnectOpcode)cmd.Data[0];
 
                 Peers.Values.ForEach(peer =>
                 {
@@ -205,7 +205,7 @@ public abstract class ENetServer : ENetLow
         // Incoming
         while (incoming.TryDequeue(out (ENet.Packet, Peer) packetPeer))
         {
-            var packetReader = new PacketReader(packetPeer.Item1);
+            PacketReader packetReader = new PacketReader(packetPeer.Item1);
             byte opcode = packetReader.ReadByte();
 
             if (!ClientPacket.PacketMapBytes.ContainsKey(opcode))

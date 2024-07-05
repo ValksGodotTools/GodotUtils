@@ -50,7 +50,7 @@ public partial class CameraController : Node
         // Not sure if the below code should be in _PhysicsProcess or _Process
 
         // Arrow keys and WASD move camera around
-        var dir = Vector2.Zero;
+        Vector2 dir = Vector2.Zero;
 
         if (GInput.IsMovingLeft())
             dir.X -= 1;

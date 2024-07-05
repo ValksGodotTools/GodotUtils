@@ -88,7 +88,7 @@ public abstract class ENetClient : ENetLow
         // Incoming
         while (incoming.TryDequeue(out ENet.Packet packet))
         {
-            var packetReader = new PacketReader(packet);
+            PacketReader packetReader = new PacketReader(packet);
             byte opcode = packetReader.ReadByte();
 
             Type type = ServerPacket.PacketMapBytes[opcode];
@@ -150,7 +150,7 @@ public abstract class ENetClient : ENetLow
     {
         DisconnectCleanup(peer);
 
-        var opcode = (DisconnectOpcode)netEvent.Data;
+        DisconnectOpcode opcode = (DisconnectOpcode)netEvent.Data;
 
         Log($"Received disconnect opcode from server: " +
             $"{opcode.ToString().ToLower()}");
@@ -184,7 +184,7 @@ public abstract class ENetClient : ENetLow
     void WorkerThread(string ip, ushort port)
     {
         Host = new Host();
-        var address = new Address
+        Address address = new Address
         {
             Port = port
         };

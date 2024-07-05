@@ -60,7 +60,7 @@ public class EventManager<TEvent>
         if (!listeners.ContainsKey(eventType))
             throw new InvalidOperationException($"Tried to remove listener of event type '{eventType}' from an event type that has not even been defined yet");
 
-        foreach (var pair in listeners)
+        foreach (KeyValuePair<TEvent, List<object>> pair in listeners)
             for (int i = pair.Value.Count - 1; i >= 0; i--)
                 if (pair.Key.Equals(eventType) && ((Listener)pair.Value[i]).Id == id)
                     pair.Value.RemoveAt(i);

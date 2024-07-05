@@ -16,7 +16,7 @@ public abstract class GamePacket
 
     public void Write()
     {
-        using (var writer = new PacketWriter())
+        using (PacketWriter writer = new PacketWriter())
         {
             writer.Write(GetOpcode());
             this?.Write(writer);
@@ -35,7 +35,7 @@ public abstract class GamePacket
 
     protected ENet.Packet CreateENetPacket()
     {
-        var enetPacket = default(ENet.Packet);
+        ENet.Packet enetPacket = default(ENet.Packet);
         enetPacket.Create(data, packetFlags);
         return enetPacket;
     }

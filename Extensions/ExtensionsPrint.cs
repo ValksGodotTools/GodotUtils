@@ -46,7 +46,7 @@ public static class ExtensionsPrint
                 base.CreateProperty(member, memberSerialization);
 
             // Ignored properties (prevents crashes)
-            var ignoredProps = new Type[]
+            Type[] ignoredProps = new Type[]
             {
                 typeof(GodotObject),
                 typeof(Node),

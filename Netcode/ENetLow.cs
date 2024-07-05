@@ -46,7 +46,7 @@ public abstract class ENetLow
     {
         while (!CTS.IsCancellationRequested)
         {
-            var polled = false;
+            bool polled = false;
 
             ConcurrentQueues();
 

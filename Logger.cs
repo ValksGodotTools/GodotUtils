@@ -65,7 +65,7 @@ public class Logger
     /// </summary>
     public void LogMs(Action code)
     {
-        var watch = new Stopwatch();
+        Stopwatch watch = new Stopwatch();
         watch.Start();
         code();
         watch.Stop();

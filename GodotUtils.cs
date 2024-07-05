@@ -58,8 +58,8 @@ public static class GU
 
     public static Area2D CreateArea(Node parent, Shape2D shape, string debugColor = "ff001300")
     {
-        var area = new Area2D();
-        var areaCollision = new CollisionShape2D
+        Area2D area = new Area2D();
+        CollisionShape2D areaCollision = new CollisionShape2D
         {
             DebugColor = new Color(debugColor),
             Shape = shape

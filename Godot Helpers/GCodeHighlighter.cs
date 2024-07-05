@@ -17,7 +17,7 @@ public partial class GCodeHighlighter : CodeHighlighter
         KeywordColors = new Godot.Collections.Dictionary();
 
         // keywords cannot contain any symbols except for "_" so can't include stuff like "'"
-        var keywords = new string[]
+        string[] keywords = new string[]
         {
             "var",
             "true",
