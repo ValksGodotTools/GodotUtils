@@ -14,11 +14,6 @@ public static class GU
         Services.Add<Logger>();
     }
 
-    public async static Task WaitOneFrame(Node parent) =>
-        await parent.ToSignal(
-            source: parent.GetTree(),
-            signal: SceneTree.SignalName.ProcessFrame);
-
     public static float RandRange(double min, double max) =>
         (float)GD.RandRange(min, max);
 

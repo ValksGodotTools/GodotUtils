@@ -5,6 +5,11 @@ using System;
 
 public static class ExtensionsNode
 {
+    public async static Task WaitOneFrame(this Node parent) =>
+        await parent.ToSignal(
+            source: parent.GetTree(),
+            signal: SceneTree.SignalName.ProcessFrame);
+
     public static void DisableChildren(this Node node)
     {
         foreach (Node child in node.GetChildren())
