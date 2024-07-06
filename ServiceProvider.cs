@@ -47,7 +47,13 @@ public class ServiceProvider
         return service;
     }
 
-    public T Get<T>() => (T)services[typeof(T)].Instance;
+    public T Get<T>()
+    {
+        if (!services.ContainsKey(typeof(T)))
+            return default;
+
+        return (T)services[typeof(T)].Instance;
+    }
 
     public override string ToString() => services.Print();
 }
