@@ -21,22 +21,16 @@ public static class ExtensionsNode
             source: parent.GetTree(),
             signal: SceneTree.SignalName.ProcessFrame);
 
-    public static void DisableChildren(this Node node)
+    /// <summary>
+    /// Sets the PhysicsProcess and Process for all the first level children of a node.
+    /// This is not a recursive operation.
+    /// </summary>
+    public static void SetChildrenEnabled(this Node node, bool enabled)
     {
         foreach (Node child in node.GetChildren())
         {
-            child.SetProcess(false);
-            child.SetPhysicsProcess(false);
-        }
-    }
-
-
-    public static void EnableChildren(this Node node)
-    {
-        foreach (Node child in node.GetChildren())
-        {
-            child.SetProcess(true);
-            child.SetPhysicsProcess(true);
+            child.SetProcess(enabled);
+            child.SetPhysicsProcess(enabled);
         }
     }
 
