@@ -35,7 +35,7 @@ public static class ExtensionsNode
     }
 
     public static void AddChildDeferred(this Node node, Node child) =>
-        node.CallDeferred("add_child", child);
+        node.CallDeferred(Godot.Node.MethodName.AddChild, child);
 
     public static void Reparent(this Node curParent, Node newParent, Node node)
     {
