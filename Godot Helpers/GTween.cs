@@ -15,6 +15,8 @@ public class GTween
     public GTween(Node node)
     {
         this.node = node;
+
+        // Ensure the Tween is fresh when re-creating it
         Kill();
         tween = node.CreateTween();
 
