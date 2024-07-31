@@ -16,6 +16,12 @@ public static class ExtensionsNode
         tween.Delay(duration);
         tween.Callback(callback);
     }
+
+    /// <summary>
+    /// Asynchronously waits one procress frame. Remember any async operations will
+    /// continue to run even after a node is QueueFree'd. If this is not desired have
+    /// a look at ExtensionsNode.Delay(this Node node, double duration, Action callback)
+    /// </summary>
     public async static Task WaitOneFrame(this Node parent) =>
         await parent.ToSignal(
             source: parent.GetTree(),
@@ -37,6 +43,9 @@ public static class ExtensionsNode
     public static void AddChildDeferred(this Node node, Node child) =>
         node.CallDeferred(Godot.Node.MethodName.AddChild, child);
 
+    /// <summary>
+    /// Reparent a node to a new parent.
+    /// </summary>
     public static void Reparent(this Node curParent, Node newParent, Node node)
     {
         // Remove node from current parent
@@ -47,7 +56,7 @@ public static class ExtensionsNode
     }
 
     /// <summary>
-    /// Get all children assuming they all extend from TNode
+    /// Attempt to retrieve all children from parent of TNode type.
     /// </summary>
     public static TNode[] GetChildren<TNode>(this Node parent) where TNode : Node
     {
@@ -70,12 +79,18 @@ public static class ExtensionsNode
         return arr;
     }
 
+    /// <summary>
+    /// QueueFree all the children attached to this node.
+    /// </summary>
     public static void QueueFreeChildren(this Node parentNode)
     {
         foreach (Node node in parentNode.GetChildren())
             node.QueueFree();
     }
 
+    /// <summary>
+    /// Remove all groups this node is attached to.
+    /// </summary>
     public static void RemoveAllGroups(this Node node)
     {
         Godot.Collections.Array<StringName> groups = node.GetGroups();
