@@ -5,6 +5,17 @@ using System;
 
 public static class ExtensionsNode
 {
+    /// <summary>
+    /// Creates a delay followed by a callback only executed after the delay. The
+    /// tween is attached to a node so when this node gets QueueFree'd the tween
+    /// will get QueueFree'd as well.
+    /// </summary>
+    public static void Delay(this Node node, double duration, Action callback)
+    {
+        GTween tween = new GTween(node);
+        tween.Delay(duration);
+        tween.Callback(callback);
+    }
     public async static Task WaitOneFrame(this Node parent) =>
         await parent.ToSignal(
             source: parent.GetTree(),
