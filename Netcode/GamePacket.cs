@@ -30,8 +30,8 @@ public abstract class GamePacket
     public void SetPeers(Peer[] peers) => Peers = peers;
     public long GetSize() => size;
     public abstract byte GetOpcode();
-    public virtual void Write(PacketWriter writer) { }
-    public virtual void Read(PacketReader reader) { }
+    public abstract void Write(PacketWriter writer);
+    public abstract void Read(PacketReader reader);
 
     protected ENet.Packet CreateENetPacket()
     {
