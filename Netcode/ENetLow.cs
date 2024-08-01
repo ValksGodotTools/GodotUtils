@@ -91,6 +91,15 @@ public abstract class ENetLow
         Stopped();
     }
 
+    /// <summary>
+    /// A simple function that transforms the number of bytes into a readable string. For
+    /// example if bytes is 1 then "1 byte" is returned. If bytes is 2 then "2 bytes" is 
+    /// returned. A empty string is returned if printing the packet size is disabled in
+    /// options.
+    /// </summary>
+    protected string FormatByteSize(long bytes) => 
+        options.PrintPacketByteSize ? $"({bytes} byte{(bytes == 1 ? "" : "s")}) " : "";
+
     protected abstract void Stopped();
     protected virtual void Starting() { }
     protected abstract void Connect(Event netEvent);

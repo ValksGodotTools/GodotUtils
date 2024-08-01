@@ -115,7 +115,7 @@ public abstract class ENetClient : ENetLow
             Type type = clientPacket.GetType();
 
             if (!IgnoredPackets.Contains(type) && options.PrintPacketSent)
-                Log($"Sent packet: {type.Name}" +
+                Log($"Sent packet: {type.Name} {FormatByteSize(clientPacket.GetSize())}" +
                     $"{(options.PrintPacketData ? $"\n{clientPacket.PrintFull()}" : "")}");
 
             clientPacket.Send();
