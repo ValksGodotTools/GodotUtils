@@ -11,25 +11,18 @@ using System.Threading.Tasks;
 // ENet API Reference: https://github.com/SoftwareGuy/ENet-CSharp/blob/master/DOCUMENTATION.md
 public abstract class ENetServer : ENetLow
 {
-    public Dictionary<uint, Peer> Peers { get; } = new();
-    protected STimer EmitLoop { get; set; }
-
-    readonly ConcurrentQueue<(Packet, Peer)> incoming = new();
-    readonly ConcurrentQueue<ServerPacket> outgoing = new();
-    readonly ConcurrentQueue<Cmd<ENetServerOpcode>> enetCmds = new();
-
-    static ENetServer()
-    {
-        ClientPacket.MapOpcodes();
-    }
-
-    public ENetServer()
-    {
-        EmitLoop = new(100, Emit, false);
-    }
-
-    protected virtual void Emit() { }
-
+    #region Godot Thread
+    /// <summary>
+    /// <para>
+    /// A thread safe way to start the server. Max clients could be 100 and port could
+    /// be set to something like 25565.
+    /// </para>
+    /// 
+    /// <para>
+    /// Options contains settings for enabling certain logging features and ignored 
+    /// packets are packets that do not get logged to the console.
+    /// </para>
+    /// </summary>
     public async void Start(ushort port, int maxClients, ENetOptions options, params Type[] ignoredPackets)
     {
         this.options = options;
@@ -50,13 +43,31 @@ public abstract class ENetServer : ENetLow
         }
     }
 
+    /// <summary>
+    /// Ban someone by their ID. Thread safe.
+    /// </summary>
     public void Ban(uint id) => Kick(id, DisconnectOpcode.Banned);
+
+    /// <summary>
+    /// Ban everyone on the server. Thread safe.
+    /// </summary>
     public void BanAll() => KickAll(DisconnectOpcode.Banned);
+
+    /// <summary>
+    /// Kick everyone on the server with a specified opcode. Thread safe.
+    /// </summary>
     public void KickAll(DisconnectOpcode opcode) =>
         enetCmds.Enqueue(new Cmd<ENetServerOpcode>(ENetServerOpcode.KickAll, opcode));
+
+    /// <summary>
+    /// Kick someone by their ID with a specified opcode. Thread safe.
+    /// </summary>
     public void Kick(uint id, DisconnectOpcode opcode) =>
         enetCmds.Enqueue(new Cmd<ENetServerOpcode>(ENetServerOpcode.Kick, id, opcode));
 
+    /// <summary>
+    /// Stop the server. Thread safe.
+    /// </summary>
     public override void Stop()
     {
         Stopping();
@@ -65,10 +76,8 @@ public abstract class ENetServer : ENetLow
         enetCmds.Enqueue(new Cmd<ENetServerOpcode>(ENetServerOpcode.Stop));
     }
 
-    protected virtual void Stopping() { }
-
     /// <summary>
-    /// Send a packet to a peer
+    /// Send a packet to a client. Thread safe.
     /// </summary>
     public void Send(ServerPacket packet, Peer peer)
     {
@@ -87,12 +96,12 @@ public abstract class ENetServer : ENetLow
     }
 
     /// <summary>
-    /// If no peers are specified, then the packet will be sent to everyone. If
-    /// one peer is specified then that peer will be excluded from the broadcast.
-    /// If more than one peer is specified then the packet will only be sent to
-    /// those peers.
+    /// If no clients are specified, then the packet will be sent to everyone. If
+    /// one client is specified then that client will be excluded from the broadcast.
+    /// If more than one client is specified then the packet will only be sent to
+    /// those clients. This function is thread safe.
     /// </summary>
-    public void Broadcast(ServerPacket packet, params Peer[] peers)
+    public void Broadcast(ServerPacket packet, params Peer[] clients)
     {
         packet.Write();
 
@@ -107,17 +116,17 @@ public abstract class ENetServer : ENetLow
 
             string start = $"Broadcasting packet {type.Name} {byteSize}";
 
-            string peerArr = peers.Select(x => x.ID).Print();
+            string peerArr = clients.Select(x => x.ID).Print();
 
             string middle = "";
 
             string end = options.PrintPacketData ?
                 $"\n{packet.PrintFull()}" : "";
 
-            if (peers.Count() == 0)
+            if (clients.Count() == 0)
                 middle = "to everyone";
 
-            else if (peers.Count() == 1)
+            else if (clients.Count() == 1)
                 middle = $"to everyone except peer {peerArr}";
 
             else
@@ -129,12 +138,44 @@ public abstract class ENetServer : ENetLow
         }
 
         packet.SetSendType(SendType.Broadcast);
-        packet.SetPeers(peers);
+        packet.SetPeers(clients);
 
         EnqueuePacket(packet);
     }
 
-    void EnqueuePacket(ServerPacket packet)
+    /// <summary>
+    /// Log a message as the server. This function is thread safe.
+    /// </summary>
+    public override void Log(object message, BBColor color = BBColor.Green) =>
+        GU.Services.Get<Logger>().Log($"[Server] {message}", color);
+    #endregion
+
+    #region ENet Thread
+    /// <summary>
+    /// This Dictionary is NOT thread safe and should only be accessed on the ENet Thread
+    /// </summary>
+    public Dictionary<uint, Peer> Peers { get; } = new();
+    protected STimer EmitLoop { get; set; }
+
+    private readonly ConcurrentQueue<(Packet, Peer)> incoming = new();
+    private readonly ConcurrentQueue<ServerPacket> outgoing = new();
+    private readonly ConcurrentQueue<Cmd<ENetServerOpcode>> enetCmds = new();
+
+    static ENetServer()
+    {
+        ClientPacket.MapOpcodes();
+    }
+
+    public ENetServer()
+    {
+        EmitLoop = new(100, Emit, false);
+    }
+
+    protected virtual void Emit() { }
+
+    protected virtual void Stopping() { }
+
+    private void EnqueuePacket(ServerPacket packet)
     {
         outgoing.Enqueue(packet);
     }
@@ -284,7 +325,7 @@ public abstract class ENetServer : ENetLow
         incoming.Enqueue((packet, netEvent.Peer));
     }
 
-    void WorkerThread(ushort port, int maxClients)
+    private void WorkerThread(ushort port, int maxClients)
     {
         Host = new Host();
 
@@ -311,9 +352,7 @@ public abstract class ENetServer : ENetLow
         base.DisconnectCleanup(peer);
         Peers.Remove(peer.ID);
     }
-
-    public override void Log(object message, BBColor color = BBColor.Green) =>
-        GU.Services.Get<Logger>().Log($"[Server] {message}", color);
+    #endregion
 }
 
 public enum ENetServerOpcode
