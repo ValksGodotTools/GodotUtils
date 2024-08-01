@@ -157,8 +157,7 @@ public abstract class ENetClient : ENetLow
         Log($"Received disconnect opcode from server: " +
             $"{opcode.ToString().ToLower()}");
 
-        GodotCmds.Enqueue(
-            new Cmd<GodotOpcode>(GodotOpcode.Disconnected, opcode));
+        GodotCmds.Enqueue(new Cmd<GodotOpcode>(GodotOpcode.Disconnected, opcode));
     }
 
     protected override void Timeout(Event netEvent)
