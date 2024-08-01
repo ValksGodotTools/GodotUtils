@@ -23,7 +23,6 @@ public abstract class ENetClient : ENetLow
     readonly ConcurrentQueue<ENet.Packet> incoming = new();
     readonly ConcurrentQueue<Cmd<ENetClientOpcode>> eNetCmds = new();
 
-    ENetOptions options;
     Peer peer;
     long connected;
 

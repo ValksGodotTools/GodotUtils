@@ -31,6 +31,8 @@ public abstract class ENetLow
     protected Host Host { get; set; }
     protected CancellationTokenSource CTS { get; set; }
     protected List<Type> IgnoredPackets { get; set; } = new();
+    
+    protected ENetOptions options;
 
     protected virtual void DisconnectCleanup(Peer peer)
     {

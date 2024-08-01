@@ -18,8 +18,6 @@ public abstract class ENetServer : ENetLow
     readonly ConcurrentQueue<ServerPacket> outgoing = new();
     readonly ConcurrentQueue<Cmd<ENetServerOpcode>> enetCmds = new();
 
-    ENetOptions options;
-
     static ENetServer()
     {
         ClientPacket.MapOpcodes();
