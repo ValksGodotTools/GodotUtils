@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 // ENet API Reference: https://github.com/SoftwareGuy/ENet-CSharp/blob/master/DOCUMENTATION.md
 public abstract class ENetClient : ENetLow
 {
+    public event Action OnConnected;
+
     public ConcurrentQueue<Cmd<GodotOpcode>> GodotCmds { get; } = new();
     protected ConcurrentQueue<ClientPacket> Outgoing { get; } = new();
 
@@ -143,6 +145,7 @@ public abstract class ENetClient : ENetLow
     protected override void Connect(Event netEvent)
     {
         connected = 1;
+        OnConnected?.Invoke();
         Log("Client connected to server");
     }
 
