@@ -16,9 +16,9 @@ public abstract class ENetClient : ENetLow
     public event Action OnConnected;
 
     /// <summary>
-    /// This should be dequeued on the Godot thread.
+    /// Fires when the client disconnects from the server. Thread safe.
     /// </summary>
-    public ConcurrentQueue<Cmd<GodotOpcode>> GodotCmds { get; } = new();
+    public event Action<DisconnectOpcode> OnDisconnected;
 
     /// <summary>
     /// Is the client connected to the server? Thread safe.
@@ -105,9 +105,12 @@ public abstract class ENetClient : ENetLow
 
             if (opcode == GodotOpcode.Connected)
             {
-                // This must be invoked on the Godot thread as it should only be listened
-                // on the Godot thread
                 OnConnected?.Invoke();
+            }
+            else if (opcode == GodotOpcode.Disconnected)
+            {
+                DisconnectOpcode disconnectOpcode = (DisconnectOpcode)cmd.Data[0];
+                OnDisconnected?.Invoke(disconnectOpcode);
             }
         }
     }
@@ -213,7 +216,7 @@ public abstract class ENetClient : ENetLow
         Log($"Received disconnect opcode from server: " +
             $"{opcode.ToString().ToLower()}");
 
-        GodotCmds.Enqueue(new Cmd<GodotOpcode>(GodotOpcode.Disconnected, opcode));
+        godotCmdsInternal.Enqueue(new Cmd<GodotOpcode>(GodotOpcode.Disconnected, opcode));
     }
 
     protected override void Timeout(Event netEvent)
