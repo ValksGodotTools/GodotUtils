@@ -9,31 +9,33 @@ using System.Threading.Tasks;
 // ENet API Reference: https://github.com/SoftwareGuy/ENet-CSharp/blob/master/DOCUMENTATION.md
 public abstract class ENetClient : ENetLow
 {
+    #region Godot Thread
+    /// <summary>
+    /// Fires when the client connects to the server. Thread safe.
+    /// </summary>
     public event Action OnConnected;
 
+    /// <summary>
+    /// This should be dequeued on the Godot thread.
+    /// </summary>
     public ConcurrentQueue<Cmd<GodotOpcode>> GodotCmds { get; } = new();
-    protected ConcurrentQueue<ClientPacket> Outgoing { get; } = new();
-    ConcurrentQueue<Cmd<GodotOpcode>> godotCmdsInternal { get; } = new();
 
-    const uint PING_INTERVAL = 1000;
-    const uint PEER_TIMEOUT = 5000;
-    const uint PEER_TIMEOUT_MINIMUM = 5000;
-    const uint PEER_TIMEOUT_MAXIMUM = 5000;
-
-    readonly ConcurrentQueue<PacketData> godotPackets = new();
-    readonly ConcurrentQueue<ENet.Packet> incoming = new();
-    readonly ConcurrentQueue<Cmd<ENetClientOpcode>> eNetCmds = new();
-
-    Peer peer;
-    long connected;
-
-    static ENetClient()
-    {
-        ServerPacket.MapOpcodes();
-    }
-
+    /// <summary>
+    /// Is the client connected to the server? Thread safe.
+    /// </summary>
     public bool IsConnected => Interlocked.Read(ref connected) == 1;
 
+    /// <summary>
+    /// <para>
+    /// A thread safe way to connect to the server. IP can be set to "127.0.0.1" for 
+    /// localhost and port can be set to something like 25565.
+    /// </para>
+    /// 
+    /// <para>
+    /// Options contains settings for enabling certain logging features and ignored 
+    /// packets are packets that do not get logged to the console.
+    /// </para>
+    /// </summary>
     public async void Connect(string ip, ushort port, ENetOptions options = default, params Type[] ignoredPackets)
     {
         this.options = options;
@@ -54,11 +56,18 @@ public abstract class ENetClient : ENetLow
         }
     }
 
+    /// <summary>
+    /// Stop the client. This function is thread safe.
+    /// </summary>
     public override void Stop()
     {
         eNetCmds.Enqueue(new Cmd<ENetClientOpcode>(ENetClientOpcode.Disconnect));
     }
 
+    /// <summary>
+    /// Send a packet to the server. Packets are defined to be reliable by default. This
+    /// function is thread safe.
+    /// </summary>
     public void Send(ClientPacket packet, PacketFlags flags = PacketFlags.Reliable)
     {
         if (!IsConnected)
@@ -67,6 +76,71 @@ public abstract class ENetClient : ENetLow
         packet.Write();
         packet.SetPeer(peer);
         Outgoing.Enqueue(packet);
+    }
+
+    /// <summary>
+    /// This function should be called in the _PhysicsProcess in the Godot thread. 
+    /// </summary>
+    public void HandlePackets()
+    {
+        while (godotPackets.TryDequeue(out PacketData packetData))
+        {
+            PacketReader packetReader = packetData.PacketReader;
+            ServerPacket handlePacket = packetData.HandlePacket;
+            Type type = packetData.Type;
+
+            handlePacket.Read(packetReader);
+            packetReader.Dispose();
+
+            handlePacket.Handle(this);
+
+            if (!IgnoredPackets.Contains(type) && options.PrintPacketReceived)
+                Log($"Received packet: {type.Name}" +
+                    $"{(options.PrintPacketData ? $"\n{handlePacket.PrintFull()}" : "")}", BBColor.Deepskyblue);
+        }
+
+        while (godotCmdsInternal.TryDequeue(out Cmd<GodotOpcode> cmd))
+        {
+            GodotOpcode opcode = cmd.Opcode;
+
+            if (opcode == GodotOpcode.Connected)
+            {
+                // This must be invoked on the Godot thread as it should only be listened
+                // on the Godot thread
+                OnConnected?.Invoke();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Log messages as the client. Thread safe.
+    /// </summary>
+    public override void Log(object message, BBColor color = BBColor.Aqua) =>
+        GU.Services.Get<Logger>().Log($"[Client] {message}", color);
+
+    #endregion
+
+    #region ENet Thread
+    // Protected
+    protected ConcurrentQueue<ClientPacket> Outgoing { get; } = new();
+
+    // Private
+    private ConcurrentQueue<Cmd<GodotOpcode>> godotCmdsInternal = new();
+    private const uint PING_INTERVAL = 1000;
+    private const uint PEER_TIMEOUT = 5000;
+    private const uint PEER_TIMEOUT_MINIMUM = 5000;
+    private const uint PEER_TIMEOUT_MAXIMUM = 5000;
+
+    private readonly ConcurrentQueue<PacketData> godotPackets = new();
+    private readonly ConcurrentQueue<ENet.Packet> incoming = new();
+    private readonly ConcurrentQueue<Cmd<ENetClientOpcode>> eNetCmds = new();
+
+    Peer peer;
+    long connected;
+
+    static ENetClient()
+    {
+        ServerPacket.MapOpcodes();
     }
 
     protected override void ConcurrentQueues()
@@ -120,40 +194,6 @@ public abstract class ENetClient : ENetLow
                     $"{(options.PrintPacketData ? $"\n{clientPacket.PrintFull()}" : "")}");
 
             clientPacket.Send();
-        }
-    }
-
-    /// <summary>
-    /// Everything in this function is handled on the Godot thread
-    /// </summary>
-    public void HandlePackets()
-    {
-        while (godotPackets.TryDequeue(out PacketData packetData))
-        {
-            PacketReader packetReader = packetData.PacketReader;
-            ServerPacket handlePacket = packetData.HandlePacket;
-            Type type = packetData.Type;
-
-            handlePacket.Read(packetReader);
-            packetReader.Dispose();
-
-            handlePacket.Handle(this);
-
-            if (!IgnoredPackets.Contains(type) && options.PrintPacketReceived)
-                Log($"Received packet: {type.Name}" +
-                    $"{(options.PrintPacketData ? $"\n{handlePacket.PrintFull()}" : "")}", BBColor.Deepskyblue);
-        }
-
-        while (godotCmdsInternal.TryDequeue(out Cmd<GodotOpcode> cmd))
-        {
-            GodotOpcode opcode = cmd.Opcode;
-
-            if (opcode == GodotOpcode.Connected)
-            {
-                // This must be invoked on the Godot thread as it should only be listened
-                // on the Godot thread
-                OnConnected?.Invoke();
-            }
         }
     }
 
@@ -224,9 +264,7 @@ public abstract class ENetClient : ENetLow
         base.DisconnectCleanup(peer);
         connected = 0;
     }
-
-    public override void Log(object message, BBColor color = BBColor.Aqua) =>
-        GU.Services.Get<Logger>().Log($"[Client] {message}", color);
+    #endregion
 }
 
 public enum ENetClientOpcode
