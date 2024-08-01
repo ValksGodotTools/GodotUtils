@@ -6,6 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 
+/// <summary>
+/// ENetServer and ENetClient both extend from this class.
+/// </summary>
 public abstract class ENetLow
 {
     public static bool ENetInitialized { get; set; }
