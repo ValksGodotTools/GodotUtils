@@ -37,8 +37,8 @@ public class PacketReader : IDisposable
     public byte[] ReadBytes(int count) => reader.ReadBytes(count);
     public byte[] ReadBytes() => ReadBytes(ReadInt());
 
-    public Vector2 ReadVector2() =>
-        new(ReadFloat(), ReadFloat());
+    public Vector2 ReadVector2() => new(ReadFloat(), ReadFloat());
+    public Vector3 ReadVector3() => new(ReadFloat(), ReadFloat(), ReadFloat());
 
     public dynamic Read(Type t)
     {
