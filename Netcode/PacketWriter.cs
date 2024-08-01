@@ -43,6 +43,13 @@ public class PacketWriter : IDisposable
         writer.Write(v.Y);
     }
 
+    public void Write(Vector3 v)
+    {
+        writer.Write(v.X);
+        writer.Write(v.Y);
+        writer.Write(v.Z);
+    }
+
     public void Write<T>(T v)
     {
         switch (v)

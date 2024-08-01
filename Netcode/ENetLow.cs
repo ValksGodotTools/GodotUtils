@@ -6,6 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 
+/// <summary>
+/// ENetServer and ENetClient both extend from this class.
+/// </summary>
 public abstract class ENetLow
 {
     public static bool ENetInitialized { get; set; }
@@ -31,6 +34,8 @@ public abstract class ENetLow
     protected Host Host { get; set; }
     protected CancellationTokenSource CTS { get; set; }
     protected List<Type> IgnoredPackets { get; set; } = new();
+    
+    protected ENetOptions options;
 
     protected virtual void DisconnectCleanup(Peer peer)
     {
@@ -85,6 +90,15 @@ public abstract class ENetLow
         _running = 0;
         Stopped();
     }
+
+    /// <summary>
+    /// A simple function that transforms the number of bytes into a readable string. For
+    /// example if bytes is 1 then "1 byte" is returned. If bytes is 2 then "2 bytes" is 
+    /// returned. A empty string is returned if printing the packet size is disabled in
+    /// options.
+    /// </summary>
+    protected string FormatByteSize(long bytes) => 
+        options.PrintPacketByteSize ? $"({bytes} byte{(bytes == 1 ? "" : "s")}) " : "";
 
     protected abstract void Stopped();
     protected virtual void Starting() { }

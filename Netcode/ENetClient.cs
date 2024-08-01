@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 // ENet API Reference: https://github.com/SoftwareGuy/ENet-CSharp/blob/master/DOCUMENTATION.md
 public abstract class ENetClient : ENetLow
 {
+    public event Action OnConnected;
+
     public ConcurrentQueue<Cmd<GodotOpcode>> GodotCmds { get; } = new();
     protected ConcurrentQueue<ClientPacket> Outgoing { get; } = new();
 
@@ -21,7 +23,6 @@ public abstract class ENetClient : ENetLow
     readonly ConcurrentQueue<ENet.Packet> incoming = new();
     readonly ConcurrentQueue<Cmd<ENetClientOpcode>> eNetCmds = new();
 
-    ENetOptions options;
     Peer peer;
     long connected;
 
@@ -114,7 +115,7 @@ public abstract class ENetClient : ENetLow
             Type type = clientPacket.GetType();
 
             if (!IgnoredPackets.Contains(type) && options.PrintPacketSent)
-                Log($"Sent packet: {type.Name}" +
+                Log($"Sent packet: {type.Name} {FormatByteSize(clientPacket.GetSize())}" +
                     $"{(options.PrintPacketData ? $"\n{clientPacket.PrintFull()}" : "")}");
 
             clientPacket.Send();
@@ -132,7 +133,7 @@ public abstract class ENetClient : ENetLow
             handlePacket.Read(packetReader);
             packetReader.Dispose();
 
-            handlePacket.Handle();
+            handlePacket.Handle(this);
 
             if (!IgnoredPackets.Contains(type) && options.PrintPacketReceived)
                 Log($"Received packet: {type.Name}" +
@@ -143,6 +144,7 @@ public abstract class ENetClient : ENetLow
     protected override void Connect(Event netEvent)
     {
         connected = 1;
+        OnConnected?.Invoke();
         Log("Client connected to server");
     }
 

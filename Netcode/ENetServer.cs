@@ -18,8 +18,6 @@ public abstract class ENetServer : ENetLow
     readonly ConcurrentQueue<ServerPacket> outgoing = new();
     readonly ConcurrentQueue<Cmd<ENetServerOpcode>> enetCmds = new();
 
-    ENetOptions options;
-
     static ENetServer()
     {
         ClientPacket.MapOpcodes();
@@ -79,7 +77,7 @@ public abstract class ENetServer : ENetLow
         Type type = packet.GetType();
 
         if (!IgnoredPackets.Contains(type) && options.PrintPacketSent)
-            Log($"Sending packet {type.Name} {(options.PrintPacketByteSize ? $"({packet.GetSize()} bytes)" : "")}to peer {peer.ID}" +
+            Log($"Sending packet {type.Name} {FormatByteSize(packet.GetSize())}to client {peer.ID}" +
                 $"{(options.PrintPacketData ? $"\n{packet.PrintFull()}" : "")}");
 
         packet.SetSendType(SendType.Peer);
@@ -227,10 +225,10 @@ public abstract class ENetServer : ENetLow
             }
             packetReader.Dispose();
 
-            handlePacket.Handle(packetPeer.Item2);
+            handlePacket.Handle(this, packetPeer.Item2);
 
             if (!IgnoredPackets.Contains(type) && options.PrintPacketReceived)
-                Log($"Received packet: {type.Name} from peer {packetPeer.Item2.ID}" +
+                Log($"Received packet: {type.Name} from client {packetPeer.Item2.ID}" +
                     $"{(options.PrintPacketData ? $"\n{handlePacket.PrintFull()}" : "")}", BBColor.LightGreen);
         }
 
