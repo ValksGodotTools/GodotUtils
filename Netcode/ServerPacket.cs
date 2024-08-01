@@ -1,6 +1,7 @@
 namespace GodotUtils.Netcode;
 
 using ENet;
+using GodotUtils.Netcode.Client;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,7 +51,7 @@ public abstract class ServerPacket : GamePacket
     /// <summary>
     /// The packet handled client-side (Godot thread)
     /// </summary>
-    public abstract void Handle();
+    public abstract void Handle(ENetClient client);
 }
 
 public enum SendType

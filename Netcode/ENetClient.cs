@@ -132,7 +132,7 @@ public abstract class ENetClient : ENetLow
             handlePacket.Read(packetReader);
             packetReader.Dispose();
 
-            handlePacket.Handle();
+            handlePacket.Handle(this);
 
             if (!IgnoredPackets.Contains(type) && options.PrintPacketReceived)
                 Log($"Received packet: {type.Name}" +

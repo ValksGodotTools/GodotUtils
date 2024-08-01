@@ -227,7 +227,7 @@ public abstract class ENetServer : ENetLow
             }
             packetReader.Dispose();
 
-            handlePacket.Handle(packetPeer.Item2);
+            handlePacket.Handle(this, packetPeer.Item2);
 
             if (!IgnoredPackets.Contains(type) && options.PrintPacketReceived)
                 Log($"Received packet: {type.Name} from peer {packetPeer.Item2.ID}" +

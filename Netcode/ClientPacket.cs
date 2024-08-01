@@ -1,5 +1,6 @@
 namespace GodotUtils.Netcode;
 
+using GodotUtils.Netcode.Server;
 using System;
 using System.Collections.Generic;
 
@@ -26,5 +27,5 @@ public abstract class ClientPacket : GamePacket
     /// The packet handled server-side
     /// </summary>
     /// <param name="peer">The client peer</param>
-    public abstract void Handle(ENet.Peer peer);
+    public abstract void Handle(ENetServer server, ENet.Peer peer);
 }
