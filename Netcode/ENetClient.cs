@@ -13,6 +13,7 @@ public abstract class ENetClient : ENetLow
 
     public ConcurrentQueue<Cmd<GodotOpcode>> GodotCmds { get; } = new();
     protected ConcurrentQueue<ClientPacket> Outgoing { get; } = new();
+    ConcurrentQueue<Cmd<GodotOpcode>> godotCmdsInternal { get; } = new();
 
     const uint PING_INTERVAL = 1000;
     const uint PEER_TIMEOUT = 5000;
@@ -122,6 +123,9 @@ public abstract class ENetClient : ENetLow
         }
     }
 
+    /// <summary>
+    /// Everything in this function is handled on the Godot thread
+    /// </summary>
     public void HandlePackets()
     {
         while (godotPackets.TryDequeue(out PacketData packetData))
@@ -139,12 +143,24 @@ public abstract class ENetClient : ENetLow
                 Log($"Received packet: {type.Name}" +
                     $"{(options.PrintPacketData ? $"\n{handlePacket.PrintFull()}" : "")}", BBColor.Deepskyblue);
         }
+
+        while (godotCmdsInternal.TryDequeue(out Cmd<GodotOpcode> cmd))
+        {
+            GodotOpcode opcode = cmd.Opcode;
+
+            if (opcode == GodotOpcode.Connected)
+            {
+                // This must be invoked on the Godot thread as it should only be listened
+                // on the Godot thread
+                OnConnected?.Invoke();
+            }
+        }
     }
 
     protected override void Connect(Event netEvent)
     {
         connected = 1;
-        OnConnected?.Invoke();
+        godotCmdsInternal.Enqueue(new Cmd<GodotOpcode>(GodotOpcode.Connected));
         Log("Client connected to server");
     }
 
@@ -220,6 +236,7 @@ public enum ENetClientOpcode
 
 public enum GodotOpcode
 {
+    Connected,
     Disconnected
 }
 
