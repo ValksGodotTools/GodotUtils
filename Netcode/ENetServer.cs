@@ -28,6 +28,7 @@ public abstract class ENetServer : ENetLow
         this.options = options;
         Starting();
         InitIgnoredPackets(ignoredPackets);
+        EmitLoop = new(100, Emit, false);
         EmitLoop.Start();
         _running = 1;
         CTS = new CancellationTokenSource();
@@ -164,11 +165,6 @@ public abstract class ENetServer : ENetLow
     static ENetServer()
     {
         ClientPacket.MapOpcodes();
-    }
-
-    public ENetServer()
-    {
-        EmitLoop = new(100, Emit, false);
     }
 
     protected virtual void Emit() { }
