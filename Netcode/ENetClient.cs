@@ -44,6 +44,7 @@ public abstract class ENetClient : ENetLow
     public async void Connect(string ip, ushort port, ENetOptions options = default, params Type[] ignoredPackets)
     {
         this.options = options;
+        Log("Client is starting");
         Starting();
         InitIgnoredPackets(ignoredPackets);
 
@@ -66,6 +67,12 @@ public abstract class ENetClient : ENetLow
     /// </summary>
     public override void Stop()
     {
+        if (_running == 0)
+        {
+            Log("Client has stopped already");
+            return;
+        }
+
         eNetCmds.Enqueue(new Cmd<ENetClientOpcode>(ENetClientOpcode.Disconnect));
     }
 

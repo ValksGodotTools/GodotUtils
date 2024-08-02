@@ -25,6 +25,12 @@ public abstract class ENetServer : ENetLow
     /// </summary>
     public async void Start(ushort port, int maxClients, ENetOptions options, params Type[] ignoredPackets)
     {
+        if (_running == 1)
+        {
+            Log("Server is running already");
+            return;
+        }
+
         this.options = options;
         Starting();
         InitIgnoredPackets(ignoredPackets);
@@ -71,6 +77,12 @@ public abstract class ENetServer : ENetLow
     /// </summary>
     public override void Stop()
     {
+        if (_running == 0)
+        {
+            Log("Server has stopped already");
+            return;
+        }
+
         Stopping();
         EmitLoop.Stop();
         EmitLoop.Dispose();
