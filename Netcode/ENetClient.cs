@@ -83,7 +83,10 @@ public abstract class ENetClient : ENetLow
     public void Send(ClientPacket packet, PacketFlags flags = PacketFlags.Reliable)
     {
         if (!IsConnected)
+        {
+            Log($"Can not send packet '{packet.GetType()}' because client is not connected to the server");
             return;
+        }
 
         packet.Write();
         packet.SetPeer(peer);
