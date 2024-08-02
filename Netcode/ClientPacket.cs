@@ -26,6 +26,5 @@ public abstract class ClientPacket : GamePacket
     /// <summary>
     /// The packet handled server-side
     /// </summary>
-    /// <param name="peer">The client peer</param>
-    public abstract void Handle(ENetServer server, ENet.Peer peer);
+    public abstract void Handle(ENetServer server, ENet.Peer client);
 }
