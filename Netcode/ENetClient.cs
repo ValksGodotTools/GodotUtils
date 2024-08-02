@@ -16,7 +16,7 @@ public abstract class ENetClient : ENetLow
     public event Action OnConnected;
 
     /// <summary>
-    /// Fires when the client disconnects from the server. Thread safe.
+    /// Fires when the client disconnects or times out from the server. Thread safe.
     /// </summary>
     public event Action<DisconnectOpcode> OnDisconnected;
 
@@ -228,21 +228,23 @@ public abstract class ENetClient : ENetLow
 
     protected override void Disconnect(Event netEvent)
     {
-        DisconnectCleanup(peer);
-
         DisconnectOpcode opcode = (DisconnectOpcode)netEvent.Data;
+        
+        godotCmdsInternal.Enqueue(new Cmd<GodotOpcode>(GodotOpcode.Disconnected, opcode));
+        
+        DisconnectCleanup(peer);
 
         Log($"Received disconnect opcode from server: " +
             $"{opcode.ToString().ToLower()}");
-
-        godotCmdsInternal.Enqueue(new Cmd<GodotOpcode>(GodotOpcode.Disconnected, opcode));
     }
 
     protected override void Timeout(Event netEvent)
     {
+        godotCmdsInternal.Enqueue(new Cmd<GodotOpcode>(GodotOpcode.Disconnected, DisconnectOpcode.Timeout));
+        godotCmdsInternal.Enqueue(new Cmd<GodotOpcode>(GodotOpcode.Timeout));
+
         DisconnectCleanup(peer);
         Log("Client connection timeout");
-        godotCmdsInternal.Enqueue(new Cmd<GodotOpcode>(GodotOpcode.Timeout));
     }
 
     protected override void Receive(Event netEvent)
