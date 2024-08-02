@@ -20,4 +20,5 @@ public class GTimer
     }
 
     public void Start() => timer.Start();
+    public void Stop() => timer.Stop();
 }
