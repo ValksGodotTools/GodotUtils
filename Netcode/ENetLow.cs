@@ -125,6 +125,7 @@ public enum DisconnectOpcode
     Maintenance,
     Restarting,
     Stopping,
+    Timeout,
     Kicked,
     Banned
 }
