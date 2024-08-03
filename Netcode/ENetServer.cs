@@ -32,12 +32,18 @@ public abstract class ENetServer : ENetLow
         }
 
         this.options = options;
-        Starting();
+
         InitIgnoredPackets(ignoredPackets);
+
         EmitLoop = new(100, Emit, false);
         EmitLoop.Start();
+
         _running = 1;
+
         CTS = new CancellationTokenSource();
+
+        Starting();
+
         using Task task = Task.Run(() => WorkerThread(port, maxClients), CTS.Token);
 
         try
@@ -83,7 +89,6 @@ public abstract class ENetServer : ENetLow
             return;
         }
 
-        Stopping();
         EmitLoop.Stop();
         EmitLoop.Dispose();
         enetCmds.Enqueue(new Cmd<ENetServerOpcode>(ENetServerOpcode.Stop));
@@ -179,9 +184,7 @@ public abstract class ENetServer : ENetLow
         ClientPacket.MapOpcodes();
     }
 
-    protected virtual void Emit() { }
-
-    protected virtual void Stopping() { }
+    protected abstract void Emit();
 
     private void EnqueuePacket(ServerPacket packet)
     {
