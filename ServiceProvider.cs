@@ -50,7 +50,10 @@ public class ServiceProvider
     public T Get<T>()
     {
         if (!services.ContainsKey(typeof(T)))
+        {
+            GD.Print($"Unable to obtain service '{typeof(T)}'");
             return default;
+        }
 
         return (T)services[typeof(T)].Instance;
     }
