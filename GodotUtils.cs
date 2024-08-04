@@ -21,7 +21,7 @@ public static class GU
     public static void DeleteEmptyFolders(string path)
     {
         foreach (string directory in Directory.GetDirectories(path))
-            DeleteEmptyFolder(path);
+            DeleteEmptyFolder(directory);
     }
 
     /// <summary>
