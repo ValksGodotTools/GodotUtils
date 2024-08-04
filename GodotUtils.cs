@@ -16,13 +16,16 @@ public static class GU
     }
 
     /// <summary>
-    /// Deletes all empty folders in this folder
+    /// Recursively deletes all empty folders in this folder
     /// </summary>
     public static void DeleteEmptyFolders(string path)
     {
         if (Directory.Exists(path))
             foreach (string directory in Directory.GetDirectories(path))
+            {
                 DeleteEmptyFolder(directory);
+                DeleteEmptyFolders(directory);
+            }
     }
 
     /// <summary>
