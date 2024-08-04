@@ -1,6 +1,7 @@
 ﻿namespace GodotUtils;
 
 using Godot;
+using System.IO;
 using System.Threading.Tasks;
 
 public static class GU
@@ -14,6 +15,34 @@ public static class GU
         Services.Add<Logger>();
     }
 
+    /// <summary>
+    /// Deletes all empty folders in this folder
+    /// </summary>
+    public static void DeleteEmptyFolders(string path)
+    {
+        foreach (string directory in Directory.GetDirectories(path))
+            DeleteEmptyFolder(path);
+    }
+
+    /// <summary>
+    /// Checks if the folder is empty and deletes it if it is
+    /// </summary>
+    public static void DeleteEmptyFolder(string path)
+    {
+        if (IsEmptyFolder(path))
+            Directory.Delete(path, recursive: false);
+    }
+
+    /// <summary>
+    /// Checks if the folder is empty
+    /// </summary>
+    public static bool IsEmptyFolder(string path) =>
+        Directory.GetDirectories(path).Length == 0 &&
+        Directory.GetFiles(path).Length == 0;
+
+    /// <summary>
+    /// Loads a scene from res://Scenes/Prefabs and instantiates it
+    /// </summary>
     public static T LoadPrefab<T>(string prefab) where T : Node =>
         (T)GD.Load<PackedScene>($"res://Scenes/Prefabs/{prefab}.tscn").Instantiate();
 
