@@ -14,6 +14,9 @@ public static class GU
         Services.Add<Logger>();
     }
 
+    public static T LoadPrefab<T>(string prefab) where T : Node =>
+        (T)GD.Load<PackedScene>($"res://Scenes/Prefabs/{prefab}.tscn").Instantiate();
+
     public static float RandRange(double min, double max) =>
         (float)GD.RandRange(min, max);
 
