@@ -23,8 +23,8 @@ public static class GU
         if (Directory.Exists(path))
             foreach (string directory in Directory.GetDirectories(path))
             {
-                DeleteEmptyFolder(directory);
                 DeleteEmptyFolders(directory);
+                DeleteEmptyFolder(directory);
             }
     }
 
