@@ -20,8 +20,9 @@ public static class GU
     /// </summary>
     public static void DeleteEmptyFolders(string path)
     {
-        foreach (string directory in Directory.GetDirectories(path))
-            DeleteEmptyFolder(directory);
+        if (Directory.Exists(path))
+            foreach (string directory in Directory.GetDirectories(path))
+                DeleteEmptyFolder(directory);
     }
 
     /// <summary>
