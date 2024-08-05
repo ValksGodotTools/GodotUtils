@@ -24,4 +24,14 @@ public static class ExtensionsMath
     /// Pulses a value from 0 to 1 to 0 to 1 over time
     /// </summary>
     public static float Pulse(this float time, float frequency) => 0.5f * (1 + Mathf.Sin(2 * Mathf.Pi * frequency * time));
+
+    /// <summary>
+    /// Counts the number of digits in 'num'. For example 123 has 3 digits.
+    /// </summary>
+    public static int CountDigits(this int num) => (int)Math.Floor(Math.Log10(num) + 1);
+
+    /// <summary>
+    /// Counts the number of digits in 'num'. For example 123 has 3 digits.
+    /// </summary>
+    public static ushort CountDigits(this ushort num) => (ushort)Math.Floor(Math.Log10(num) + 1);
 }
