@@ -30,6 +30,13 @@ public class PrevCurQueue<T>
     public void Add(T newData)
     {
         Progress = 0; // reset progress as this is new incoming data
+
+        if (data.Count == 0)
+        {
+            Previous = newData;
+            Current = newData;
+        }
+
         data.Add(newData);
 
         if (data.Count > 2) // only keep track of previous and current
