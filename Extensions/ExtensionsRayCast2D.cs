@@ -22,13 +22,13 @@ public static class ExtensionsRayCast2D
     /// </summary>
     public static Variant GetTileData(this RayCast2D raycast, string layerName)
     {
-        if (!raycast.IsColliding() || raycast.GetCollider() is not TileMap tileMap)
+        if (!raycast.IsColliding() || raycast.GetCollider() is not TileMapLayer tileMap)
             return default;
 
         Vector2 collisionPos = raycast.GetCollisionPoint();
         Vector2I tilePos = tileMap.LocalToMap(tileMap.ToLocal(collisionPos));
 
-        TileData tileData = tileMap.GetCellTileData(0, tilePos);
+        TileData tileData = tileMap.GetCellTileData(tilePos);
 
         if (tileData == null)
             return default;

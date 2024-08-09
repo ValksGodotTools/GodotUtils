@@ -7,7 +7,7 @@ public static class ExtensionsTileMap
     // enable a layer with Mathf.Pow(2, x - 1) where x is the layer you want enabled
     // if you wanted to enable multiple then add the sum of the powers
     // e.g. Mathf.Pow(2, 1) + Mathf.Pow(2, 3) to enable layers 0 and 2
-    public static void EnableLayers(this TileMap tileMap, params uint[] layers)
+    public static void EnableLayers(this TileMapLayer tileMap, params uint[] layers)
     {
         uint result = 0;
 
@@ -32,11 +32,11 @@ public static class ExtensionsTileMap
     /// To get the tile the player is standing on see RayCast2D.GetTileData(...)
     /// </para>
     /// </summary>
-    public static Variant GetTileData(this TileMap tilemap, Vector2 pos, string layerName)
+    public static Variant GetTileData(this TileMapLayer tilemap, Vector2 pos, string layerName)
     {
         Vector2I tilePos = tilemap.LocalToMap(tilemap.ToLocal(pos));
 
-        TileData tileData = tilemap.GetCellTileData(0, tilePos);
+        TileData tileData = tilemap.GetCellTileData(tilePos);
 
         if (tileData == null)
             return default;
@@ -44,19 +44,19 @@ public static class ExtensionsTileMap
         return tileData.GetCustomData(layerName);
     }
 
-    public static bool InTileMap(this TileMap tilemap, Vector2 pos)
+    public static bool InTileMap(this TileMapLayer tilemap, Vector2 pos)
     {
         Vector2I tilePos = tilemap.LocalToMap(tilemap.ToLocal(pos));
 
-        return tilemap.GetCellSourceId(0, tilePos) != -1;
+        return tilemap.GetCellSourceId(tilePos) != -1;
     }
 
-    public static string GetTileName(this TileMap tilemap, Vector2 pos, int layer = 0)
+    public static string GetTileName(this TileMapLayer tilemap, Vector2 pos)
     {
         if (!tilemap.TileExists(pos))
             return "";
 
-        TileData tileData = tilemap.GetCellTileData(layer, tilemap.LocalToMap(pos));
+        TileData tileData = tilemap.GetCellTileData(tilemap.LocalToMap(pos));
 
         if (tileData == null)
             return "";
@@ -66,9 +66,10 @@ public static class ExtensionsTileMap
         return data.AsString();
     }
 
-    public static bool TileExists(this TileMap tilemap, Vector2 pos, int layer = 0) => tilemap.GetCellSourceId(layer, tilemap.LocalToMap(pos)) != -1;
+    public static bool TileExists(this TileMapLayer tilemap, Vector2 pos) => 
+        tilemap.GetCellSourceId(tilemap.LocalToMap(pos)) != -1;
 
-    static int GetCurrentTileId(this TileMap tilemap, Vector2 pos)
+    static int GetCurrentTileId(this TileMapLayer tilemap, Vector2 pos)
     {
         Vector2I cellPos = tilemap.LocalToMap(pos);
         return 0;
