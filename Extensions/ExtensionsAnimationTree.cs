@@ -29,4 +29,10 @@ public static class ExtensionsAnimationTree
 
     public static void SetParam(this AnimationTree tree, StringName path, Variant value) =>
         tree.Set($"parameters/{path}", value);
+
+    public static Variant GetParam(this AnimationTree tree, StringName path) =>
+        tree.Get($"parameters/{path}");
+
+    public static bool GetCondition(this AnimationTree tree, StringName path) =>
+        (bool)tree.GetParam($"conditions/{path}");
 }
