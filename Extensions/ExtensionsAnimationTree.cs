@@ -35,4 +35,7 @@ public static class ExtensionsAnimationTree
 
     public static bool GetCondition(this AnimationTree tree, StringName path) =>
         (bool)tree.GetParam($"conditions/{path}");
+
+    public static AnimationNodeStateMachinePlayback GetStateMachine(this AnimationTree tree) =>
+        tree.Get("parameters/playback").As<AnimationNodeStateMachinePlayback>();
 }
