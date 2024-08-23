@@ -72,7 +72,7 @@ public static class ExtensionsAnimatedSprite2D
     /// <summary>
     /// Gets the scaled size of the specified sprite frame
     /// </summary>
-    public static Vector2 GetSize(this AnimatedSprite2D sprite, string anim = "")
+    public static Vector2 GetScaledSize(this AnimatedSprite2D sprite, string anim = "")
     {
         anim = string.IsNullOrWhiteSpace(anim) ? sprite.Animation : anim;
         return new Vector2(GetWidth(sprite, anim), GetHeight(sprite, anim));
