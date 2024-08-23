@@ -4,6 +4,12 @@ using Godot;
 
 public static class ExtensionsSprite2D
 {
+    /// <summary>
+    /// The sprite size multiplied by the sprites scale
+    /// </summary>
+    public static Vector2 GetScaledSize(this Sprite2D sprite) =>
+        sprite.GetSize() * sprite.Scale;
+
     public static Vector2 GetSize(this Sprite2D sprite) => sprite.Texture.GetSize();
 
     /// <summary>
