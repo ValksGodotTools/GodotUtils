@@ -4,18 +4,12 @@ using Godot;
 
 public static class ExtensionsTileMap
 {
-    // enable a layer with Mathf.Pow(2, x - 1) where x is the layer you want enabled
-    // if you wanted to enable multiple then add the sum of the powers
-    // e.g. Mathf.Pow(2, 1) + Mathf.Pow(2, 3) to enable layers 0 and 2
-    public static void EnableLayers(this TileMapLayer tileMap, params uint[] layers)
+    public static void EnableLayers(this TileMapLayer tileMap, params int[] layers)
     {
-        uint result = 0;
+        int result = GU.GetLayerValues(layers);
 
-        foreach (uint layer in layers)
-            result += GUMath.UIntPow(2, layer - 1);
-
-        tileMap.TileSet.SetPhysicsLayerCollisionLayer(0, result);
-        tileMap.TileSet.SetPhysicsLayerCollisionMask(0, result);
+        tileMap.TileSet.SetPhysicsLayerCollisionLayer(0, (uint)result);
+        tileMap.TileSet.SetPhysicsLayerCollisionMask(0, (uint)result);
     }
 
     /// <summary>
