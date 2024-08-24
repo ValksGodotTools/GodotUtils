@@ -5,9 +5,23 @@ using System;
 
 public static class ExtensionsNode
 {
-    public static T GetComponent<T>(this Node node, string path) where T : Node
+    /// <summary>
+    /// Searches for the specified type of component attached to this node
+    /// </summary>
+    public static T GetComponent<T>(this Node node, bool recursive = true) where T : Node
     {
-        return (T)node.FindChild(path);
+        foreach (Node child in node.GetChildren())
+        {
+            if (child is T)
+            {
+                return (T)child;
+            }
+
+            if (recursive)
+                return child.GetComponent<T>();
+        }
+
+        return null;
     }
 
     /// <summary>
