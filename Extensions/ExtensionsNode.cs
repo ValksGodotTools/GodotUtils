@@ -5,6 +5,11 @@ using System;
 
 public static class ExtensionsNode
 {
+    public static T GetComponent<T>(this Node node, string path) where T : Node
+    {
+        return (T)node.FindChild(path);
+    }
+
     /// <summary>
     /// Creates a looping tween that will stop and execute a callback when a condition is met.
     /// </summary>
