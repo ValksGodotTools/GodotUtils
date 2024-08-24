@@ -25,36 +25,6 @@ public static class ExtensionsNode
     }
 
     /// <summary>
-    /// Creates a looping tween that will stop and execute a callback when a condition is met.
-    /// </summary>
-    public static void TimerLoop(this Node node, double duration, Func<bool> condition, Action callback)
-    {
-        GTween tween = new(node);
-        tween.Delay(duration);
-        tween.Loop();
-        tween.Callback(() =>
-        {
-            if (condition())
-            {
-                tween.Stop();
-                callback();
-            }
-        });
-    }
-
-    /// <summary>
-    /// Creates a delay followed by a callback only executed after the delay. The
-    /// tween is attached to a node so when this node gets QueueFree'd the tween
-    /// will get QueueFree'd as well.
-    /// </summary>
-    public static void TimerDelay(this Node node, double duration, Action callback)
-    {
-        GTween tween = new(node);
-        tween.Delay(duration);
-        tween.Callback(callback);
-    }
-
-    /// <summary>
     /// Asynchronously waits one procress frame. Remember any async operations will
     /// continue to run even after a node is QueueFree'd. If this is not desired have
     /// a look at ExtensionsNode.Delay(this Node node, double duration, Action callback)
