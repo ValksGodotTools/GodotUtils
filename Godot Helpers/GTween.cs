@@ -24,6 +24,36 @@ public class GTween
         tween.SetProcessMode(Tween.TweenProcessMode.Physics);
     }
 
+    /// <summary>
+    /// Creates a looping tween that will stop and execute a callback when a condition is met.
+    /// </summary>
+    public static void Loop(Node node, double duration, Func<bool> condition, Action callback)
+    {
+        GTween tween = new(node);
+        tween.Delay(duration);
+        tween.Loop();
+        tween.Callback(() =>
+        {
+            if (condition())
+            {
+                tween.Stop();
+                callback();
+            }
+        });
+    }
+
+    /// <summary>
+    /// Creates a delay followed by a callback only executed after the delay. The
+    /// tween is attached to a node so when this node gets QueueFree'd the tween
+    /// will get QueueFree'd as well.
+    /// </summary>
+    public static void Delay(Node node, double duration, Action callback)
+    {
+        GTween tween = new(node);
+        tween.Delay(duration);
+        tween.Callback(callback);
+    }
+
     public void SetProcessMode(Tween.TweenProcessMode mode) =>
         tween.SetProcessMode(mode);
 
