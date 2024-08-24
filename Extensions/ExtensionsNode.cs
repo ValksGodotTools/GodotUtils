@@ -6,9 +6,9 @@ using System;
 public static class ExtensionsNode
 {
     /// <summary>
-    /// Searches for the specified type of component attached to this node
+    /// Searches for the specified type of node attached to this node
     /// </summary>
-    public static T GetComponent<T>(this Node node, bool recursive = true) where T : Node
+    public static T GetNode<T>(this Node node, bool recursive = true) where T : Node
     {
         foreach (Node child in node.GetChildren())
         {
@@ -18,7 +18,7 @@ public static class ExtensionsNode
             }
 
             if (recursive)
-                return child.GetComponent<T>();
+                return child.GetNode<T>();
         }
 
         return null;
