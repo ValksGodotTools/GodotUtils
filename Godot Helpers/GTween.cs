@@ -11,6 +11,7 @@ public class GTween
 {
     Tween tween;
     Node node;
+    string animatingProperty;
 
     public GTween(Node node)
     {
@@ -60,27 +61,26 @@ public class GTween
     public void StopLooping() => tween.SetLoops(1);
     public void Loop(int loops = 0) => tween.SetLoops(loops);
 
-    public PropertyTweener AnimateColor(Color color, double duration, bool modulateChildren = false, bool parallel = false)
+    public void SetAnimatingProp(string animatingProperty) =>
+        this.animatingProperty = animatingProperty;
+
+    public GPropertyTweener AnimateProp(Variant finalValue, double duration, bool parallel = false)
     {
-        if (node is ColorRect)
-            return Animate("color", color, duration, parallel);
-        else
-        {
-            if (modulateChildren)
-            {
-                return Animate("modulate", color, duration, parallel);
-            }
-            else
-            {
-                return Animate("self_modulate", color, duration, parallel);
-            }
-        }
+        if (string.IsNullOrWhiteSpace(animatingProperty))
+            throw new Exception("No animating property has been set");
+
+        return Animate(animatingProperty, finalValue, duration, parallel);
     }
 
-    public PropertyTweener Animate(string prop, Variant finalValue, double duration, bool parallel = false) =>
-        parallel ?
-            tween.Parallel().TweenProperty(node, prop, finalValue, duration) :
-            tween.TweenProperty(node, prop, finalValue, duration);
+    public GPropertyTweener Animate(string prop, Variant finalValue, double duration, bool parallel = false)
+    {
+        if (parallel)
+            tween = tween.Parallel();
+
+        PropertyTweener tweener = tween.TweenProperty(node, prop, finalValue, duration);
+
+        return new GPropertyTweener(tweener);
+    }     
 
     public CallbackTweener Callback(Action callback, bool parallel = false)
     {
@@ -99,4 +99,44 @@ public class GTween
     public void Pause() => tween.Pause();
     public void Resume() => tween.Play();
     public void Kill() => tween?.Kill();
+}
+
+public class GPropertyTweener
+{
+    PropertyTweener tweener;
+
+    public GPropertyTweener(PropertyTweener tweener)
+    {
+        this.tweener = tweener;
+    }
+
+    public GPropertyTweener SetTrans(Tween.TransitionType transType)
+    {
+        tweener.SetTrans(transType);
+        return this;
+    }
+
+    public GPropertyTweener SetEase(Tween.EaseType easeType)
+    {
+        tweener.SetEase(easeType);
+        return this;
+    }
+
+    public GPropertyTweener Sine()
+    {
+        tweener.SetTrans(Tween.TransitionType.Sine);
+        return this;
+    }
+
+    public GPropertyTweener EaseIn()
+    {
+        tweener.SetEase(Tween.EaseType.In);
+        return this;
+    }
+
+    public GPropertyTweener EaseOut()
+    {
+        tweener.SetEase(Tween.EaseType.Out);
+        return this;
+    }
 }
