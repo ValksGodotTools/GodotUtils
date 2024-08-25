@@ -10,15 +10,23 @@ public static class ExtensionsNode
     /// </summary>
     public static T GetNode<T>(this Node node, bool recursive = true) where T : Node
     {
-        foreach (Node child in node.GetChildren())
-        {
-            if (child is T)
-            {
-                return (T)child;
-            }
+        Godot.Collections.Array<Node> children = node.GetChildren();
 
-            if (recursive)
-                return child.GetNode<T>();
+        foreach (Node child in children)
+        {
+            if (child is T type)
+                return type;
+        }
+
+        if (recursive)
+        {
+            foreach (Node child in children)
+            {
+                T val = child.GetNode<T>();
+
+                if (val is not null)
+                    return val;
+            }
         }
 
         return null;
