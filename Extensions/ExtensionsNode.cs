@@ -6,12 +6,15 @@ using System;
 public static class ExtensionsNode
 {
     /// <summary>
-    /// Searches for the specified type of node attached to this node
+    /// Find a child node of type T
     /// </summary>
     public static T GetNode<T>(this Node node, bool recursive = true) where T : Node
     {
-        Godot.Collections.Array<Node> children = node.GetChildren();
+        return FindNode<T>(node.GetChildren(), recursive);
+    }
 
+    private static T FindNode<T>(Godot.Collections.Array<Node> children, bool recursive = true) where T : Node
+    {
         foreach (Node child in children)
         {
             if (child is T type)
@@ -22,7 +25,7 @@ public static class ExtensionsNode
         {
             foreach (Node child in children)
             {
-                T val = child.GetNode<T>();
+                T val = FindNode<T>(child.GetChildren());
 
                 if (val is not null)
                     return val;
