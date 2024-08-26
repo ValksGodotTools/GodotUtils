@@ -156,7 +156,7 @@ public partial class GPath : Path2D
     void Animate(bool forwards)
     {
         tween = new(this);
-        tween.Animate("progress", tweenValues[tweenIndex],
+        tween.Animate(PathFollow2D.PropertyName.Progress, tweenValues[tweenIndex],
             CalculateDuration(forwards)).SetTrans(transType).SetEase(easeType);
     }
 
