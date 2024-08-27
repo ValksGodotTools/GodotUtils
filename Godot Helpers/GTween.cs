@@ -10,6 +10,7 @@ using static Godot.Tween;
 /// </summary>
 public class GTween
 {
+    PropertyTweener tweener;
     Tween tween;
     Node node;
     string animatingProperty;
@@ -67,10 +68,10 @@ public class GTween
     /// tween.AnimateProp(Colors.Transparent, 0.5);
     /// </code>
     /// </summary>
-    public GTweenerBuilder AnimateProp(Variant finalValue, double duration)
+    public GTween AnimateProp(Variant finalValue, double duration)
     {
         if (string.IsNullOrWhiteSpace(animatingProperty))
-            throw new Exception("No animating property has been set");
+            throw new Exception("No animation property has been set with tween.SetAnimatingProp(...)");
 
         return Animate(animatingProperty, finalValue, duration);
     }
@@ -82,13 +83,13 @@ public class GTween
     /// tween.Animate(ColorRect.PropertyName.Color, Colors.Transparent, 0.5);
     /// </code>
     /// </summary>
-    public GTweenerBuilder Animate(string prop, Variant finalValue, double duration)
+    public GTween Animate(string prop, Variant finalValue, double duration)
     {
-        PropertyTweener tweener = tween
+        tweener = tween
             .TweenProperty(node, prop, finalValue, duration)
             .SetTrans(Tween.TransitionType.Sine);
 
-        return new GTweenerBuilder(this, tweener);
+        return this;
     }
 
     /// <summary>
@@ -209,130 +210,107 @@ public class GTween
         return this;
     }
 
+    public GTween SetTrans(Tween.TransitionType transType)
+    {
+        return UpdateTweener(nameof(SetTrans), () => tweener.SetTrans(transType));
+    }
+
+    public GTween SetEase(Tween.EaseType easeType)
+    {
+        return UpdateTweener(nameof(SetEase), () => tweener.SetEase(easeType));
+    }
+
+    public GTween Linear()
+    {
+        return UpdateTweener(nameof(Linear), () => tweener.SetTrans(TransitionType.Linear));
+    }
+
+    public GTween Back()
+    {
+        return UpdateTweener(nameof(Back), () => tweener.SetTrans(TransitionType.Back));
+    }
+
+    public GTween Sine()
+    {
+        return UpdateTweener(nameof(Sine), () => tweener.SetTrans(TransitionType.Sine));
+    }
+
+    public GTween Bounce()
+    {
+        return UpdateTweener(nameof(Bounce), () => tweener.SetTrans(TransitionType.Bounce));
+    }
+
+    public GTween Circ()
+    {
+        return UpdateTweener(nameof(Circ), () => tweener.SetTrans(TransitionType.Circ));
+    }
+
+    public GTween Cubic()
+    {
+        return UpdateTweener(nameof(Cubic), () => tweener.SetTrans(TransitionType.Cubic));
+    }
+
+    public GTween Elastic()
+    {
+        return UpdateTweener(nameof(Elastic), () => tweener.SetTrans(TransitionType.Elastic));
+    }
+
+    public GTween Expo()
+    {
+        return UpdateTweener(nameof(Expo), () => tweener.SetTrans(TransitionType.Expo));
+    }
+
+    public GTween Quad()
+    {
+        return UpdateTweener(nameof(Quad), () => tweener.SetTrans(TransitionType.Quad));
+    }
+
+    public GTween Quart()
+    {
+        return UpdateTweener(nameof(Quart), () => tweener.SetTrans(TransitionType.Quart));
+    }
+
+    public GTween Quint()
+    {
+        return UpdateTweener(nameof(Quint), () => tweener.SetTrans(TransitionType.Quint));
+    }
+
+    public GTween Spring()
+    {
+        return UpdateTweener(nameof(Spring), () => tweener.SetTrans(TransitionType.Spring));
+    }
+
+    public GTween EaseIn()
+    {
+        return UpdateTweener(nameof(EaseIn), () => tweener.SetEase(EaseType.In));
+    }
+
+    public GTween EaseOut()
+    {
+        return UpdateTweener(nameof(EaseOut), () => tweener.SetEase(EaseType.Out));
+    }
+
+    public GTween EaseInOut()
+    {
+        return UpdateTweener(nameof(EaseInOut), () => tweener.SetEase(EaseType.InOut));
+    }
+
+    public GTween EaseOutIn()
+    {
+        return UpdateTweener(nameof(EaseOutIn), () => tweener.SetEase(EaseType.OutIn));
+    }
+
     /// <summary>
     /// Checks if the tween is still playing
     /// </summary>
     public bool IsRunning() => tween.IsRunning();
-}
 
-public class GTweenerBuilder
-{
-    GTween tween;
-    PropertyTweener tweener;
-
-    public GTweenerBuilder(GTween tween, PropertyTweener tweener)
+    private GTween UpdateTweener(string methodName, Action action)
     {
-        this.tween = tween;
-        this.tweener = tweener;
-    }
+        if (tweener == null)
+            throw new Exception($"Cannot call {methodName}() because no tweener has been set with tween.Animate(...)");
 
-    public GTween Append() => tween;
-
-    public GTweenerBuilder SetTrans(Tween.TransitionType transType)
-    {
-        tweener.SetTrans(transType);
-        return this;
-    }
-
-    public GTweenerBuilder SetEase(Tween.EaseType easeType)
-    {
-        tweener.SetEase(easeType);
-        return this;
-    }
-
-    public GTweenerBuilder Linear()
-    {
-        tweener.SetTrans(TransitionType.Linear);
-        return this;
-    }
-
-    public GTweenerBuilder Back()
-    {
-        tweener.SetTrans(TransitionType.Back);
-        return this;
-    }
-
-    public GTweenerBuilder Sine()
-    {
-        tweener.SetTrans(TransitionType.Sine);
-        return this;
-    }
-
-    public GTweenerBuilder Bounce()
-    {
-        tweener.SetTrans(TransitionType.Bounce);
-        return this;
-    }
-
-    public GTweenerBuilder Circ()
-    {
-        tweener.SetTrans(TransitionType.Circ);
-        return this;
-    }
-
-    public GTweenerBuilder Cubic()
-    {
-        tweener.SetTrans(TransitionType.Cubic);
-        return this;
-    }
-
-    public GTweenerBuilder Elastic()
-    {
-        tweener.SetTrans(TransitionType.Elastic);
-        return this;
-    }
-
-    public GTweenerBuilder Expo()
-    {
-        tweener.SetTrans(TransitionType.Expo);
-        return this;
-    }
-
-    public GTweenerBuilder Quad()
-    {
-        tweener.SetTrans(TransitionType.Quad);
-        return this;
-    }
-
-    public GTweenerBuilder Quart()
-    {
-        tweener.SetTrans(TransitionType.Quart);
-        return this;
-    }
-
-    public GTweenerBuilder Quint()
-    {
-        tweener.SetTrans(TransitionType.Quint);
-        return this;
-    }
-
-    public GTweenerBuilder Spring()
-    {
-        tweener.SetTrans(TransitionType.Spring);
-        return this;
-    }
-
-    public GTweenerBuilder EaseIn()
-    {
-        tweener.SetEase(EaseType.In);
-        return this;
-    }
-
-    public GTweenerBuilder EaseOut()
-    {
-        tweener.SetEase(EaseType.Out);
-        return this;
-    }
-
-    public GTweenerBuilder EaseInOut()
-    {
-        tweener.SetEase(EaseType.InOut);
-        return this;
-    }
-
-    public GTweenerBuilder EaseOutIn()
-    {
-        tweener.SetEase(EaseType.OutIn);
+        action();
         return this;
     }
 }
