@@ -2,6 +2,7 @@
 
 using Godot;
 using System;
+using static Godot.Tween;
 
 /// <summary>
 /// The created GTween should be defined in _Ready() if it is going to be re-used
@@ -28,49 +29,35 @@ public class GTween
     /// <summary>
     /// Creates a looping tween that will stop and execute a callback when a condition is met.
     /// </summary>
-    public static void Loop(Node node, double duration, Func<bool> condition, Action callback)
+    public static GTween Loop(Node node, double duration, Func<bool> condition, Action callback)
     {
         GTween tween = new(node);
-        tween.Delay(duration);
-        tween.Loop();
-        tween.Callback(() =>
-        {
-            if (condition())
+        tween.Delay(duration)
+            .Loop()
+            .Callback(() =>
             {
-                tween.Stop();
-                callback();
-            }
-        });
+                if (condition())
+                {
+                    tween.Stop();
+                    callback();
+                }
+            });
+
+        return tween;
     }
 
     /// <summary>
     /// Creates a delay followed by a callback only executed after the delay
     /// </summary>
-    public static void Delay(Node node, double duration, Action callback)
+    public static GTween Delay(Node node, double duration, Action callback)
     {
         GTween tween = new(node);
-        tween.Delay(duration);
-        tween.Callback(callback);
+
+        tween.Delay(duration)
+            .Callback(callback);
+
+        return tween;
     }
-
-    public void SetProcessMode(Tween.TweenProcessMode mode) =>
-        tween.SetProcessMode(mode);
-
-    /// <summary>
-    /// Sets the animation to repeat
-    /// </summary>
-    public void Loop(int loops = 0) => tween.SetLoops(loops);
-
-    /// <summary>
-    /// Sets the property to be animated on
-    /// 
-    /// <code>
-    /// tween.SetAnimatingProp(ColorRect.PropertyName.Color);
-    /// tween.AnimateProp(Colors.Transparent, 0.5);
-    /// </code>
-    /// </summary>
-    public void SetAnimatingProp(string animatingProperty) =>
-        this.animatingProperty = animatingProperty;
 
     /// <summary>
     /// Animates the property that was set with SetAnimatingProp(string prop)
@@ -80,12 +67,12 @@ public class GTween
     /// tween.AnimateProp(Colors.Transparent, 0.5);
     /// </code>
     /// </summary>
-    public GPropertyTweener AnimateProp(Variant finalValue, double duration, bool parallel = false)
+    public GTweenerBuilder AnimateProp(Variant finalValue, double duration)
     {
         if (string.IsNullOrWhiteSpace(animatingProperty))
             throw new Exception("No animating property has been set");
 
-        return Animate(animatingProperty, finalValue, duration, parallel);
+        return Animate(animatingProperty, finalValue, duration);
     }
 
     /// <summary>
@@ -95,180 +82,257 @@ public class GTween
     /// tween.Animate(ColorRect.PropertyName.Color, Colors.Transparent, 0.5);
     /// </code>
     /// </summary>
-    public GPropertyTweener Animate(string prop, Variant finalValue, double duration, bool parallel = false)
+    public GTweenerBuilder Animate(string prop, Variant finalValue, double duration)
     {
-        if (parallel)
-            tween = tween.Parallel();
-
         PropertyTweener tweener = tween
             .TweenProperty(node, prop, finalValue, duration)
             .SetTrans(Tween.TransitionType.Sine);
 
-        return new GPropertyTweener(tweener);
-    }     
-
-    /// <summary>
-    /// The callback is executed in sync with the animation
-    /// </summary>
-    public CallbackTweener Callback(Action callback, bool parallel = false)
-    {
-        if (!parallel)
-            return tween.TweenCallback(Callable.From(callback));
-        else
-            return tween.Parallel().TweenCallback(Callable.From(callback));
+        return new GTweenerBuilder(this, tweener);
     }
 
     /// <summary>
-    /// Delay the animation by a specified duration
+    /// Sets the property to be animated on
+    /// 
+    /// <code>
+    /// tween.SetAnimatingProp(ColorRect.PropertyName.Color);
+    /// tween.AnimateProp(Colors.Transparent, 0.5);
+    /// </code>
     /// </summary>
-    public void Delay(double duration) =>
+    public GTween SetAnimatingProp(string animatingProperty)
+    {
+        this.animatingProperty = animatingProperty;
+        return this;
+    }
+
+    public GTween SetProcessMode(Tween.TweenProcessMode mode)
+    {
+        tween = tween.SetProcessMode(mode);
+        return this;
+    }
+
+    /// <summary>
+    /// Sets the animation to repeat
+    /// </summary>
+    public GTween Loop(int loops = 0)
+    {
+        tween = tween.SetLoops(loops);
+        return this;
+    }
+
+    /// <summary>
+    /// <para>Makes the next <see cref="Godot.Tweener"/> run parallelly to the previous one.</para>
+    /// <para><b>Example:</b></para>
+    /// <para><code>
+    /// GTween tween = new(...);
+    /// tween.Animate(...);
+    /// tween.Parallel().Animate(...);
+    /// tween.Parallel().Animate(...);
+    /// </code></para>
+    /// <para>All <see cref="Godot.Tweener"/>s in the example will run at the same time.</para>
+    /// <para>You can make the <see cref="Godot.Tween"/> parallel by default by using <see cref="Godot.Tween.SetParallel(bool)"/>.</para>
+    /// </summary>
+    public GTween Parallel()
+    {
+        tween = tween.Parallel();
+        return this;
+    }
+
+    /// <summary>
+    /// <para>If <paramref name="parallel"/> is <see langword="true"/>, the <see cref="Godot.Tweener"/>s appended after this method will by default run simultaneously, as opposed to sequentially.</para>
+    /// <para><code>
+    /// tween.SetParallel()
+    /// tween.Animate(...)
+    /// tween.Animate(...)
+    /// </code></para>
+    /// </summary>
+    public GTween SetParallel(bool parallel = true)
+    {
+        tween = tween.SetParallel(parallel);
+        return this;
+    }
+
+    public GTween Callback(Action callback)
+    {
+        tween.TweenCallback(Callable.From(callback));
+        return this;
+    }
+
+    public GTween Delay(double duration)
+    {
         tween.TweenCallback(Callable.From(() => { /* Empty Action */ })).SetDelay(duration);
+        return this;
+    }
 
     /// <summary>
     /// Executed when the tween has finished
     /// </summary>
-    public void Finished(Action callback) => tween.Finished += callback;
+    public GTween Finished(Action callback)
+    {
+        tween.Finished += callback;
+        return this;
+    }
+
+    /// <summary>
+    /// If the tween is looping, this can be used to stop it
+    /// </summary>
+    public GTween Stop()
+    {
+        tween.Stop();
+        return this;
+    }
+
+    /// <summary>
+    /// Pause the tween
+    /// </summary>
+    public GTween Pause()
+    {
+        tween.Pause();
+        return this;
+    }
+
+    /// <summary>
+    /// If the tween was paused with Pause(), resume it with Resume()
+    /// </summary>
+    public GTween Resume()
+    {
+        tween.Play();
+        return this;
+    }
+
+    /// <summary>
+    /// Kill the tween
+    /// </summary>
+    public GTween Kill()
+    {
+        tween?.Kill();
+        return this;
+    }
 
     /// <summary>
     /// Checks if the tween is still playing
     /// </summary>
     public bool IsRunning() => tween.IsRunning();
-
-    /// <summary>
-    /// If the tween is looping, this can be used to stop it
-    /// </summary>
-    public void Stop() => tween.Stop();
-
-    /// <summary>
-    /// Pause the tween
-    /// </summary>
-    public void Pause() => tween.Pause();
-
-    /// <summary>
-    /// If the tween was paused with Pause(), resume it with Resume()
-    /// </summary>
-    public void Resume() => tween.Play();
-
-    /// <summary>
-    /// Kill the tween
-    /// </summary>
-    public void Kill() => tween?.Kill();
 }
 
-public class GPropertyTweener
+public class GTweenerBuilder
 {
+    GTween tween;
     PropertyTweener tweener;
 
-    public GPropertyTweener(PropertyTweener tweener)
+    public GTweenerBuilder(GTween tween, PropertyTweener tweener)
     {
+        this.tween = tween;
         this.tweener = tweener;
     }
 
-    public GPropertyTweener SetTrans(Tween.TransitionType transType)
+    public GTween Append() => tween;
+
+    public GTweenerBuilder SetTrans(Tween.TransitionType transType)
     {
         tweener.SetTrans(transType);
         return this;
     }
 
-    public GPropertyTweener SetEase(Tween.EaseType easeType)
+    public GTweenerBuilder SetEase(Tween.EaseType easeType)
     {
         tweener.SetEase(easeType);
         return this;
     }
 
-    public GPropertyTweener Linear()
+    public GTweenerBuilder Linear()
     {
-        tweener.SetTrans(Tween.TransitionType.Linear);
+        tweener.SetTrans(TransitionType.Linear);
         return this;
     }
 
-    public GPropertyTweener Back()
+    public GTweenerBuilder Back()
     {
-        tweener.SetTrans(Tween.TransitionType.Back);
+        tweener.SetTrans(TransitionType.Back);
         return this;
     }
 
-    public GPropertyTweener Sine()
+    public GTweenerBuilder Sine()
     {
-        tweener.SetTrans(Tween.TransitionType.Sine);
+        tweener.SetTrans(TransitionType.Sine);
         return this;
     }
 
-    public GPropertyTweener Bounce()
+    public GTweenerBuilder Bounce()
     {
-        tweener.SetTrans(Tween.TransitionType.Bounce);
+        tweener.SetTrans(TransitionType.Bounce);
         return this;
     }
 
-    public GPropertyTweener Circ()
+    public GTweenerBuilder Circ()
     {
-        tweener.SetTrans(Tween.TransitionType.Circ);
+        tweener.SetTrans(TransitionType.Circ);
         return this;
     }
 
-    public GPropertyTweener Cubic()
+    public GTweenerBuilder Cubic()
     {
-        tweener.SetTrans(Tween.TransitionType.Cubic);
+        tweener.SetTrans(TransitionType.Cubic);
         return this;
     }
 
-    public GPropertyTweener Elastic()
+    public GTweenerBuilder Elastic()
     {
-        tweener.SetTrans(Tween.TransitionType.Elastic);
+        tweener.SetTrans(TransitionType.Elastic);
         return this;
     }
 
-    public GPropertyTweener Expo()
+    public GTweenerBuilder Expo()
     {
-        tweener.SetTrans(Tween.TransitionType.Expo);
+        tweener.SetTrans(TransitionType.Expo);
         return this;
     }
 
-    public GPropertyTweener Quad()
+    public GTweenerBuilder Quad()
     {
-        tweener.SetTrans(Tween.TransitionType.Quad);
+        tweener.SetTrans(TransitionType.Quad);
         return this;
     }
 
-    public GPropertyTweener Quart()
+    public GTweenerBuilder Quart()
     {
-        tweener.SetTrans(Tween.TransitionType.Quart);
+        tweener.SetTrans(TransitionType.Quart);
         return this;
     }
 
-    public GPropertyTweener Quint()
+    public GTweenerBuilder Quint()
     {
-        tweener.SetTrans(Tween.TransitionType.Quint);
+        tweener.SetTrans(TransitionType.Quint);
         return this;
     }
 
-    public GPropertyTweener Spring()
+    public GTweenerBuilder Spring()
     {
-        tweener.SetTrans(Tween.TransitionType.Spring);
+        tweener.SetTrans(TransitionType.Spring);
         return this;
     }
 
-    public GPropertyTweener EaseIn()
+    public GTweenerBuilder EaseIn()
     {
-        tweener.SetEase(Tween.EaseType.In);
+        tweener.SetEase(EaseType.In);
         return this;
     }
 
-    public GPropertyTweener EaseOut()
+    public GTweenerBuilder EaseOut()
     {
-        tweener.SetEase(Tween.EaseType.Out);
+        tweener.SetEase(EaseType.Out);
         return this;
     }
 
-    public GPropertyTweener EaseInOut()
+    public GTweenerBuilder EaseInOut()
     {
-        tweener.SetEase(Tween.EaseType.InOut);
+        tweener.SetEase(EaseType.InOut);
         return this;
     }
 
-    public GPropertyTweener EaseOutIn()
+    public GTweenerBuilder EaseOutIn()
     {
-        tweener.SetEase(Tween.EaseType.OutIn);
+        tweener.SetEase(EaseType.OutIn);
         return this;
     }
 }
