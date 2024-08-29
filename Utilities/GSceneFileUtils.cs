@@ -6,39 +6,46 @@ public static class GSceneFileUtils
 {
     public static void FixBrokenDependencies()
     {
-        GDirectories.Traverse(ProjectSettings.GlobalizePath("res://"), FixBrokenResourcePath);
+        GDirectories.Traverse(ProjectSettings.GlobalizePath("res://"), FixBrokenResourcePaths);
     }
 
-    private static void FixBrokenResourcePath(string fullFilePath)
+    private static void FixBrokenResourcePaths(string fullFilePath)
     {
         if (fullFilePath.EndsWith(".tscn"))
         {
-            string text = File.ReadAllText(fullFilePath);
+            FixBrokenResourcePath(fullFilePath, new Regex("path=\"(?<path>.+)\" "));
+        }
+        else if (fullFilePath.EndsWith(".glb.import"))
+        {
+            FixBrokenResourcePath(fullFilePath, new Regex("\"save_to_file/path\": \"(?<path>.+)\""));
+        }
+    }
 
-            Regex regex = new("path=\"(?<path>.+)\" ");
+    private static void FixBrokenResourcePath(string fullFilePath, Regex regex)
+    {
+        string text = File.ReadAllText(fullFilePath);
 
-            foreach (Match match in regex.Matches(text))
+        foreach (Match match in regex.Matches(text))
+        {
+            string oldResourcePath = match.Groups["path"].Value;
+
+            if (!Godot.FileAccess.FileExists(oldResourcePath))
             {
-                string oldResourcePath = match.Groups["path"].Value;
+                string newResourcePathGlobal = GDirectories.FindFile(ProjectSettings.GlobalizePath("res://"), oldResourcePath.GetFile());
 
-                if (!Godot.FileAccess.FileExists(oldResourcePath))
+                if (!string.IsNullOrWhiteSpace(newResourcePathGlobal))
                 {
-                    string newResourcePathGlobal = GDirectories.FindFile(ProjectSettings.GlobalizePath("res://"), oldResourcePath.GetFile());
-                    
-                    if (!string.IsNullOrWhiteSpace(newResourcePathGlobal))
-                    {
-                        string newResourcePathLocal = ProjectSettings.LocalizePath(newResourcePathGlobal);
+                    string newResourcePathLocal = ProjectSettings.LocalizePath(newResourcePathGlobal);
 
-                        text = text.Replace(oldResourcePath, newResourcePathLocal);
-                    }
-                    else
-                    {
-                        GD.Print($"Failed to fix a resource path for the scene '{fullFilePath.GetFile()}'. The resource '{oldResourcePath.GetFile()}' could not be found in the project.");
-                    }
+                    text = text.Replace(oldResourcePath, newResourcePathLocal);
+                }
+                else
+                {
+                    GD.Print($"Failed to fix a resource path for the scene '{fullFilePath.GetFile()}'. The resource '{oldResourcePath.GetFile()}' could not be found in the project.");
                 }
             }
-
-            File.WriteAllText(fullFilePath, text);
         }
+
+        File.WriteAllText(fullFilePath, text);
     }
 }
