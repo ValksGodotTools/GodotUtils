@@ -17,6 +17,12 @@ public static class GDirectories
     {
         using DirAccess dir = DirAccess.Open(relativeFolder);
 
+        if (dir == null)
+        {
+            GD.Print("Failed to open directory: " + relativeFolder);
+            return;
+        }
+
         dir.ListDirBegin();
 
         string fileName;
