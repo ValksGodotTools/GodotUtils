@@ -19,8 +19,7 @@ public static class GDirectories
 
         if (dir == null)
         {
-            GD.Print("Failed to open directory: " + relativeFolder);
-            return;
+            throw new Exception("Failed to open directory: " + relativeFolder);
         }
 
         dir.ListDirBegin();
@@ -45,5 +44,47 @@ public static class GDirectories
         }
 
         dir.ListDirEnd();
+    }
+
+    public static string FindLocalFile(string relativeFolder, string theFile)
+    {
+        using DirAccess dir = DirAccess.Open(relativeFolder);
+
+        if (dir == null)
+        {
+            throw new Exception("Failed to open directory: " + relativeFolder);
+        }
+
+        dir.ListDirBegin();
+
+        string fileName;
+
+        while ((fileName = dir.GetNext()) != "")
+        {
+            string fullFilePath = Path.Combine(ProjectSettings.GlobalizePath(relativeFolder), fileName);
+
+            if (dir.CurrentIsDir())
+            {
+                if (!fileName.StartsWith("."))
+                {
+                    string result = FindLocalFile(fullFilePath, theFile);
+
+                    if (result != null)
+                        return result;
+                }
+            }
+            else
+            {
+                if (theFile == fileName)
+                {
+                    string localPath = ProjectSettings.LocalizePath(fullFilePath);
+                    return localPath;
+                }
+            }
+        }
+
+        dir.ListDirEnd();
+
+        return null;
     }
 }
