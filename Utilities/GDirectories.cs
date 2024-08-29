@@ -17,12 +17,6 @@ public static class GDirectories
     {
         using DirAccess dir = DirAccess.Open(relativeFolder);
 
-        if (dir == null)
-        {
-            GD.Print("Failed to open directory: " + relativeFolder);
-            return;
-        }
-
         dir.ListDirBegin();
 
         string fileName;
@@ -31,9 +25,12 @@ public static class GDirectories
         {
             string fullFilePath = Path.Combine(ProjectSettings.GlobalizePath(relativeFolder), fileName);
 
-            if (dir.CurrentIsDir() && !fileName.StartsWith("."))
+            if (dir.CurrentIsDir())
             {
-                Traverse(fullFilePath, actionFullFilePath);
+                if (!fileName.StartsWith("."))
+                {
+                    Traverse(fullFilePath, actionFullFilePath);
+                }
             }
             else
             {
