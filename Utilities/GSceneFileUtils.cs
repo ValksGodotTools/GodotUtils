@@ -23,7 +23,7 @@ public static class GSceneFileUtils
 
                 if (!Godot.FileAccess.FileExists(oldResourcePath))
                 {
-                    string newResourcePath = FindLocalPathToFile("res://", oldResourcePath.GetFile());
+                    string newResourcePath = GDirectories.FindLocalFile(ProjectSettings.GlobalizePath("res://"), oldResourcePath.GetFile());
 
                     if (!string.IsNullOrWhiteSpace(newResourcePath))
                     {
@@ -38,28 +38,5 @@ public static class GSceneFileUtils
 
             File.WriteAllText(fullFilePath, text);
         }
-    }
-
-    private static string FindLocalPathToFile(string relativeFolder, string fileName)
-    {
-        string file = null;
-
-        GDirectories.Traverse(relativeFolder, fullFilePath =>
-        {
-            file = CheckIsFile(fullFilePath, fileName);
-        });
-
-        return file;
-    }
-
-    private static string CheckIsFile(string fullFilePath, string fileName)
-    {
-        if (fullFilePath.GetFile() == fileName)
-        {
-            string localPath = ProjectSettings.LocalizePath(fullFilePath);
-            return localPath;
-        }
-
-        return null;
     }
 }
