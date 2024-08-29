@@ -17,6 +17,11 @@ public static class GDirectories
     {
         using DirAccess dir = DirAccess.Open(relativeFolder);
 
+        if (relativeFolder == "valkyrienyanko")
+        {
+            GD.Print("WTF!");
+        }
+
         dir.ListDirBegin();
 
         string fileName;
