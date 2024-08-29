@@ -68,4 +68,18 @@ public static class ExtensionsString
         regex.Compile("\\[.+?\\]");
         return regex.Sub(source, replacement: "", all: true);
     }
+
+    /// <summary>
+    /// Converts the first character in a string to be Uppercase
+    /// </summary>
+    public static string FirstCharToUpper(this string input)
+    {
+        if (input is null)
+            throw new ArgumentNullException(nameof(input));
+
+        if (input is "")
+            return input;
+
+        return string.Concat(input[0].ToString().ToUpper(), input.AsSpan(1));
+    }
 }
