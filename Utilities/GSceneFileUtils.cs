@@ -23,11 +23,13 @@ public static class GSceneFileUtils
 
                 if (!Godot.FileAccess.FileExists(oldResourcePath))
                 {
-                    string newResourcePath = GDirectories.FindLocalFile(ProjectSettings.GlobalizePath("res://"), oldResourcePath.GetFile());
-
-                    if (!string.IsNullOrWhiteSpace(newResourcePath))
+                    string newResourcePathGlobal = GDirectories.FindFile(ProjectSettings.GlobalizePath("res://"), oldResourcePath.GetFile());
+                    
+                    if (!string.IsNullOrWhiteSpace(newResourcePathGlobal))
                     {
-                        text = text.Replace(oldResourcePath, newResourcePath);
+                        string newResourcePathLocal = ProjectSettings.LocalizePath(newResourcePathGlobal);
+
+                        text = text.Replace(oldResourcePath, newResourcePathLocal);
                     }
                     else
                     {

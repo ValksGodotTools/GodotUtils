@@ -6,33 +6,27 @@ using System.IO;
 public static class GDirectories
 {
     /// <summary>
-    /// Recursively traverses all directories and performs a action on each file path. This ignores
-    /// any directories that start with a period like .godot
+    /// Recursively traverses all directories and performs a action on each file path. 
     /// 
     /// <code>
     /// GDirectories.Traverse("res://", fullFilePath => GD.Print(fullFilePath))
     /// </code>
     /// </summary>
-    public static void Traverse(string relativeFolder, Action<string> actionFullFilePath)
+    public static void Traverse(string directory, Action<string> actionFullFilePath)
     {
-        using DirAccess dir = DirAccess.Open(relativeFolder);
-
-        if (dir == null)
-        {
-            throw new Exception("Failed to open directory: " + relativeFolder);
-        }
+        using DirAccess dir = DirAccess.Open(ProjectSettings.GlobalizePath(directory));
 
         dir.ListDirBegin();
 
-        string fileName;
+        string nextFileName;
 
-        while ((fileName = dir.GetNext()) != "")
+        while ((nextFileName = dir.GetNext()) != "")
         {
-            string fullFilePath = Path.Combine(ProjectSettings.GlobalizePath(relativeFolder), fileName);
+            string fullFilePath = Path.Combine(directory, nextFileName);
 
             if (dir.CurrentIsDir())
             {
-                if (!fileName.StartsWith("."))
+                if (!nextFileName.StartsWith("."))
                 {
                     Traverse(fullFilePath, actionFullFilePath);
                 }
@@ -46,28 +40,34 @@ public static class GDirectories
         dir.ListDirEnd();
     }
 
-    public static string FindLocalFile(string relativeFolder, string theFile)
-    {
-        using DirAccess dir = DirAccess.Open(relativeFolder);
 
-        if (dir == null)
-        {
-            throw new Exception("Failed to open directory: " + relativeFolder);
-        }
+    /// <summary>
+    /// Recursively searches for the file name and if found returns the full file path to
+    /// that file.
+    /// 
+    /// <para>null is returned if the file is not found</para>
+    /// 
+    /// <code>
+    /// string fullPathToPlayer = GDirectories.FindFile("res://", "Player.tscn")
+    /// </code>
+    /// </summary>
+    public static string FindFile(string directory, string fileName)
+    {
+        using DirAccess dir = DirAccess.Open(ProjectSettings.GlobalizePath(directory));
 
         dir.ListDirBegin();
 
-        string fileName;
+        string nextFileName;
 
-        while ((fileName = dir.GetNext()) != "")
+        while ((nextFileName = dir.GetNext()) != "")
         {
-            string fullFilePath = Path.Combine(ProjectSettings.GlobalizePath(relativeFolder), fileName);
+            string fullFilePath = Path.Combine(directory, nextFileName);
 
             if (dir.CurrentIsDir())
             {
-                if (!fileName.StartsWith("."))
+                if (!nextFileName.StartsWith("."))
                 {
-                    string result = FindLocalFile(fullFilePath, theFile);
+                    string result = FindFile(fullFilePath, fileName);
 
                     if (result != null)
                         return result;
@@ -75,10 +75,9 @@ public static class GDirectories
             }
             else
             {
-                if (theFile == fileName)
+                if (fileName == nextFileName)
                 {
-                    string localPath = ProjectSettings.LocalizePath(fullFilePath);
-                    return localPath;
+                    return fullFilePath;
                 }
             }
         }
