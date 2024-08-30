@@ -27,7 +27,7 @@ public static class ExtensionsAnimatedSprite2D
         if (frameCount - 1 >= frame)
             sprite.Frame = frame;
         else
-            GU.Services.Get<Logger>().LogWarning($"The frame '{frame}' specified for {sprite.Name} is" +
+            ServiceProvider.Services.Get<Logger>().LogWarning($"The frame '{frame}' specified for {sprite.Name} is" +
                 $"lower than the frame count '{frameCount}'");
 
         sprite.Play(anim);
@@ -114,8 +114,8 @@ public static class ExtensionsAnimatedSprite2D
         Image img = tex.GetImage();
         Vector2I size = img.GetSize();
 
-        int transColumnsLeft = GU.GetTransparentColumnsLeft(img, size);
-        int transColumnsRight = GU.GetTransparentColumnsRight(img, size);
+        int transColumnsLeft = GImageUtils.GetTransparentColumnsLeft(img, size);
+        int transColumnsRight = GImageUtils.GetTransparentColumnsRight(img, size);
 
         int pixelWidth = size.X - transColumnsLeft - transColumnsRight;
 
@@ -141,8 +141,8 @@ public static class ExtensionsAnimatedSprite2D
         Image img = tex.GetImage();
         Vector2I size = img.GetSize();
 
-        int transRowsTop = GU.GetTransparentRowsTop(img, size);
-        int transRowsBottom = GU.GetTransparentRowsBottom(img, size);
+        int transRowsTop = GImageUtils.GetTransparentRowsTop(img, size);
+        int transRowsBottom = GImageUtils.GetTransparentRowsBottom(img, size);
 
         int pixelHeight = size.Y - transRowsTop - transRowsBottom;
 

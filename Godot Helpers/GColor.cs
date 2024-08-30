@@ -21,9 +21,9 @@ public class GColor
     /// </summary>
     public static Color Random(int alpha = 255)
     {
-        float r = GU.RandRange(0.0, 1.0);
-        float g = GU.RandRange(0.0, 1.0);
-        float b = GU.RandRange(0.0, 1.0);
+        float r = GMath.RandRange(0.0, 1.0);
+        float g = GMath.RandRange(0.0, 1.0);
+        float b = GMath.RandRange(0.0, 1.0);
 
         return new Color(r, g, b, alpha / 255f);
     }

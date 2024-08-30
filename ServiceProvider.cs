@@ -11,6 +11,15 @@ public class ServiceProvider
         public bool Persistent { get; set; }
     }
 
+    public static ServiceProvider Services { get; private set; }
+
+    // Must be called externally from Game repository
+    public static void Init(ServiceProvider services)
+    {
+        Services = services;
+        Services.Add<Logger>();
+    }
+
     protected Dictionary<Type, Service> services = new();
 
     /// <summary>

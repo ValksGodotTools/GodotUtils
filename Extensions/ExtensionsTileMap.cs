@@ -6,7 +6,7 @@ public static class ExtensionsTileMap
 {
     public static void EnableLayers(this TileMapLayer tileMap, params int[] layers)
     {
-        int result = GU.GetLayerValues(layers);
+        int result = GMath.GetLayerValues(layers);
 
         tileMap.TileSet.SetPhysicsLayerCollisionLayer(0, (uint)result);
         tileMap.TileSet.SetPhysicsLayerCollisionMask(0, (uint)result);

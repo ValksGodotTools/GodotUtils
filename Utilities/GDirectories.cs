@@ -86,4 +86,40 @@ public static class GDirectories
 
         return null;
     }
+
+    /// <summary>
+    /// Recursively deletes all empty folders in this folder
+    /// </summary>
+    public static void DeleteEmptyDirectories(string path)
+    {
+        path = ProjectSettings.GlobalizePath(path);
+
+        if (Directory.Exists(path))
+            foreach (string directory in Directory.GetDirectories(path))
+            {
+                DeleteEmptyDirectories(directory);
+                DeleteEmptyDirectory(directory);
+            }
+    }
+
+    /// <summary>
+    /// Checks if the folder is empty and deletes it if it is
+    /// </summary>
+    public static void DeleteEmptyDirectory(string path)
+    {
+        path = ProjectSettings.GlobalizePath(path);
+
+        if (IsEmptyDirectory(path))
+            Directory.Delete(path, recursive: false);
+    }
+
+    /// <summary>
+    /// Checks if the folder is empty
+    /// </summary>
+    public static bool IsEmptyDirectory(string path)
+    {
+        path = ProjectSettings.GlobalizePath(path);
+
+        return Directory.GetDirectories(path).Length == 0 && Directory.GetFiles(path).Length == 0;
+    }
 }
