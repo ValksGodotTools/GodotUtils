@@ -1,3 +1,6 @@
+> [!IMPORTANT]
+> **GodotUtils has been hard merged into [ValksGodotUtils/Template](https://github.com/ValksGodotTools/Template). No more updates will be made to [ValksGodotUtils/GodotUtils](https://github.com/ValksGodotTools/GodotUtils).**
+
 ## What is this?
 An ever expanding utils library for Godot 4 C#. This is the library I am using across all my games, now open source for everyone else to enjoy as well.
 
