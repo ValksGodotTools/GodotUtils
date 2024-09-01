@@ -1,5 +1,7 @@
 ﻿namespace GodotUtils.World2D.TopDown;
 
+using Godot;
+
 public static class Utils
 {
     public static Vector2 GetMovementInput(string prefix = "")
