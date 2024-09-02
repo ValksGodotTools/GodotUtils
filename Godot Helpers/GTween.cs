@@ -4,10 +4,6 @@ using Godot;
 using System;
 using static Godot.Tween;
 
-/// <summary>
-/// The created GTween should be defined in _Ready() if it is going to be re-used
-/// several times
-/// </summary>
 public class GTween
 {
     PropertyTweener tweener;
@@ -48,7 +44,8 @@ public class GTween
     }
 
     /// <summary>
-    /// Creates a delay followed by a callback only executed after the delay
+    /// Creates a delay of <paramref name="duration"/> seconds followed by a
+    /// <paramref name="callback"/>
     /// </summary>
     public static GTween Delay(Node node, double duration, Action callback)
     {
@@ -59,6 +56,12 @@ public class GTween
 
         return tween;
     }
+
+    /// <summary>
+    /// Creates a 0.01s delay followed by a <paramref name="callback"/>
+    /// </summary>
+    public static GTween SmallDelay(Node node, Action callback)
+        => Delay(node, 0.01, callback);
 
     /// <summary>
     /// Animates the property that was set with SetAnimatingProp(string prop)
@@ -77,32 +80,33 @@ public class GTween
     }
 
     /// <summary>
-    /// Animates a specified property. All tweens use the Sine transition by default.
+    /// Animates a specified <paramref name="property"/>. All tweens use the 
+    /// Sine transition by default.
     /// 
     /// <code>
     /// tween.Animate(ColorRect.PropertyName.Color, Colors.Transparent, 0.5);
     /// </code>
     /// </summary>
-    public GTween Animate(string prop, Variant finalValue, double duration)
+    public GTween Animate(string property, Variant finalValue, double duration)
     {
         tweener = tween
-            .TweenProperty(node, prop, finalValue, duration)
+            .TweenProperty(node, property, finalValue, duration)
             .SetTrans(Tween.TransitionType.Sine);
 
         return this;
     }
 
     /// <summary>
-    /// Sets the property to be animated on
+    /// Sets the <paramref name="property"/> to be animated on
     /// 
     /// <code>
     /// tween.SetAnimatingProp(ColorRect.PropertyName.Color);
     /// tween.AnimateProp(Colors.Transparent, 0.5);
     /// </code>
     /// </summary>
-    public GTween SetAnimatingProp(string animatingProperty)
+    public GTween SetAnimatingProp(string property)
     {
-        this.animatingProperty = animatingProperty;
+        this.animatingProperty = property;
         return this;
     }
 
@@ -166,7 +170,7 @@ public class GTween
     }
 
     /// <summary>
-    /// Executed when the tween has finished
+    /// A <paramref name="callback"/> is executed when the tween has finished
     /// </summary>
     public GTween Finished(Action callback)
     {
