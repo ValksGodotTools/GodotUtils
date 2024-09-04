@@ -4,6 +4,14 @@ using Godot;
 
 public static class ExtensionsCanvasItem
 {
+    public static void SetUnshaded(this CanvasItem canvasItem)
+    {
+        canvasItem.Material = new CanvasItemMaterial
+        {
+            LightMode = CanvasItemMaterial.LightModeEnum.Unshaded
+        };
+    }
+
     /// <summary>
     /// <para>Convert the CanvasItem's local position to a screen position</para>
     /// 
