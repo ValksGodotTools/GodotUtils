@@ -2,6 +2,7 @@
 
 using Godot;
 using System;
+using System.IO;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -125,12 +126,12 @@ public class Logger
         {
             // Ex: Scripts/Main.cs:23
             tracePath = $"  at {filePath.Substring(filePath.IndexOf("Scripts"))}:{lineNumber}";
-            tracePath = tracePath.Replace('\\', '/');
+            tracePath = tracePath.Replace(Path.DirectorySeparatorChar, '/');
         }
         else
         {
             // Main.cs:23
-            string[] elements = filePath.Split('\\');
+            string[] elements = filePath.Split(Path.DirectorySeparatorChar);
             tracePath = $"  at {elements[elements.Length - 1]}:{lineNumber}";
         }
 
