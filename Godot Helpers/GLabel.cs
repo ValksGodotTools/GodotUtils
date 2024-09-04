@@ -12,6 +12,15 @@ public partial class GLabel : Label
         SetFontSize(fontSize);
     }
 
-    public void SetTransparent() => SelfModulate = new Color(1, 1, 1, 0);
-    public void SetFontSize(int v) => AddThemeFontSizeOverride("font_size", v);
+    public GLabel SetTransparent()
+    {
+        SelfModulate = new Color(1, 1, 1, 0);
+        return this;
+    }
+
+    public GLabel SetFontSize(int v)
+    {
+        AddThemeFontSizeOverride("font_size", v);
+        return this;
+    }
 }
