@@ -6,6 +6,29 @@ using System;
 public static class ExtensionsNode
 {
     /// <summary>
+    /// Recursively searches for all nodes of <paramref name="type"/>
+    /// </summary>
+    public static List<Node> GetNodes(this Node node, Type type)
+    {
+        List<Node> nodes = [];
+        RecursiveSearch(node, type, nodes);
+        return nodes;
+    }
+
+    private static void RecursiveSearch(Node node, Type type, List<Node> nodes)
+    {
+        if (node.GetType() == type)
+        {
+            nodes.Add(node);
+        }
+
+        foreach (Node child in node.GetChildren())
+        {
+            RecursiveSearch(child, type, nodes);
+        }
+    }
+
+    /// <summary>
     /// Find a child node of type T
     /// </summary>
     public static T GetNode<T>(this Node node, bool recursive = true) where T : Node
