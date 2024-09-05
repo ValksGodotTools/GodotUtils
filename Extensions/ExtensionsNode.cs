@@ -1,7 +1,7 @@
-namespace GodotUtils;
-
 using Godot;
 using System;
+
+namespace GodotUtils;
 
 public static class ExtensionsNode
 {
@@ -11,11 +11,11 @@ public static class ExtensionsNode
     public static List<Node> GetNodes(this Node node, Type type)
     {
         List<Node> nodes = [];
-        RecursiveSearch(node, type, nodes);
+        RecursiveTypeMatchSearch(node, type, nodes);
         return nodes;
     }
 
-    private static void RecursiveSearch(Node node, Type type, List<Node> nodes)
+    private static void RecursiveTypeMatchSearch(Node node, Type type, List<Node> nodes)
     {
         if (node.GetType() == type)
         {
@@ -24,7 +24,7 @@ public static class ExtensionsNode
 
         foreach (Node child in node.GetChildren())
         {
-            RecursiveSearch(child, type, nodes);
+            RecursiveTypeMatchSearch(child, type, nodes);
         }
     }
 
@@ -82,39 +82,38 @@ public static class ExtensionsNode
         node.CallDeferred(Godot.Node.MethodName.AddChild, child);
 
     /// <summary>
-    /// Reparent a node to a new parent.
+    /// Reparents <paramref name="node"/> from <paramref name="oldParent"/> to <paramref name="newParent"/>
     /// </summary>
-    public static void Reparent(this Node curParent, Node newParent, Node node)
+    public static void Reparent(this Node oldParent, Node newParent, Node node)
     {
         // Remove node from current parent
-        curParent.RemoveChild(node);
+        oldParent.RemoveChild(node);
 
         // Add node to new parent
         newParent.AddChild(node);
     }
 
     /// <summary>
-    /// Attempt to retrieve all children from parent of TNode type.
+    /// Recursively retrieves all nodes of type <typeparamref name="T"/> from <paramref name="node"/>
     /// </summary>
-    public static TNode[] GetChildren<TNode>(this Node parent) where TNode : Node
+    public static List<T> GetChildren<T>(this Node node) where T : Node
     {
-        Godot.Collections.Array<Node> children = parent.GetChildren();
-        TNode[] arr = new TNode[children.Count];
+        List<T> children = new();
+        FindChildrenOfType<T>(node, children);
+        return children;
+    }
 
-        for (int i = 0; i < children.Count; i++)
-            try
+    private static void FindChildrenOfType<T>(Node node, List<T> children) where T : Node
+    {
+        foreach (Node child in node.GetChildren())
+        {
+            if (child is T typedChild)
             {
-                arr[i] = (TNode)children[i];
-            }
-            catch (InvalidCastException)
-            {
-                GD.PushError($"Could not get all children from parent " +
-                    $"'{parent.Name}' because could not cast from " +
-                    $"{children[i].GetType()} to {typeof(TNode)} for node " +
-                    $"'{children[i].Name}'");
+                children.Add(typedChild);
             }
 
-        return arr;
+            FindChildrenOfType<T>(child, children);
+        }
     }
 
     /// <summary>
@@ -123,7 +122,9 @@ public static class ExtensionsNode
     public static void QueueFreeChildren(this Node parentNode)
     {
         foreach (Node node in parentNode.GetChildren())
+        {
             node.QueueFree();
+        }
     }
 
     /// <summary>
@@ -132,7 +133,10 @@ public static class ExtensionsNode
     public static void RemoveAllGroups(this Node node)
     {
         Godot.Collections.Array<StringName> groups = node.GetGroups();
+
         for (int i = 0; i < groups.Count; i++)
+        {
             node.RemoveFromGroup(groups[i]);
+        }
     }
 }
