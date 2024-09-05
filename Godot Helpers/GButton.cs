@@ -1,4 +1,4 @@
-﻿namespace GodotUtils;
+namespace GodotUtils;
 
 using Godot;
 
@@ -9,3 +9,4 @@ public partial class GButton : Button
         Text = text;
     }
 }
+

@@ -1,4 +1,4 @@
-﻿namespace GodotUtils;
+namespace GodotUtils;
 
 using Godot;
 
@@ -39,3 +39,4 @@ public static class ExtensionsAnimationTree
     public static AnimationNodeStateMachinePlayback GetStateMachine(this AnimationTree tree) =>
         tree.Get("parameters/playback").As<AnimationNodeStateMachinePlayback>();
 }
+

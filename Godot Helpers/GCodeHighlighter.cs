@@ -1,4 +1,4 @@
-﻿namespace GodotUtils;
+namespace GodotUtils;
 
 using Godot;
 
@@ -34,3 +34,4 @@ public partial class GCodeHighlighter : CodeHighlighter
             KeywordColors.Add(keyword, new Color("a59fff"));
     }
 }
+

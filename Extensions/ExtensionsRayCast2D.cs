@@ -1,4 +1,4 @@
-﻿namespace GodotUtils;
+namespace GodotUtils;
 
 using Godot;
 using System.Collections.Generic;
@@ -92,3 +92,4 @@ public static class ExtensionsRayCast2D
         return default;
     }
 }
+

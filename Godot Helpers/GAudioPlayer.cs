@@ -1,4 +1,4 @@
-﻿namespace GodotUtils;
+namespace GodotUtils;
 
 using Godot;
 
@@ -60,3 +60,4 @@ public class GAudioPlayer
 
     public void Play() => StreamPlayer.Play();
 }
+

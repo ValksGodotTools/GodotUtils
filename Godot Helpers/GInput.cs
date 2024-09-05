@@ -1,4 +1,4 @@
-﻿namespace GodotUtils;
+namespace GodotUtils;
 
 using Godot;
 
@@ -13,3 +13,4 @@ public static class GInput
     public static bool IsMovingDown() =>
         Input.IsKeyPressed(Key.Down) || Input.IsKeyPressed(Key.S);
 }
+

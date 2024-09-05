@@ -1,4 +1,4 @@
-﻿namespace GodotUtils;
+namespace GodotUtils;
 
 using Godot;
 
@@ -27,3 +27,4 @@ public static class ExtensionsCanvasItem
             + root.Position;
     }
 }
+

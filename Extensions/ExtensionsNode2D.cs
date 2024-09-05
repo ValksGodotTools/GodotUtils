@@ -1,4 +1,4 @@
-﻿namespace GodotUtils;
+namespace GodotUtils;
 
 using Godot;
 
@@ -28,3 +28,4 @@ public static class ExtensionsNode2D
         node.GlobalRotation = rot;
     }
 }
+

@@ -1,4 +1,4 @@
-﻿namespace GodotUtils;
+namespace GodotUtils;
 
 using Godot;
 using System.IO;
@@ -51,3 +51,4 @@ public static class GSceneFileUtils
         File.WriteAllText(fullFilePath, text);
     }
 }
+

@@ -1,4 +1,4 @@
-﻿namespace GodotUtils;
+namespace GodotUtils;
 
 using Godot;
 
@@ -24,3 +24,4 @@ public static class ExtensionsInputEventKey
         return OS.GetKeycodeString(keyWithModifiers).Replace("+", " + ");
     }
 }
+

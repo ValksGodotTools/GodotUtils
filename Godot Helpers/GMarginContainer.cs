@@ -1,4 +1,4 @@
-﻿namespace GodotUtils;
+namespace GodotUtils;
 
 using Godot;
 
@@ -31,3 +31,4 @@ public partial class GMarginContainer : MarginContainer
     public void SetMarginBottom(int padding) =>
         AddThemeConstantOverride("margin_bottom", padding);
 }
+

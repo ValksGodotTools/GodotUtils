@@ -1,4 +1,4 @@
-﻿namespace GodotUtils;
+namespace GodotUtils;
 
 using Godot;
 using System;
@@ -70,3 +70,4 @@ public class ServiceProvider
 
     public override string ToString() => services.Print();
 }
+

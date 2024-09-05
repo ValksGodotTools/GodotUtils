@@ -1,4 +1,4 @@
-﻿namespace GodotUtils;
+namespace GodotUtils;
 
 using Godot;
 
@@ -41,3 +41,4 @@ public static class ExtensionsInputEventMouseButton
     static bool IsReleased(this InputEventMouseButton @event, MouseButton button) =>
         @event.ButtonIndex == button && !@event.Pressed;
 }
+

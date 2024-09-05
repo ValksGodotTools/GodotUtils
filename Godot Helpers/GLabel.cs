@@ -1,4 +1,4 @@
-﻿namespace GodotUtils;
+namespace GodotUtils;
 
 using Godot;
 
@@ -24,3 +24,4 @@ public partial class GLabel : Label
         return this;
     }
 }
+

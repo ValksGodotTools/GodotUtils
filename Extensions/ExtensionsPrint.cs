@@ -1,4 +1,4 @@
-﻿namespace GodotUtils;
+namespace GodotUtils;
 
 using Godot;
 using Newtonsoft.Json;
@@ -67,3 +67,4 @@ public static class ExtensionsPrint
         }
     }
 }
+

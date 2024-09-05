@@ -1,4 +1,6 @@
-﻿namespace GodotUtils;
+using System;
+
+namespace GodotUtils;
 
 using Godot;
 using System.IO;
@@ -123,3 +125,4 @@ public static class GDirectories
         return Directory.GetDirectories(path).Length == 0 && Directory.GetFiles(path).Length == 0;
     }
 }
+

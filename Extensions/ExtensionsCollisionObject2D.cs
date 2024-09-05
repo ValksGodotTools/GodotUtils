@@ -1,4 +1,4 @@
-﻿namespace GodotUtils;
+namespace GodotUtils;
 
 using Godot;
 
@@ -13,3 +13,4 @@ public static class ExtensionsCollisionObject2D
         collisionObject.CollisionMask = (uint)GMath.GetLayerValues(layers);
     }
 }
+

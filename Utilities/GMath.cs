@@ -38,3 +38,4 @@ public static class GMath
 
     public static float RandAngle() => RandRange(0, Mathf.Pi * 2);
 }
+

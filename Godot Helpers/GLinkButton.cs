@@ -1,4 +1,4 @@
-﻿namespace GodotUtils;
+namespace GodotUtils;
 
 using Godot;
 
@@ -14,3 +14,4 @@ public partial class GLinkButton : LinkButton
 
     public void SetFontSize(int v) => AddThemeFontSizeOverride("font_size", v);
 }
+

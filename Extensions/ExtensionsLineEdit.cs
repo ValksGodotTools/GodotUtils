@@ -84,3 +84,4 @@ public static class ExtensionsLineEdit
         input.CaretColumn = input.Text.Length;
     }
 }
+

@@ -1,4 +1,4 @@
-﻿namespace GodotUtils;
+namespace GodotUtils;
 
 using Godot;
 using System;
@@ -318,3 +318,4 @@ public class GTween
         return this;
     }
 }
+

@@ -1,4 +1,4 @@
-﻿namespace GodotUtils;
+namespace GodotUtils;
 
 using Godot;
 
@@ -10,3 +10,4 @@ public static class ExtensionsControl
     public static void CenterToScreen(this Control control) =>
         control.SetAnchorsAndOffsetsPreset(Control.LayoutPreset.Center);
 }
+

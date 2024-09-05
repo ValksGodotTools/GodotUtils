@@ -1,4 +1,4 @@
-﻿namespace GodotUtils;
+namespace GodotUtils;
 
 using Godot;
 using System;
@@ -37,3 +37,4 @@ public static class ExtensionsTextEdit
         //textEdit.CaretColumn = text.Length;
     }
 }
+

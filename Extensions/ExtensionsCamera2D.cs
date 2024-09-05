@@ -1,4 +1,4 @@
-﻿namespace GodotUtils;
+namespace GodotUtils;
 
 using Godot;
 
@@ -17,3 +17,4 @@ public static class ExtensionsCamera2D
             GTween.Delay(camera, 0.01, () => camera.PositionSmoothingEnabled = true);
     }
 }
+

@@ -1,4 +1,4 @@
-﻿namespace GodotUtils;
+namespace GodotUtils;
 
 public class Cmd<TOpcode>
 {
@@ -11,3 +11,4 @@ public class Cmd<TOpcode>
         Data = data;
     }
 }
+

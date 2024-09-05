@@ -1,8 +1,8 @@
-﻿using Godot;
+using Godot;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Collections.Concurrent;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Text;
 
@@ -261,3 +261,4 @@ public enum BBColor
     Yellow,
     Orange
 }
+

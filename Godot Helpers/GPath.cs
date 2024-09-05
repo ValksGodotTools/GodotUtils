@@ -1,4 +1,4 @@
-﻿namespace GodotUtils;
+namespace GodotUtils;
 
 using Godot;
 using System.Linq;
@@ -184,3 +184,4 @@ public partial class GPath : Path2D
         return duration;
     }
 }
+

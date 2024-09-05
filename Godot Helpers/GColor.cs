@@ -1,4 +1,4 @@
-﻿namespace GodotUtils;
+namespace GodotUtils;
 
 using Godot;
 
@@ -28,3 +28,4 @@ public class GColor
         return new Color(r, g, b, alpha / 255f);
     }
 }
+

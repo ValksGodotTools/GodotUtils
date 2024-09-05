@@ -1,4 +1,4 @@
-﻿namespace GodotUtils;
+namespace GodotUtils;
 
 using Godot;
 
@@ -94,3 +94,4 @@ public static class ExtensionsSprite2D
         return diff;
     }
 }
+

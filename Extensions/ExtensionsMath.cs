@@ -1,3 +1,5 @@
+using System;
+
 namespace GodotUtils;
 
 using Godot;
@@ -35,3 +37,4 @@ public static class ExtensionsMath
     /// </summary>
     public static ushort CountDigits(this ushort num) => (ushort)Math.Floor(Math.Log10(num) + 1);
 }
+

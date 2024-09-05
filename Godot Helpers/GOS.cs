@@ -1,4 +1,4 @@
-﻿namespace GodotUtils;
+namespace GodotUtils;
 
 using Godot;
 using System.Runtime.InteropServices;
@@ -19,3 +19,4 @@ public static class GOS
 
     public static bool IsMac() => RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
 }
+

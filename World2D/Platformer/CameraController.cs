@@ -104,3 +104,4 @@ public partial class CameraController : Camera2D
         targetZoom = Mathf.Clamp(targetZoom, minZoom, maxZoom);
     }
 }
+

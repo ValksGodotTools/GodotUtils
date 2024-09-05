@@ -1,4 +1,4 @@
-﻿namespace GodotUtils;
+namespace GodotUtils;
 
 using Godot;
 
@@ -10,3 +10,4 @@ public static class GVector2
     public static Vector2 Random() => 
         new Vector2(GMath.RandRange(-1.0, 1.0), GMath.RandRange(-1.0, 1.0)).Normalized();
 }
+

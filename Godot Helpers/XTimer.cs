@@ -1,4 +1,4 @@
-﻿namespace GodotUtils;
+namespace GodotUtils;
 
 using Godot;
 using System;
@@ -96,3 +96,4 @@ public partial class XTimer : Node
     /// </summary>
     public bool IsActive() => Time < Delay;
 }
+
