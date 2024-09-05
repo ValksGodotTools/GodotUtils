@@ -66,6 +66,18 @@ public static class ExtensionsNode
             signal: SceneTree.SignalName.ProcessFrame);
 
     /// <summary>
+    /// Delays an action. Callback may not execute if node is freed before delay completes.
+    /// </summary>
+    /// <param name="node">The node.</param>
+    /// <param name="duration">Delay in seconds.</param>
+    /// <param name="callback">Action to execute after delay.</param>
+    public static async void Delay(this Node node, double duration, Action callback)
+    {
+        await node.ToSignal(node.GetTree().CreateTimer(duration), "timeout");
+        callback?.Invoke();
+    }
+
+    /// <summary>
     /// Sets the PhysicsProcess and Process for all the first level children of a node.
     /// This is not a recursive operation.
     /// </summary>
