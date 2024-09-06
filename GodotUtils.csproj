@@ -1,26 +1,28 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
-    <Authors>valk</Authors>
-    <PackageTags>godot; godot4;</PackageTags>
-    <PackageId>Valks$(AssemblyName)</PackageId>
-    <Title>Valks Godot Utils</Title>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-	<PackageLicenseFile>LICENSE</PackageLicenseFile>
-	<PackageReadmeFile>README.md</PackageReadmeFile>
-	<Description>A utils library for Godot 4 C#</Description>
-	<RepositoryUrl>https://github.com/Valks-Games/GodotUtils</RepositoryUrl>
-	<Version>1.0.1</Version>
+    <ImplicitUsings>false</ImplicitUsings> <!--Prevent use of the global usings feature-->
+    <RootNamespace>GodotUtils</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
 	<None Include="LICENSE" Pack="true" PackagePath="" />
 	<None Include="README.md" Pack="true" PackagePath="" />
   </ItemGroup>
   <ItemGroup>
+    <!-- Condition="!Exists('ENet-CSharp.dll')" is required for other platforms -->
+    <PackageReference Include="ENet-CSharp" Version="2.4.8" Condition="!Exists('ENet-CSharp.dll')" />
     <PackageReference Include="GodotSharp" Version="4.3.0" />
     <PackageReference Include="Godot.SourceGenerators" Version="4.3.0" />
 	<PackageReference Include="Newtonsoft.Json" Version="13.0.1" /> <!--This is used because net472 does not have System.Text.Json-->
   </ItemGroup>
+    <!-- Local Packages -->
+    <!-- This is required for other platforms where the ENet NuGet package is not enough -->
+    <ItemGroup>
+        <Reference Include="ENet-CSharp" Condition="Exists('ENet-CSharp.dll')">
+            <HintPath>ENet-CSharp.dll</HintPath>
+        </Reference>
+    </ItemGroup>
 </Project>
