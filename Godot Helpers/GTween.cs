@@ -1,8 +1,10 @@
+using Godot;
+using static Godot.Tween;
+using System;
+
+
 namespace GodotUtils;
 
-using Godot;
-using System;
-using static Godot.Tween;
 
 public class GTween
 {

@@ -1,7 +1,9 @@
-namespace GodotUtils;
-
 using Godot;
 using System;
+
+
+namespace GodotUtils;
+
 
 public class GTimer
 {

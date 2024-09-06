@@ -1,8 +1,10 @@
-namespace GodotUtils;
-
 using Godot;
 using System.IO;
 using System.Text.RegularExpressions;
+
+
+namespace GodotUtils;
+
 
 public static class GSceneFileUtils
 {

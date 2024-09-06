@@ -1,6 +1,8 @@
+using Godot;
+
+
 namespace GodotUtils;
 
-using Godot;
 
 public static class GMath
 {

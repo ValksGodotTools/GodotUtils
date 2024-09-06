@@ -1,9 +1,11 @@
-namespace GodotUtils;
-
+using EaseType = Godot.Tween.EaseType;
 using Godot;
 using System.Linq;
-using EaseType = Godot.Tween.EaseType;
 using TransType = Godot.Tween.TransitionType;
+
+
+namespace GodotUtils;
+
 
 /*
  * Create a path from a set of points with options to add curvature and
