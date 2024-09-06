@@ -19,7 +19,7 @@ public static class ExtensionsTileMap
     /// GD.Print(tileName);
     /// </code>
     /// </summary>
-    public static T GetCustomData<T>(this TileMapLayer tileMap, Vector2I tileCoordinates, string customDataLayerName)
+    public static T GetCustomData<[MustBeVariant]T>(this TileMapLayer tileMap, Vector2I tileCoordinates, string customDataLayerName)
     {
         TileData tileData = tileMap.GetCellTileData(tileCoordinates);
 
