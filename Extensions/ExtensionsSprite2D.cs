@@ -1,8 +1,6 @@
 using Godot;
 
-
 namespace GodotUtils;
-
 
 public static class ExtensionsSprite2D
 {

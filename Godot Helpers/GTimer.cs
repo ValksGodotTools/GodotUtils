@@ -1,9 +1,8 @@
 using Godot;
 using System;
-
+using Timer = Godot.Timer;
 
 namespace GodotUtils;
-
 
 public class GTimer
 {

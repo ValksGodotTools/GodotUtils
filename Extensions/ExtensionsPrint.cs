@@ -6,9 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System;
 
-
 namespace GodotUtils;
-
 
 public static class ExtensionsPrint
 {

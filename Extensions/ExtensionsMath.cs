@@ -1,10 +1,7 @@
 using Godot;
 using System;
 
-
-
 namespace GodotUtils;
-
 
 public static class ExtensionsMath
 {

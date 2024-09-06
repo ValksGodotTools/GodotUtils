@@ -1,8 +1,6 @@
 using Godot;
 
-
 namespace GodotUtils.World2D.TopDown;
-
 
 public static class Utils
 {

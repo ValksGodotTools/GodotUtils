@@ -2,10 +2,7 @@ using Godot;
 using System.IO;
 using System;
 
-
-
 namespace GodotUtils;
-
 
 public static class GDirectories
 {
@@ -43,7 +40,6 @@ public static class GDirectories
 
         dir.ListDirEnd();
     }
-
 
     /// <summary>
     /// Recursively searches for the file name and if found returns the full file path to

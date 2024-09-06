@@ -2,9 +2,7 @@ using Godot;
 using System.Collections.Generic;
 using System;
 
-
 namespace GodotUtils;
-
 
 public class ServiceProvider
 {

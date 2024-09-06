@@ -1,9 +1,7 @@
 using Godot;
 using System.Collections.Generic;
 
-
 namespace GodotUtils;
-
 
 public static class ExtensionsRayCast2D
 {

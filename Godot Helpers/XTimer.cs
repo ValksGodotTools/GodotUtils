@@ -1,9 +1,7 @@
 using Godot;
 using System;
 
-
 namespace GodotUtils;
-
 
 public partial class XTimer : Node
 {

@@ -3,9 +3,7 @@ using Godot;
 using System.Linq;
 using TransType = Godot.Tween.TransitionType;
 
-
 namespace GodotUtils;
-
 
 /*
  * Create a path from a set of points with options to add curvature and

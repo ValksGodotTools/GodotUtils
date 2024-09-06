@@ -1,8 +1,6 @@
 using Godot;
 
-
 namespace GodotUtils.World2D.Platformer;
-
 
 public partial class CameraController : Camera2D
 {

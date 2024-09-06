@@ -1,8 +1,6 @@
 using Godot;
 
-
 namespace GodotUtils;
-
 
 public partial class GPadding : Control
 {

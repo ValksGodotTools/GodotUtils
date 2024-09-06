@@ -1,8 +1,6 @@
 using Godot;
 
-
 namespace GodotUtils.World2D.TopDown;
-
 
 /*
  * Attach this script to a child node of the Camera node
