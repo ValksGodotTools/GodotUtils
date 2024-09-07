@@ -21,7 +21,7 @@ public class ServiceProvider
         Services.Add<Logger>();
     }
 
-    protected Dictionary<Type, Service> services = new();
+    protected Dictionary<Type, Service> services = [];
 
     /// <summary>
     /// Add a Node that exists within the game tree. For example UIItemNotification
@@ -29,7 +29,8 @@ public class ServiceProvider
     /// </summary>
     public virtual Service Add(object instance, bool persistent = false)
     {
-        Service service = new Service { 
+        Service service = new()
+        {
             Instance = instance, 
             Persistent = persistent 
         };
@@ -45,8 +46,10 @@ public class ServiceProvider
     /// </summary>
     public Service Add<T>() where T : new()
     {
-        T instance = new T();
-        Service service = new Service { 
+        T instance = new();
+
+        Service service = new()
+        { 
             Instance = instance, 
             Persistent = true // all instances that do not exist in the game tree
             // should be persistent
@@ -68,6 +71,6 @@ public class ServiceProvider
         return (T)services[typeof(T)].Instance;
     }
 
-    public override string ToString() => services.Print();
+    public override string ToString() => services.ToFormattedString();
 }
 
