@@ -1,4 +1,5 @@
-﻿using Godot;
+﻿using CSharpUtils;
+using Godot;
 using System;
 
 namespace GodotUtils;
@@ -69,7 +70,7 @@ public class GOptionButtonEnum : GOptionButtonBase
 
         foreach (object item in Enum.GetValues(enumType))
         {
-            Control.AddItem(item.ToString());
+            Control.AddItem(item.ToString().AddSpaceBeforeEachCapital());
         }
 
         Control.ItemSelected += item =>
