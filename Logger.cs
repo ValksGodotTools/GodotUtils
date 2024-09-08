@@ -38,17 +38,17 @@ public class Logger
             return; // or handle the case where no objects are provided
         }
 
-        StringBuilder messageBuilder = new StringBuilder();
+        StringBuilder messageBuilder = new();
 
         foreach (object obj in objects)
         {
             messageBuilder.Append(obj);
-            messageBuilder.Append(" "); // Add a space between objects for readability
+            messageBuilder.Append(' '); // Add a space between objects for readability
         }
 
         string message = messageBuilder.ToString().Trim(); // Remove the trailing space
 
-        LogInfo logInfo = new LogInfo(LoggerOpcode.Message, new LogMessage(message), BBColor.Gray);
+        LogInfo logInfo = new(LoggerOpcode.Message, new LogMessage(message), BBColor.Gray);
 
         messages.Enqueue(logInfo);
     }
@@ -104,7 +104,7 @@ public class Logger
     /// </summary>
     public void LogMs(Action code)
     {
-        Stopwatch watch = new Stopwatch();
+        Stopwatch watch = new();
         watch.Start();
         code();
         watch.Stop();
@@ -203,38 +203,23 @@ public class Logger
     }
 }
 
-public class LogInfo
+public class LogInfo(LoggerOpcode opcode, LogMessage data, BBColor color = BBColor.Gray)
 {
-    public LoggerOpcode Opcode { get; set; }
-    public LogMessage Data { get; set; }
-    public BBColor Color { get; set; }
-
-    public LogInfo(LoggerOpcode opcode, LogMessage data, BBColor color = BBColor.Gray)
-    {
-        Opcode = opcode;
-        Data = data;
-        Color = color;
-    }
+    public LoggerOpcode Opcode { get; set; } = opcode;
+    public LogMessage Data { get; set; } = data;
+    public BBColor Color { get; set; } = color;
 }
 
-public class LogMessage
+public class LogMessage(string message)
 {
-    public string Message { get; set; }
-    public LogMessage(string message) => this.Message = message;
-
+    public string Message { get; set; } = message;
 }
-public class LogMessageTrace : LogMessage
+
+public class LogMessageTrace(string message, bool trace = true, string tracePath = default) : LogMessage(message)
 {
     // Show the Trace Information for the Message
-    public bool ShowTrace { get; set; }
-    public string TracePath { get; set; }
-
-    public LogMessageTrace(string message, bool trace = true, string tracePath = default)
-    : base(message)
-    {
-        ShowTrace = trace;
-        TracePath = tracePath;
-    }
+    public bool ShowTrace { get; set; } = trace;
+    public string TracePath { get; set; } = tracePath;
 }
 
 public enum LoggerOpcode
