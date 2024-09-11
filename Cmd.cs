@@ -1,14 +1,8 @@
 namespace GodotUtils;
 
-public class Cmd<TOpcode>
+public class Cmd<TOpcode>(TOpcode opcode, params object[] data)
 {
-    public TOpcode Opcode { get; set; }
-    public object[] Data { get; set; }
-
-    public Cmd(TOpcode opcode, params object[] data)
-    {
-        Opcode = opcode;
-        Data = data;
-    }
+    public TOpcode Opcode { get; set; } = opcode;
+    public object[] Data { get; set; } = data;
 }
 

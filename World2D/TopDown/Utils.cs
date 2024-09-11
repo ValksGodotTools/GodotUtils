@@ -13,7 +13,9 @@ public static class Utils
             $"{prefix}move_up", $"{prefix}move_down");
     }
 
-    public static Vector2 GetMovementInputRaw(string prefix = "") =>
-        GetMovementInput(prefix).Round();
+    public static Vector2 GetMovementInputRaw(string prefix = "")
+    {
+        return GetMovementInput(prefix).Round();
+    }
 }
 

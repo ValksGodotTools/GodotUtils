@@ -62,10 +62,12 @@ public static class ExtensionsNode
     /// continue to run even after a node is QueueFree'd. If this is not desired have
     /// a look at ExtensionsNode.Delay(this Node node, double duration, Action callback)
     /// </summary>
-    public async static Task WaitOneFrame(this Node parent) =>
+    public async static Task WaitOneFrame(this Node parent)
+    {
         await parent.ToSignal(
             source: parent.GetTree(),
             signal: SceneTree.SignalName.ProcessFrame);
+    }
 
     /// <summary>
     /// Delays an action. Callback may not execute if node is freed before delay completes.
@@ -92,8 +94,10 @@ public static class ExtensionsNode
         }
     }
 
-    public static void AddChildDeferred(this Node node, Node child) =>
+    public static void AddChildDeferred(this Node node, Node child)
+    {
         node.CallDeferred(Godot.Node.MethodName.AddChild, child);
+    }
 
     /// <summary>
     /// Reparents <paramref name="node"/> from <paramref name="oldParent"/> to <paramref name="newParent"/>

@@ -27,7 +27,7 @@ public static class GDirectories
 
             if (dir.CurrentIsDir())
             {
-                if (!nextFileName.StartsWith("."))
+                if (!nextFileName.StartsWith('.'))
                 {
                     Traverse(fullFilePath, actionFullFilePath);
                 }
@@ -65,7 +65,7 @@ public static class GDirectories
 
             if (dir.CurrentIsDir())
             {
-                if (!nextFileName.StartsWith("."))
+                if (!nextFileName.StartsWith('.'))
                 {
                     string result = FindFile(fullFilePath, fileName);
 

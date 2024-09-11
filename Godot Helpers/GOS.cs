@@ -9,14 +9,29 @@ namespace GodotUtils;
 public static class GOS
 {
     // Read up on feature tags https://docs.godotengine.org/en/latest/tutorials/export/feature_tags.html
-    public static bool IsExportedRelease() => OS.HasFeature("template");
+    public static bool IsExportedRelease()
+    {
+        return OS.HasFeature("template");
+    }
 
-    public static bool IsEditor() => !IsExportedRelease();
+    public static bool IsEditor()
+    {
+        return !IsExportedRelease();
+    }
 
-    public static bool IsWindows() => RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+    public static bool IsWindows()
+    {
+        return RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+    }
 
-    public static bool IsLinux() => RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
+    public static bool IsLinux()
+    {
+        return RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
+    }
 
-    public static bool IsMac() => RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
+    public static bool IsMac()
+    {
+        return RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
+    }
 }
 

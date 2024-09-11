@@ -25,10 +25,15 @@ public static class GMath
         return num;
     }
 
-    public static float RandRange(double min, double max) =>
-        (float)GD.RandRange(min, max);
+    public static float RandRange(double min, double max)
+    {
+        return (float)GD.RandRange(min, max);
+    }
 
-    public static int RandRange(int min, int max) => GD.RandRange(min, max);
+    public static int RandRange(int min, int max)
+    {
+        return GD.RandRange(min, max);
+    }
 
     public static Vector2 RandDir(float dist = 1)
     {
@@ -36,6 +41,9 @@ public static class GMath
         return new Vector2(Mathf.Cos(theta) * dist, Mathf.Sin(theta) * dist);
     }
 
-    public static float RandAngle() => RandRange(0, Mathf.Pi * 2);
+    public static float RandAngle()
+    {
+        return RandRange(0, Mathf.Pi * 2);
+    }
 }
 

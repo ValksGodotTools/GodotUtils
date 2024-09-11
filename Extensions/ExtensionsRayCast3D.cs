@@ -18,8 +18,10 @@ public static class ExtensionsRayCast3D
         return numRaycastsColliding;
     }
 
-    public static void ExcludeRaycastParents(this RayCast3D raycast) =>
+    public static void ExcludeRaycastParents(this RayCast3D raycast)
+    {
         ExcludeParents(raycast, raycast.GetParent());
+    }
 
     static void ExcludeParents(RayCast3D raycast, Node parent)
     {

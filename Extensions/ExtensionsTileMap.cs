@@ -29,7 +29,7 @@ public static class ExtensionsTileMap
             return data;
         }
 
-        return default(T);
+        return default;
     }
 }
 

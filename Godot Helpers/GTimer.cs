@@ -20,7 +20,14 @@ public class GTimer
         timer.Timeout += () => Timeout?.Invoke();
     }
 
-    public void Start() => timer.Start();
-    public void Stop() => timer.Stop();
+    public void Start()
+    {
+        timer.Start();
+    }
+
+    public void Stop()
+    {
+        timer.Stop();
+    }
 }
 

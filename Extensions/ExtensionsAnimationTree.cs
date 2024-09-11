@@ -24,19 +24,29 @@ public static class ExtensionsAnimationTree
     /// The name is the name of the BlendSpace1D in the AnimationTree inspector. By default this
     /// is called "BlendSpace1D".
     /// </summary>
-    public static void SetBlendSpace1DPosition(this AnimationTree tree, StringName name, float value) =>
+    public static void SetBlendSpace1DPosition(this AnimationTree tree, StringName name, float value)
+    {
         tree.SetParam($"{name}/blend_position", value);
+    }
 
-    public static void SetParam(this AnimationTree tree, StringName path, Variant value) =>
+    public static void SetParam(this AnimationTree tree, StringName path, Variant value)
+    {
         tree.Set($"parameters/{path}", value);
+    }
 
-    public static Variant GetParam(this AnimationTree tree, StringName path) =>
-        tree.Get($"parameters/{path}");
+    public static Variant GetParam(this AnimationTree tree, StringName path)
+    {
+        return tree.Get($"parameters/{path}");
+    }
 
-    public static bool GetCondition(this AnimationTree tree, StringName path) =>
-        (bool)tree.GetParam($"conditions/{path}");
+    public static bool GetCondition(this AnimationTree tree, StringName path)
+    {
+        return (bool)tree.GetParam($"conditions/{path}");
+    }
 
-    public static AnimationNodeStateMachinePlayback GetStateMachine(this AnimationTree tree) =>
-        tree.Get("parameters/playback").As<AnimationNodeStateMachinePlayback>();
+    public static AnimationNodeStateMachinePlayback GetStateMachine(this AnimationTree tree)
+    {
+        return tree.Get("parameters/playback").As<AnimationNodeStateMachinePlayback>();
+    }
 }
 

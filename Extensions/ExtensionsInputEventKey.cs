@@ -4,11 +4,15 @@ namespace GodotUtils;
 
 public static class ExtensionsInputEventKey
 {
-    public static bool IsJustPressed(this InputEventKey v, Key key) =>
-        v.Keycode == key && v.Pressed && !v.Echo;
+    public static bool IsJustPressed(this InputEventKey v, Key key)
+    {
+        return v.Keycode == key && v.Pressed && !v.Echo;
+    }
 
-    public static bool IsJustReleased(this InputEventKey v, Key key) =>
-        v.Keycode == key && !v.Pressed && !v.Echo;
+    public static bool IsJustReleased(this InputEventKey v, Key key)
+    {
+        return v.Keycode == key && !v.Pressed && !v.Echo;
+    }
 
     /// <summary>
     /// <para>Convert to a human readable key</para>

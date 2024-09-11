@@ -64,7 +64,10 @@ public partial class GPath : Path2D
         }
     }
 
-    public void SetLevelProgress(int v) => pathFollow.Progress = tweenValues[v - 1];
+    public void SetLevelProgress(int v)
+    {
+        pathFollow.Progress = tweenValues[v - 1];
+    }
 
     public void AnimateTo(int targetIndex)
     {

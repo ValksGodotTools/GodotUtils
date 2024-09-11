@@ -12,6 +12,9 @@ public partial class GLinkButton : LinkButton
         SetFontSize(fontSize);
     }
 
-    public void SetFontSize(int v) => AddThemeFontSizeOverride("font_size", v);
+    public void SetFontSize(int v)
+    {
+        AddThemeFontSizeOverride("font_size", v);
+    }
 }
 

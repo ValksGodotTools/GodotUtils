@@ -60,12 +60,14 @@ public static class ExtensionsPrint
     /// </summary>
     /// <param name="v">The object to convert.</param>
     /// <returns>A formatted JSON string representation of the object.</returns>
-    public static string ToFormattedString(this object v) =>
-        JsonConvert.SerializeObject(v, Formatting.Indented, new JsonSerializerSettings
+    public static string ToFormattedString(this object v)
+    {
+        return JsonConvert.SerializeObject(v, Formatting.Indented, new JsonSerializerSettings
         {
             ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
             ContractResolver = new IgnorePropsResolver() // ignore all Godot props
         });
+    }
 
     /// <summary>
     /// A custom contract resolver used to ignore certain Godot properties during JSON serialization.

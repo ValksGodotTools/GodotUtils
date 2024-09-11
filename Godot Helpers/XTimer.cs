@@ -70,17 +70,26 @@ public partial class XTimer : Node
     /// Set the time to delay. Useful if for example guns should be pre-loaded
     /// on game start.
     /// </summary>
-    public void MaximizeTime() => Time = Delay;
+    public void MaximizeTime()
+    {
+        Time = Delay;
+    }
 
     /// <summary>
     /// Start the timer
     /// </summary>
-    public void Start() => SetPhysicsProcess(true);
+    public void Start()
+    {
+        SetPhysicsProcess(true);
+    }
 
     /// <summary>
     /// Stop the timer
     /// </summary>
-    public void Stop() => SetPhysicsProcess(false);
+    public void Stop()
+    {
+        SetPhysicsProcess(false);
+    }
 
     /// <summary>
     /// Reset the timer by setting the time to 0 and starting the timer again
@@ -94,6 +103,9 @@ public partial class XTimer : Node
     /// <summary>
     /// Is Time still less than Delay?
     /// </summary>
-    public bool IsActive() => Time < Delay;
+    public bool IsActive()
+    {
+        return Time < Delay;
+    }
 }
 

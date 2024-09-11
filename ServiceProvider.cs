@@ -71,6 +71,9 @@ public class ServiceProvider
         return (T)services[typeof(T)].Instance;
     }
 
-    public override string ToString() => services.ToFormattedString();
+    public override string ToString()
+    {
+        return services.ToFormattedString();
+    }
 }
 

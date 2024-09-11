@@ -19,16 +19,24 @@ public partial class GMarginContainer : MarginContainer
             AddThemeConstantOverride($"margin_{margin}", padding);
     }
 
-    public void SetMarginLeft(int padding) =>
+    public void SetMarginLeft(int padding)
+    {
         AddThemeConstantOverride("margin_left", padding);
+    }
 
-    public void SetMarginRight(int padding) =>
+    public void SetMarginRight(int padding)
+    {
         AddThemeConstantOverride("margin_right", padding);
+    }
 
-    public void SetMarginTop(int padding) =>
+    public void SetMarginTop(int padding)
+    {
         AddThemeConstantOverride("margin_top", padding);
+    }
 
-    public void SetMarginBottom(int padding) =>
+    public void SetMarginBottom(int padding)
+    {
         AddThemeConstantOverride("margin_bottom", padding);
+    }
 }
 

@@ -114,7 +114,10 @@ public class Logger
     /// <summary>
     /// Checks to see if there are any messages left in the queue
     /// </summary>
-    public bool StillWorking() => !messages.IsEmpty;
+    public bool StillWorking()
+    {
+        return !messages.IsEmpty;
+    }
 
     /// <summary>
     /// Dequeues a Requested Message and Logs it

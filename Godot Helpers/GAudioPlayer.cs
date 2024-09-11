@@ -58,6 +58,9 @@ public class GAudioPlayer
         parent.AddChild(StreamPlayer);
     }
 
-    public void Play() => StreamPlayer.Play();
+    public void Play()
+    {
+        StreamPlayer.Play();
+    }
 }
 

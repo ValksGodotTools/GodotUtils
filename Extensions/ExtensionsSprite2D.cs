@@ -7,10 +7,15 @@ public static class ExtensionsSprite2D
     /// <summary>
     /// The sprite size multiplied by the sprites scale
     /// </summary>
-    public static Vector2 GetScaledSize(this Sprite2D sprite) =>
-        sprite.GetSize() * sprite.Scale;
+    public static Vector2 GetScaledSize(this Sprite2D sprite)
+    {
+        return sprite.GetSize() * sprite.Scale;
+    }
 
-    public static Vector2 GetSize(this Sprite2D sprite) => sprite.Texture.GetSize();
+    public static Vector2 GetSize(this Sprite2D sprite)
+    {
+        return sprite.Texture.GetSize();
+    }
 
     /// <summary>
     /// <para>
@@ -23,8 +28,10 @@ public static class ExtensionsSprite2D
     /// shapes at runtime.
     /// </para>
     /// </summary>
-    public static Vector2 GetPixelSize(this Sprite2D sprite) =>
-        new Vector2(GetPixelWidth(sprite), GetPixelHeight(sprite));
+    public static Vector2 GetPixelSize(this Sprite2D sprite)
+    {
+        return new(GetPixelWidth(sprite), GetPixelHeight(sprite));
+    }
 
     /// <summary>
     /// <para>
