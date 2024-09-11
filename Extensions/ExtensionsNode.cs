@@ -116,7 +116,7 @@ public static class ExtensionsNode
     /// </summary>
     public static List<T> GetChildren<T>(this Node node) where T : Node
     {
-        List<T> children = new();
+        List<T> children = [];
         FindChildrenOfType<T>(node, children);
         return children;
     }
