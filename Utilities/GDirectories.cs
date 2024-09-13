@@ -100,14 +100,33 @@ public static class GDirectories
     /// <returns>A new file path with the specified segment removed.</returns>
     public static string RemovePathSegment(string path, string segmentToRemove)
     {
-        // Split the path into parts
-        string[] parts = path.Split(Path.DirectorySeparatorChar);
+        // Normalize the path separators to match the current environment
+        path = NormalizePath(path);
+        segmentToRemove = NormalizePath(segmentToRemove);
 
-        // Filter out the segment to remove
-        string[] newParts = Array.FindAll(parts, part => part != segmentToRemove);
+        // Check if the segment to remove is part of the path
+        if (path.Contains(segmentToRemove))
+        {
+            // Remove the segment from the path
+            path = path.Replace(segmentToRemove + Path.DirectorySeparatorChar, string.Empty);
+        }
 
-        // Join the parts back together
-        return Path.Combine(newParts);
+        return path;
+    }
+
+    /// <summary>
+    /// Normalizes the specified path by replacing all forward slashes ('/') and backslashes ('\') with the system's directory separator character.
+    /// </summary>
+    /// <param name="path">The path to normalize.</param>
+    /// <returns>A normalized path where all directory separators are replaced with the system's directory separator character.</returns>
+    /// <remarks>
+    /// This method is useful when dealing with paths that may come from different sources (e.g., URLs, different operating systems) and need to be standardized for the current environment.
+    /// </remarks>
+    public static string NormalizePath(string path)
+    {
+        return path
+            .Replace('/', Path.DirectorySeparatorChar)
+            .Replace('\\', Path.DirectorySeparatorChar);
     }
 
     /// <summary>
