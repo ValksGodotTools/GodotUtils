@@ -21,7 +21,7 @@ public static class GDirectories
 
         string nextFileName;
 
-        while ((nextFileName = dir.GetNext()) != "")
+        while ((nextFileName = dir.GetNext()) != string.Empty)
         {
             string fullFilePath = Path.Combine(directory, nextFileName);
 
@@ -59,7 +59,7 @@ public static class GDirectories
 
         string nextFileName;
 
-        while ((nextFileName = dir.GetNext()) != "")
+        while ((nextFileName = dir.GetNext()) != string.Empty)
         {
             string fullFilePath = Path.Combine(directory, nextFileName);
 
