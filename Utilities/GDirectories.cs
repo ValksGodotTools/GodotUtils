@@ -15,7 +15,9 @@ public static class GDirectories
     /// </summary>
     public static void Traverse(string directory, Action<string> actionFullFilePath)
     {
-        using DirAccess dir = DirAccess.Open(ProjectSettings.GlobalizePath(directory));
+        directory = NormalizePath(ProjectSettings.GlobalizePath(directory));
+
+        using DirAccess dir = DirAccess.Open(directory);
 
         dir.ListDirBegin();
 
@@ -52,7 +54,9 @@ public static class GDirectories
     /// <returns>Returns the full path to the file or null if the file is not found</returns>
     public static string FindFile(string directory, string fileName)
     {
-        using DirAccess dir = DirAccess.Open(ProjectSettings.GlobalizePath(directory));
+        directory = NormalizePath(ProjectSettings.GlobalizePath(directory));
+
+        using DirAccess dir = DirAccess.Open(directory);
 
         dir.ListDirBegin();
 
@@ -134,7 +138,7 @@ public static class GDirectories
     /// </summary>
     public static void DeleteEmptyDirectories(string path)
     {
-        path = ProjectSettings.GlobalizePath(path);
+        path = NormalizePath(ProjectSettings.GlobalizePath(path));
 
         if (Directory.Exists(path))
             foreach (string directory in Directory.GetDirectories(path))
@@ -149,7 +153,7 @@ public static class GDirectories
     /// </summary>
     public static void DeleteEmptyDirectory(string path)
     {
-        path = ProjectSettings.GlobalizePath(path);
+        path = NormalizePath(ProjectSettings.GlobalizePath(path));
 
         if (IsEmptyDirectory(path))
             Directory.Delete(path, recursive: false);
@@ -161,7 +165,7 @@ public static class GDirectories
     /// <returns>Returns true if the directory is empty</returns>
     public static bool IsEmptyDirectory(string path)
     {
-        path = ProjectSettings.GlobalizePath(path);
+        path = NormalizePath(ProjectSettings.GlobalizePath(path));
 
         return Directory.GetDirectories(path).Length == 0 && Directory.GetFiles(path).Length == 0;
     }

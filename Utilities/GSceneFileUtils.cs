@@ -8,7 +8,7 @@ public static class GSceneFileUtils
 {
     public static void FixBrokenDependencies()
     {
-        GDirectories.Traverse(ProjectSettings.GlobalizePath("res://"), FixBrokenResourcePaths);
+        GDirectories.Traverse("res://", FixBrokenResourcePaths);
     }
 
     private static void FixBrokenResourcePaths(string fullFilePath)
@@ -33,7 +33,7 @@ public static class GSceneFileUtils
 
             if (!Godot.FileAccess.FileExists(oldResourcePath))
             {
-                string newResourcePathGlobal = GDirectories.FindFile(ProjectSettings.GlobalizePath("res://"), oldResourcePath.GetFile());
+                string newResourcePathGlobal = GDirectories.FindFile("res://", oldResourcePath.GetFile());
 
                 if (!string.IsNullOrWhiteSpace(newResourcePathGlobal))
                 {
