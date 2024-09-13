@@ -45,12 +45,11 @@ public static class GDirectories
     /// Recursively searches for the file name and if found returns the full file path to
     /// that file.
     /// 
-    /// <para>null is returned if the file is not found</para>
-    /// 
     /// <code>
     /// string fullPathToPlayer = GDirectories.FindFile("res://", "Player.tscn")
     /// </code>
     /// </summary>
+    /// <returns>Returns the full path to the file or null if the file is not found</returns>
     public static string FindFile(string directory, string fileName)
     {
         using DirAccess dir = DirAccess.Open(ProjectSettings.GlobalizePath(directory));
@@ -88,6 +87,30 @@ public static class GDirectories
     }
 
     /// <summary>
+    /// Removes a specified <paramref name="segmentToRemove"/> from a file <paramref name="path"/>.
+    /// <code>
+    /// string path = @"A/B/C/D/E";
+    /// string segmentToRemove = "C";
+    /// string newPath = GDirectories.RemovePathSegment(path, segmentToRemove);
+    /// // newPath will be "A/B/D/E"
+    /// </code>
+    /// </summary>
+    /// <param name="path">The original file path.</param>
+    /// <param name="segmentToRemove">The segment to remove from the path.</param>
+    /// <returns>A new file path with the specified segment removed.</returns>
+    public static string RemovePathSegment(string path, string segmentToRemove)
+    {
+        // Split the path into parts
+        string[] parts = path.Split(Path.DirectorySeparatorChar);
+
+        // Filter out the segment to remove
+        string[] newParts = Array.FindAll(parts, part => part != segmentToRemove);
+
+        // Join the parts back together
+        return Path.Combine(newParts);
+    }
+
+    /// <summary>
     /// Recursively deletes all empty folders in this folder
     /// </summary>
     public static void DeleteEmptyDirectories(string path)
@@ -114,8 +137,9 @@ public static class GDirectories
     }
 
     /// <summary>
-    /// Checks if the folder is empty
+    /// Checks if the directory is empty
     /// </summary>
+    /// <returns>Returns true if the directory is empty</returns>
     public static bool IsEmptyDirectory(string path)
     {
         path = ProjectSettings.GlobalizePath(path);
