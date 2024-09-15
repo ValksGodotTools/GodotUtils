@@ -6,7 +6,7 @@ namespace GodotUtils;
 
 public static class ExtensionsLineEdit
 {
-    private static readonly Dictionary<ulong, string> prevTexts = new();
+    private static readonly Dictionary<ulong, string> prevTexts = [];
 
     /// <summary>
     /// <para>

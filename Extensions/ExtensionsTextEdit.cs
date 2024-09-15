@@ -6,7 +6,7 @@ namespace GodotUtils;
 
 public static class ExtensionsTextEdit
 {
-    static readonly Dictionary<ulong, string> prevTexts = new();
+    static readonly Dictionary<ulong, string> prevTexts = [];
 
     public static string Filter(this TextEdit textEdit, Func<string, bool> filter)
     {
