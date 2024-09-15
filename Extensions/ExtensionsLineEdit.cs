@@ -31,7 +31,7 @@ public static class ExtensionsLineEdit
         {
             lineEdit.Text = prevTexts[id];
             lineEdit.CaretColumn = prevTexts[id].Length;
-            return prevTexts.ContainsKey(id) ? prevTexts[id] : "";
+            return prevTexts.TryGetValue(id, out string value) ? value : "";
         }
 
         prevTexts[id] = lineEdit.Text;

@@ -17,8 +17,8 @@ public partial class GCodeHighlighter : CodeHighlighter
         KeywordColors = [];
 
         // keywords cannot contain any symbols except for "_" so can't include stuff like "'"
-        string[] keywords = new string[]
-        {
+        string[] keywords =
+        [
             "var",
             "true",
             "false",
@@ -28,7 +28,7 @@ public partial class GCodeHighlighter : CodeHighlighter
             "protected",
             "internal",
             "void"
-        };
+        ];
 
         foreach (string keyword in keywords)
             KeywordColors.Add(keyword, new Color("a59fff"));

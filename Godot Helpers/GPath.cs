@@ -79,7 +79,7 @@ public partial class GPath : Path2D
 
     public int AnimateForwards(int step = 1)
     {
-        tweenIndex = Mathf.Min(tweenIndex + step, tweenValues.Count() - 1);
+        tweenIndex = Mathf.Min(tweenIndex + step, tweenValues.Length - 1);
         Animate(true);
         return tweenIndex;
     }

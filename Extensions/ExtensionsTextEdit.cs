@@ -14,18 +14,18 @@ public static class ExtensionsTextEdit
         ulong id = textEdit.GetInstanceId();
 
         if (string.IsNullOrWhiteSpace(text))
-            return prevTexts.ContainsKey(id) ? prevTexts[id] : null;
+            return prevTexts.TryGetValue(id, out string value) ? value : null;
 
         if (!filter(text))
         {
-            if (!prevTexts.ContainsKey(id))
+            if (!prevTexts.TryGetValue(id, out string value))
             {
                 textEdit.ChangeTextEditText("");
                 return null;
             }
 
-            textEdit.ChangeTextEditText(prevTexts[id]);
-            return prevTexts[id];
+            textEdit.ChangeTextEditText(value);
+            return value;
         }
 
         prevTexts[id] = text;
