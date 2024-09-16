@@ -13,7 +13,7 @@ public class GTween
 
     public GTween(Node node)
     {
-        this._node = node;
+        _node = node;
 
         // Ensure the Tween is fresh when re-creating it
         Kill();
@@ -108,7 +108,7 @@ public class GTween
     /// </summary>
     public GTween SetAnimatingProp(string property)
     {
-        this._animatingProperty = property;
+        _animatingProperty = property;
         return this;
     }
 

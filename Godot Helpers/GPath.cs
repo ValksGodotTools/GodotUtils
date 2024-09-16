@@ -31,16 +31,16 @@ public partial class GPath : Path2D
 
     public GPath(Vector2[] points, Color color, int width = 5, int dashes = 0, double animSpeed = 1)
     {
-        this._points = points;
+        _points = points;
         Curve = new Curve2D();
         _pathFollow = new PathFollow2D { Rotates = false };
         _tween = new GTween(_pathFollow);
         AddChild(_pathFollow);
 
-        this._color = color;
-        this._width = width;
-        this._dashes = dashes;
-        this._animSpeed = animSpeed;
+        _color = color;
+        _width = width;
+        _dashes = dashes;
+        _animSpeed = animSpeed;
 
         // Add points to the path
         for (int i = 0; i < points.Length; i++)
@@ -91,7 +91,7 @@ public partial class GPath : Path2D
 
     public void AddSprite(Sprite2D sprite)
     {
-        this._sprite = sprite;
+        _sprite = sprite;
         _pathFollow.AddChild(sprite);
     }
 
