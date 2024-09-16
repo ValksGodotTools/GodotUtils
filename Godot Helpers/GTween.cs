@@ -112,7 +112,7 @@ public class GTween
         return this;
     }
 
-    public GTween SetProcessMode(Tween.TweenProcessMode mode)
+    public GTween SetProcessMode(TweenProcessMode mode)
     {
         _tween = _tween.SetProcessMode(mode);
         return this;
@@ -128,7 +128,7 @@ public class GTween
     }
 
     /// <summary>
-    /// <para>Makes the next <see cref="Godot.Tweener"/> run parallelly to the previous one.</para>
+    /// <para>Makes the next <see cref="Tweener"/> run parallelly to the previous one.</para>
     /// <para><b>Example:</b></para>
     /// <para><code>
     /// GTween tween = new(...);
@@ -136,8 +136,8 @@ public class GTween
     /// tween.Parallel().Animate(...);
     /// tween.Parallel().Animate(...);
     /// </code></para>
-    /// <para>All <see cref="Godot.Tweener"/>s in the example will run at the same time.</para>
-    /// <para>You can make the <see cref="Godot.Tween"/> parallel by default by using <see cref="Godot.Tween.SetParallel(bool)"/>.</para>
+    /// <para>All <see cref="Tweener"/>s in the example will run at the same time.</para>
+    /// <para>You can make the <see cref="Tween"/> parallel by default by using <see cref="Tween.SetParallel(bool)"/>.</para>
     /// </summary>
     public GTween Parallel()
     {
@@ -146,7 +146,7 @@ public class GTween
     }
 
     /// <summary>
-    /// <para>If <paramref name="parallel"/> is <see langword="true"/>, the <see cref="Godot.Tweener"/>s appended after this method will by default run simultaneously, as opposed to sequentially.</para>
+    /// <para>If <paramref name="parallel"/> is <see langword="true"/>, the <see cref="Tweener"/>s appended after this method will by default run simultaneously, as opposed to sequentially.</para>
     /// <para><code>
     /// tween.SetParallel()
     /// tween.Animate(...)
@@ -216,12 +216,12 @@ public class GTween
         return this;
     }
 
-    public GTween SetTrans(Tween.TransitionType transType)
+    public GTween SetTrans(TransitionType transType)
     {
         return UpdateTweener(nameof(SetTrans), () => _tweener.SetTrans(transType));
     }
 
-    public GTween SetEase(Tween.EaseType easeType)
+    public GTween SetEase(EaseType easeType)
     {
         return UpdateTweener(nameof(SetEase), () => _tweener.SetEase(easeType));
     }

@@ -117,7 +117,7 @@ public static class ExtensionsNode
     public static List<T> GetChildren<T>(this Node node) where T : Node
     {
         List<T> children = [];
-        FindChildrenOfType<T>(node, children);
+        FindChildrenOfType(node, children);
         return children;
     }
 
@@ -130,7 +130,7 @@ public static class ExtensionsNode
                 children.Add(typedChild);
             }
 
-            FindChildrenOfType<T>(child, children);
+            FindChildrenOfType(child, children);
         }
     }
 
