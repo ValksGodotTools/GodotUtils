@@ -8,26 +8,26 @@ public class GTimer
 {
     public event Action Timeout;
 
-    private Timer timer;
+    private Timer _timer;
 
     public GTimer(Node node, double milliseconds, bool looping)
     {
-        timer = new Timer();
-        timer.ProcessCallback = Timer.TimerProcessCallback.Physics;
-        timer.OneShot = !looping;
-        timer.WaitTime = milliseconds * 0.001; // Convert from milliseconds to seconds
-        node.AddChild(timer);
-        timer.Timeout += () => Timeout?.Invoke();
+        _timer = new Timer();
+        _timer.ProcessCallback = Timer.TimerProcessCallback.Physics;
+        _timer.OneShot = !looping;
+        _timer.WaitTime = milliseconds * 0.001; // Convert from milliseconds to seconds
+        node.AddChild(_timer);
+        _timer.Timeout += () => Timeout?.Invoke();
     }
 
     public void Start()
     {
-        timer.Start();
+        _timer.Start();
     }
 
     public void Stop()
     {
-        timer.Stop();
+        _timer.Stop();
     }
 }
 

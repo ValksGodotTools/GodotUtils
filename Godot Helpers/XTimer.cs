@@ -18,7 +18,7 @@ public partial class XTimer : Node
     /// </summary>
     public double Delay { get; set; }
 
-    Action<double> processCallback;
+    Action<double> _processCallback;
 
     /// <summary>
     /// Creates a new timer with a set delay in seconds
@@ -35,7 +35,7 @@ public partial class XTimer : Node
 
         if (repeating)
         {
-            processCallback = delta =>
+            _processCallback = delta =>
             {
                 Time += delta;
 
@@ -48,7 +48,7 @@ public partial class XTimer : Node
         }
         else
         {
-            processCallback = delta =>
+            _processCallback = delta =>
             {
                 Time += delta;
 
@@ -63,7 +63,7 @@ public partial class XTimer : Node
 
     public override void _PhysicsProcess(double delta)
     {
-        processCallback(delta);
+        _processCallback(delta);
     }
 
     /// <summary>

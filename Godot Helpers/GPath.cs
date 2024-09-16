@@ -12,36 +12,36 @@ public partial class GPath : Path2D
 {
     public bool Rotates
     {
-        get => pathFollow.Rotates;
-        set => pathFollow.Rotates = value;
+        get => _pathFollow.Rotates;
+        set => _pathFollow.Rotates = value;
     }
 
-    PathFollow2D pathFollow;
-    Vector2[] points;
-    Sprite2D sprite;
+    PathFollow2D _pathFollow;
+    Vector2[] _points;
+    Sprite2D _sprite;
 
-    GTween tween;
-    float[] tweenValues;
-    int tweenIndex;
-    TransType transType = TransType.Sine;
-    EaseType easeType = EaseType.Out;
-    double animSpeed;
-    Color color;
-    float width;
-    int dashes;
+    GTween _tween;
+    float[] _tweenValues;
+    int _tweenIndex;
+    TransType _transType = TransType.Sine;
+    EaseType _easeType = EaseType.Out;
+    double _animSpeed;
+    Color _color;
+    float _width;
+    int _dashes;
 
     public GPath(Vector2[] points, Color color, int width = 5, int dashes = 0, double animSpeed = 1)
     {
-        this.points = points;
+        this._points = points;
         Curve = new Curve2D();
-        pathFollow = new PathFollow2D { Rotates = false };
-        tween = new GTween(pathFollow);
-        AddChild(pathFollow);
+        _pathFollow = new PathFollow2D { Rotates = false };
+        _tween = new GTween(_pathFollow);
+        AddChild(_pathFollow);
 
-        this.color = color;
-        this.width = width;
-        this.dashes = dashes;
-        this.animSpeed = animSpeed;
+        this._color = color;
+        this._width = width;
+        this._dashes = dashes;
+        this._animSpeed = animSpeed;
 
         // Add points to the path
         for (int i = 0; i < points.Length; i++)
@@ -54,46 +54,46 @@ public partial class GPath : Path2D
     {
         Vector2[] points = Curve.GetBakedPoints();
 
-        for (int i = 0; i < points.Length - 1; i += (dashes + 1))
+        for (int i = 0; i < points.Length - 1; i += (_dashes + 1))
         {
             Vector2 A = points[i];
             Vector2 B = points[i + 1];
 
-            DrawLine(A, B, color, width, true);
+            DrawLine(A, B, _color, _width, true);
         }
     }
 
     public void SetLevelProgress(int v)
     {
-        pathFollow.Progress = tweenValues[v - 1];
+        _pathFollow.Progress = _tweenValues[v - 1];
     }
 
     public void AnimateTo(int targetIndex)
     {
-        if (targetIndex > tweenIndex)
-            AnimateForwards(targetIndex - tweenIndex);
+        if (targetIndex > _tweenIndex)
+            AnimateForwards(targetIndex - _tweenIndex);
         else
-            AnimateBackwards(tweenIndex - targetIndex);
+            AnimateBackwards(_tweenIndex - targetIndex);
     }
 
     public int AnimateForwards(int step = 1)
     {
-        tweenIndex = Mathf.Min(tweenIndex + step, tweenValues.Length - 1);
+        _tweenIndex = Mathf.Min(_tweenIndex + step, _tweenValues.Length - 1);
         Animate(true);
-        return tweenIndex;
+        return _tweenIndex;
     }
 
     public int AnimateBackwards(int step = 1)
     {
-        tweenIndex = Mathf.Max(tweenIndex - step, 0);
+        _tweenIndex = Mathf.Max(_tweenIndex - step, 0);
         Animate(false);
-        return tweenIndex;
+        return _tweenIndex;
     }
 
     public void AddSprite(Sprite2D sprite)
     {
-        this.sprite = sprite;
-        pathFollow.AddChild(sprite);
+        this._sprite = sprite;
+        _pathFollow.AddChild(sprite);
     }
 
     /// <summary>
@@ -105,10 +105,10 @@ public partial class GPath : Path2D
         // Add aditional points to make each line be curved
         int invert = 1;
 
-        for (int i = 0; i < points.Length - 1; i++)
+        for (int i = 0; i < _points.Length - 1; i++)
         {
-            Vector2 A = points[i];
-            Vector2 B = points[i + 1];
+            Vector2 A = _points[i];
+            Vector2 B = _points[i + 1];
 
             Vector2 center = (A + B) / 2;
             Vector2 offset = ((B - A).Orthogonal().Normalized() * curveDistance * invert);
@@ -150,38 +150,38 @@ public partial class GPath : Path2D
 
     void CalculateTweenValues()
     {
-        tweenValues = new float[points.Length];
-        for (int i = 0; i < points.Length; i++)
-            tweenValues[i] = Curve.GetClosestOffset(points[i]);
+        _tweenValues = new float[_points.Length];
+        for (int i = 0; i < _points.Length; i++)
+            _tweenValues[i] = Curve.GetClosestOffset(_points[i]);
     }
 
     void Animate(bool forwards)
     {
-        tween = new(this);
-        tween.Animate(PathFollow2D.PropertyName.Progress, tweenValues[tweenIndex],
-            CalculateDuration(forwards)).SetTrans(transType).SetEase(easeType);
+        _tween = new(this);
+        _tween.Animate(PathFollow2D.PropertyName.Progress, _tweenValues[_tweenIndex],
+            CalculateDuration(forwards)).SetTrans(_transType).SetEase(_easeType);
     }
 
     double CalculateDuration(bool forwards)
     {
         // The remaining distance left to go from the current sprites progress
         float remainingDistance = Mathf.Abs(
-            tweenValues[tweenIndex] - pathFollow.Progress);
+            _tweenValues[_tweenIndex] - _pathFollow.Progress);
 
         int startIndex = 0;
 
         // Dynamically calculate the start index
-        for (int i = 0; i < tweenValues.Length; i++)
-            if (pathFollow.Progress <= tweenValues[i])
+        for (int i = 0; i < _tweenValues.Length; i++)
+            if (_pathFollow.Progress <= _tweenValues[i])
             {
                 startIndex = i;
                 break;
             }
 
         // The number of level icons left to pass
-        int levelIconsLeft = Mathf.Max(1, Mathf.Abs(tweenIndex - startIndex));
+        int levelIconsLeft = Mathf.Max(1, Mathf.Abs(_tweenIndex - startIndex));
 
-        double duration = remainingDistance / 150 / animSpeed / levelIconsLeft;
+        double duration = remainingDistance / 150 / _animSpeed / levelIconsLeft;
 
         return duration;
     }

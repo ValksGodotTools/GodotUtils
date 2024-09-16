@@ -6,21 +6,21 @@ namespace GodotUtils;
 
 public class GTween
 {
-    PropertyTweener tweener;
-    Tween tween;
-    Node node;
-    string animatingProperty;
+    PropertyTweener _tweener;
+    Tween _tween;
+    Node _node;
+    string _animatingProperty;
 
     public GTween(Node node)
     {
-        this.node = node;
+        this._node = node;
 
         // Ensure the Tween is fresh when re-creating it
         Kill();
-        tween = node.CreateTween();
+        _tween = node.CreateTween();
 
         // This helps to prevent the camera from lagging behind the players movement
-        tween.SetProcessMode(Tween.TweenProcessMode.Physics);
+        _tween.SetProcessMode(Tween.TweenProcessMode.Physics);
     }
 
     /// <summary>
@@ -75,10 +75,10 @@ public class GTween
     /// </summary>
     public GTween AnimateProp(Variant finalValue, double duration)
     {
-        if (string.IsNullOrWhiteSpace(animatingProperty))
+        if (string.IsNullOrWhiteSpace(_animatingProperty))
             throw new Exception("No animation property has been set with tween.SetAnimatingProp(...)");
 
-        return Animate(animatingProperty, finalValue, duration);
+        return Animate(_animatingProperty, finalValue, duration);
     }
 
     /// <summary>
@@ -91,8 +91,8 @@ public class GTween
     /// </summary>
     public GTween Animate(string property, Variant finalValue, double duration)
     {
-        tweener = tween
-            .TweenProperty(node, property, finalValue, duration)
+        _tweener = _tween
+            .TweenProperty(_node, property, finalValue, duration)
             .SetTrans(Tween.TransitionType.Sine);
 
         return this;
@@ -108,13 +108,13 @@ public class GTween
     /// </summary>
     public GTween SetAnimatingProp(string property)
     {
-        this.animatingProperty = property;
+        this._animatingProperty = property;
         return this;
     }
 
     public GTween SetProcessMode(Tween.TweenProcessMode mode)
     {
-        tween = tween.SetProcessMode(mode);
+        _tween = _tween.SetProcessMode(mode);
         return this;
     }
 
@@ -123,7 +123,7 @@ public class GTween
     /// </summary>
     public GTween Loop(int loops = 0)
     {
-        tween = tween.SetLoops(loops);
+        _tween = _tween.SetLoops(loops);
         return this;
     }
 
@@ -141,7 +141,7 @@ public class GTween
     /// </summary>
     public GTween Parallel()
     {
-        tween = tween.Parallel();
+        _tween = _tween.Parallel();
         return this;
     }
 
@@ -155,19 +155,19 @@ public class GTween
     /// </summary>
     public GTween SetParallel(bool parallel = true)
     {
-        tween = tween.SetParallel(parallel);
+        _tween = _tween.SetParallel(parallel);
         return this;
     }
 
     public GTween Callback(Action callback)
     {
-        tween.TweenCallback(Callable.From(callback));
+        _tween.TweenCallback(Callable.From(callback));
         return this;
     }
 
     public GTween Delay(double duration)
     {
-        tween.TweenCallback(Callable.From(() => { /* Empty Action */ })).SetDelay(duration);
+        _tween.TweenCallback(Callable.From(() => { /* Empty Action */ })).SetDelay(duration);
         return this;
     }
 
@@ -176,7 +176,7 @@ public class GTween
     /// </summary>
     public GTween Finished(Action callback)
     {
-        tween.Finished += callback;
+        _tween.Finished += callback;
         return this;
     }
 
@@ -185,7 +185,7 @@ public class GTween
     /// </summary>
     public GTween Stop()
     {
-        tween.Stop();
+        _tween.Stop();
         return this;
     }
 
@@ -194,7 +194,7 @@ public class GTween
     /// </summary>
     public GTween Pause()
     {
-        tween.Pause();
+        _tween.Pause();
         return this;
     }
 
@@ -203,7 +203,7 @@ public class GTween
     /// </summary>
     public GTween Resume()
     {
-        tween.Play();
+        _tween.Play();
         return this;
     }
 
@@ -212,98 +212,98 @@ public class GTween
     /// </summary>
     public GTween Kill()
     {
-        tween?.Kill();
+        _tween?.Kill();
         return this;
     }
 
     public GTween SetTrans(Tween.TransitionType transType)
     {
-        return UpdateTweener(nameof(SetTrans), () => tweener.SetTrans(transType));
+        return UpdateTweener(nameof(SetTrans), () => _tweener.SetTrans(transType));
     }
 
     public GTween SetEase(Tween.EaseType easeType)
     {
-        return UpdateTweener(nameof(SetEase), () => tweener.SetEase(easeType));
+        return UpdateTweener(nameof(SetEase), () => _tweener.SetEase(easeType));
     }
 
     public GTween TransLinear()
     {
-        return UpdateTweener(nameof(TransLinear), () => tweener.SetTrans(TransitionType.Linear));
+        return UpdateTweener(nameof(TransLinear), () => _tweener.SetTrans(TransitionType.Linear));
     }
 
     public GTween TransBack()
     {
-        return UpdateTweener(nameof(TransBack), () => tweener.SetTrans(TransitionType.Back));
+        return UpdateTweener(nameof(TransBack), () => _tweener.SetTrans(TransitionType.Back));
     }
 
     public GTween TransSine()
     {
-        return UpdateTweener(nameof(TransSine), () => tweener.SetTrans(TransitionType.Sine));
+        return UpdateTweener(nameof(TransSine), () => _tweener.SetTrans(TransitionType.Sine));
     }
 
     public GTween TransBounce()
     {
-        return UpdateTweener(nameof(TransBounce), () => tweener.SetTrans(TransitionType.Bounce));
+        return UpdateTweener(nameof(TransBounce), () => _tweener.SetTrans(TransitionType.Bounce));
     }
 
     public GTween TransCirc()
     {
-        return UpdateTweener(nameof(TransCirc), () => tweener.SetTrans(TransitionType.Circ));
+        return UpdateTweener(nameof(TransCirc), () => _tweener.SetTrans(TransitionType.Circ));
     }
 
     public GTween TransCubic()
     {
-        return UpdateTweener(nameof(TransCubic), () => tweener.SetTrans(TransitionType.Cubic));
+        return UpdateTweener(nameof(TransCubic), () => _tweener.SetTrans(TransitionType.Cubic));
     }
 
     public GTween TransElastic()
     {
-        return UpdateTweener(nameof(TransElastic), () => tweener.SetTrans(TransitionType.Elastic));
+        return UpdateTweener(nameof(TransElastic), () => _tweener.SetTrans(TransitionType.Elastic));
     }
 
     public GTween TransExpo()
     {
-        return UpdateTweener(nameof(TransExpo), () => tweener.SetTrans(TransitionType.Expo));
+        return UpdateTweener(nameof(TransExpo), () => _tweener.SetTrans(TransitionType.Expo));
     }
 
     public GTween TransQuad()
     {
-        return UpdateTweener(nameof(TransQuad), () => tweener.SetTrans(TransitionType.Quad));
+        return UpdateTweener(nameof(TransQuad), () => _tweener.SetTrans(TransitionType.Quad));
     }
 
     public GTween TransQuart()
     {
-        return UpdateTweener(nameof(TransQuart), () => tweener.SetTrans(TransitionType.Quart));
+        return UpdateTweener(nameof(TransQuart), () => _tweener.SetTrans(TransitionType.Quart));
     }
 
     public GTween TransQuint()
     {
-        return UpdateTweener(nameof(TransQuint), () => tweener.SetTrans(TransitionType.Quint));
+        return UpdateTweener(nameof(TransQuint), () => _tweener.SetTrans(TransitionType.Quint));
     }
 
     public GTween TransSpring()
     {
-        return UpdateTweener(nameof(TransSpring), () => tweener.SetTrans(TransitionType.Spring));
+        return UpdateTweener(nameof(TransSpring), () => _tweener.SetTrans(TransitionType.Spring));
     }
 
     public GTween EaseIn()
     {
-        return UpdateTweener(nameof(EaseIn), () => tweener.SetEase(EaseType.In));
+        return UpdateTweener(nameof(EaseIn), () => _tweener.SetEase(EaseType.In));
     }
 
     public GTween EaseOut()
     {
-        return UpdateTweener(nameof(EaseOut), () => tweener.SetEase(EaseType.Out));
+        return UpdateTweener(nameof(EaseOut), () => _tweener.SetEase(EaseType.Out));
     }
 
     public GTween EaseInOut()
     {
-        return UpdateTweener(nameof(EaseInOut), () => tweener.SetEase(EaseType.InOut));
+        return UpdateTweener(nameof(EaseInOut), () => _tweener.SetEase(EaseType.InOut));
     }
 
     public GTween EaseOutIn()
     {
-        return UpdateTweener(nameof(EaseOutIn), () => tweener.SetEase(EaseType.OutIn));
+        return UpdateTweener(nameof(EaseOutIn), () => _tweener.SetEase(EaseType.OutIn));
     }
 
     /// <summary>
@@ -311,12 +311,12 @@ public class GTween
     /// </summary>
     public bool IsRunning()
     {
-        return tween.IsRunning();
+        return _tween.IsRunning();
     }
 
     private GTween UpdateTweener(string methodName, Action action)
     {
-        if (tweener == null)
+        if (_tweener == null)
             throw new Exception($"Cannot call {methodName}() because no tweener has been set with tween.Animate(...)");
 
         action();

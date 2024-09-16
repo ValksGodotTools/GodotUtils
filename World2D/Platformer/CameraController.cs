@@ -4,18 +4,18 @@ namespace GodotUtils.World2D.Platformer;
 
 public partial class CameraController : Camera2D
 {
-    float zoomIncrement = 0.08f;
-    float minZoom = 1.5f;
-    float maxZoom = 3.0f;
-    float smoothFactor = 0.25f;
-    float horizontalPanSpeed = 8;
+    float _zoomIncrement = 0.08f;
+    float _minZoom = 1.5f;
+    float _maxZoom = 3.0f;
+    float _smoothFactor = 0.25f;
+    float _horizontalPanSpeed = 8;
 
-    float targetZoom;
+    float _targetZoom;
 
     public override void _Ready()
     {
         // Set the initial target zoom value on game start
-        targetZoom = base.Zoom.X;
+        _targetZoom = base.Zoom.X;
     }
 
     public override void _PhysicsProcess(double delta)
@@ -43,21 +43,21 @@ public partial class CameraController : Camera2D
         {
             // Prevent the camera from going too far left
             if (camLeftPos > LimitLeft)
-                Position -= new Vector2(horizontalPanSpeed, 0);
+                Position -= new Vector2(_horizontalPanSpeed, 0);
         }
 
         if (Input.IsActionPressed("move_right"))
         {
             // Prevent the camera from going too far right
             if (camRightPos < LimitRight)
-                Position += new Vector2(horizontalPanSpeed, 0);
+                Position += new Vector2(_horizontalPanSpeed, 0);
         }
     }
 
     void Zooming()
     {
         // Lerp to the target zoom for a smooth effect
-        Zoom = Zoom.Lerp(new Vector2(targetZoom, targetZoom), smoothFactor);
+        Zoom = Zoom.Lerp(new Vector2(_targetZoom, _targetZoom), _smoothFactor);
     }
 
     void Boundaries(float camLeftPos, float camRightPos)
@@ -94,14 +94,14 @@ public partial class CameraController : Camera2D
 
         // Zoom in
         if (@event.ButtonIndex == MouseButton.WheelUp)
-            targetZoom += zoomIncrement;
+            _targetZoom += _zoomIncrement;
 
         // Zoom out
         if (@event.ButtonIndex == MouseButton.WheelDown)
-            targetZoom -= zoomIncrement;
+            _targetZoom -= _zoomIncrement;
 
         // Clamp the zoom
-        targetZoom = Mathf.Clamp(targetZoom, minZoom, maxZoom);
+        _targetZoom = Mathf.Clamp(_targetZoom, _minZoom, _maxZoom);
     }
 }
 

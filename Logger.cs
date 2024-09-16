@@ -18,14 +18,14 @@ public class Logger
 {
     public event Action<string> MessageLogged;
 
-    readonly ConcurrentQueue<LogInfo> messages = new();
+    readonly ConcurrentQueue<LogInfo> _messages = new();
 
     /// <summary>
     /// Log a message
     /// </summary>
     public void Log(object message, BBColor color = BBColor.Gray)
     {
-        messages.Enqueue(new LogInfo(LoggerOpcode.Message, new LogMessage($"{message}"), color));
+        _messages.Enqueue(new LogInfo(LoggerOpcode.Message, new LogMessage($"{message}"), color));
     }
 
     /// <summary>
@@ -50,7 +50,7 @@ public class Logger
 
         LogInfo logInfo = new(LoggerOpcode.Message, new LogMessage(message), BBColor.Gray);
 
-        messages.Enqueue(logInfo);
+        _messages.Enqueue(logInfo);
     }
 
     /// <summary>
@@ -116,7 +116,7 @@ public class Logger
     /// </summary>
     public bool StillWorking()
     {
-        return !messages.IsEmpty;
+        return !_messages.IsEmpty;
     }
 
     /// <summary>
@@ -124,7 +124,7 @@ public class Logger
     /// </summary>
     public void Update()
     {
-        if (!messages.TryDequeue(out LogInfo result))
+        if (!_messages.TryDequeue(out LogInfo result))
             return;
 
         switch (result.Opcode)
@@ -176,7 +176,7 @@ public class Logger
             tracePath = $"  at {elements[elements.Length - 1]}:{lineNumber}";
         }
 
-        messages.Enqueue(
+        _messages.Enqueue(
             new LogInfo(opcode,
                 new LogMessageTrace(
                     message,
