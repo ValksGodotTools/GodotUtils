@@ -4,13 +4,12 @@ namespace GodotUtils.World2D.Platformer;
 
 public partial class CameraController : Camera2D
 {
-    float _zoomIncrement = 0.08f;
-    float _minZoom = 1.5f;
-    float _maxZoom = 3.0f;
-    float _smoothFactor = 0.25f;
-    float _horizontalPanSpeed = 8;
-
-    float _targetZoom;
+    private float _zoomIncrement = 0.08f;
+    private float _minZoom = 1.5f;
+    private float _maxZoom = 3.0f;
+    private float _smoothFactor = 0.25f;
+    private float _horizontalPanSpeed = 8;
+    private float _targetZoom;
 
     public override void _Ready()
     {
@@ -37,7 +36,7 @@ public partial class CameraController : Camera2D
         @event.Dispose(); // Object count was increasing a lot when this function was executed
     }
 
-    void Panning(float camLeftPos, float camRightPos)
+    private void Panning(float camLeftPos, float camRightPos)
     {
         if (Input.IsActionPressed("move_left"))
         {
@@ -54,13 +53,13 @@ public partial class CameraController : Camera2D
         }
     }
 
-    void Zooming()
+    private void Zooming()
     {
         // Lerp to the target zoom for a smooth effect
         Zoom = Zoom.Lerp(new Vector2(_targetZoom, _targetZoom), _smoothFactor);
     }
 
-    void Boundaries(float camLeftPos, float camRightPos)
+    private void Boundaries(float camLeftPos, float camRightPos)
     {
         if (camLeftPos < LimitLeft)
         {
@@ -81,12 +80,12 @@ public partial class CameraController : Camera2D
         }
     }
 
-    void InputEventMouseButton(InputEventMouseButton @event)
+    private void InputEventMouseButton(InputEventMouseButton @event)
     {
         InputZoom(@event);
     }
 
-    void InputZoom(InputEventMouseButton @event)
+    private void InputZoom(InputEventMouseButton @event)
     {
         // Not sure why or if this is required
         if (!@event.IsPressed())

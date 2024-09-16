@@ -6,7 +6,7 @@ namespace GodotUtils;
 
 public static class ExtensionsTextEdit
 {
-    static readonly Dictionary<ulong, string> prevTexts = [];
+    private static readonly Dictionary<ulong, string> prevTexts = [];
 
     public static string Filter(this TextEdit textEdit, Func<string, bool> filter)
     {
@@ -31,7 +31,8 @@ public static class ExtensionsTextEdit
         prevTexts[id] = text;
         return text;
     }
-    static void ChangeTextEditText(this TextEdit textEdit, string text)
+
+    private static void ChangeTextEditText(this TextEdit textEdit, string text)
     {
         textEdit.Text = text;
         //textEdit.CaretColumn = text.Length;

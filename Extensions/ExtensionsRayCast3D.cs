@@ -23,7 +23,7 @@ public static class ExtensionsRayCast3D
         ExcludeParents(raycast, raycast.GetParent());
     }
 
-    static void ExcludeParents(RayCast3D raycast, Node parent)
+    private static void ExcludeParents(RayCast3D raycast, Node parent)
     {
         if (parent != null)
         {

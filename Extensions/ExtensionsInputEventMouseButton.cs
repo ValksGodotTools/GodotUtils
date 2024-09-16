@@ -51,12 +51,12 @@ public static class ExtensionsInputEventMouseButton
     }
 
     // Helper Functions
-    static bool IsPressed(this InputEventMouseButton @event, MouseButton button)
+    private static bool IsPressed(this InputEventMouseButton @event, MouseButton button)
     {
         return @event.ButtonIndex == button && @event.Pressed;
     }
 
-    static bool IsReleased(this InputEventMouseButton @event, MouseButton button)
+    private static bool IsReleased(this InputEventMouseButton @event, MouseButton button)
     {
         return @event.ButtonIndex == button && !@event.Pressed;
     }

@@ -78,7 +78,7 @@ public static class ExtensionsLineEdit
         prevNum = num;
     }
 
-    static void EditInputText(LineEdit input, string text)
+    private static void EditInputText(LineEdit input, string text)
     {
         input.Text = text;
         input.CaretColumn = input.Text.Length;

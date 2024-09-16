@@ -18,7 +18,7 @@ public class Logger
 {
     public event Action<string> MessageLogged;
 
-    readonly ConcurrentQueue<LogInfo> _messages = new();
+    private readonly ConcurrentQueue<LogInfo> _messages = new();
 
     /// <summary>
     /// Log a message
@@ -159,7 +159,7 @@ public class Logger
     /// <summary>
     /// Logs a message that may contain trace information
     /// </summary>
-    void LogDetailed(LoggerOpcode opcode, string message, BBColor color, bool trace, string filePath, int lineNumber)
+    private void LogDetailed(LoggerOpcode opcode, string message, BBColor color, bool trace, string filePath, int lineNumber)
     {
         string tracePath;
 
@@ -187,7 +187,7 @@ public class Logger
         ));
     }
 
-    void Print(object v, BBColor color)
+    private void Print(object v, BBColor color)
     {
         //Console.ForegroundColor = color;
 
@@ -198,7 +198,7 @@ public class Logger
             GD.PrintRich($"[color={color}]{v}");
     }
 
-    void PrintErr(object v, BBColor color)
+    private void PrintErr(object v, BBColor color)
     {
         //Console.ForegroundColor = color;
         GD.PrintErr(v);

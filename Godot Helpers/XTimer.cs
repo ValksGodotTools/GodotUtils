@@ -18,7 +18,7 @@ public partial class XTimer : Node
     /// </summary>
     public double Delay { get; set; }
 
-    Action<double> _processCallback;
+    private Action<double> _processCallback;
 
     /// <summary>
     /// Creates a new timer with a set delay in seconds

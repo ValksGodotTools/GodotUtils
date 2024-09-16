@@ -6,10 +6,10 @@ namespace GodotUtils;
 
 public class GTween
 {
-    PropertyTweener _tweener;
-    Tween _tween;
-    Node _node;
-    string _animatingProperty;
+    private PropertyTweener _tweener;
+    private Tween _tween;
+    private Node _node;
+    private string _animatingProperty;
 
     public GTween(Node node)
     {
