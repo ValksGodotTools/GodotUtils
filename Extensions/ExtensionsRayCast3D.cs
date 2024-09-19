@@ -12,7 +12,9 @@ public static class ExtensionsRayCast3D
         foreach (RayCast3D raycast in raycasts)
         {
             if (raycast.IsColliding())
+            {
                 numRaycastsColliding++;
+            }
         }
 
         return numRaycastsColliding;
@@ -28,7 +30,9 @@ public static class ExtensionsRayCast3D
         if (parent != null)
         {
             if (parent is CollisionObject3D collision)
+            {
                 raycast.AddException(collision);
+            }
 
             ExcludeParents(raycast, parent.GetParentOrNull<Node>());
         }

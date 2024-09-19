@@ -73,7 +73,9 @@ public static class GDirectories
                     string result = FindFile(fullFilePath, fileName);
 
                     if (result != null)
+                    {
                         return result;
+                    }
                 }
             }
             else
@@ -141,11 +143,13 @@ public static class GDirectories
         path = NormalizePath(ProjectSettings.GlobalizePath(path));
 
         if (Directory.Exists(path))
+        {
             foreach (string directory in Directory.GetDirectories(path))
             {
                 DeleteEmptyDirectories(directory);
                 DeleteEmptyDirectory(directory);
             }
+        }
     }
 
     /// <summary>
@@ -156,7 +160,9 @@ public static class GDirectories
         path = NormalizePath(ProjectSettings.GlobalizePath(path));
 
         if (IsEmptyDirectory(path))
+        {
             Directory.Delete(path, recursive: false);
+        }
     }
 
     /// <summary>

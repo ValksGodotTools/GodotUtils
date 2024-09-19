@@ -14,7 +14,9 @@ public static class ExtensionsTextEdit
         ulong id = textEdit.GetInstanceId();
 
         if (string.IsNullOrWhiteSpace(text))
+        {
             return prevTexts.TryGetValue(id, out string value) ? value : null;
+        }
 
         if (!filter(text))
         {

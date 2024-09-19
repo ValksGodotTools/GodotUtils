@@ -43,7 +43,9 @@ public static class ExtensionsPrint
     public static string ToFormattedString<T>(this IEnumerable<T> value, bool newLine = true)
     {
         if (value == null)
+        {
             return null;
+        }
 
         if (newLine)
         {
@@ -97,10 +99,14 @@ public static class ExtensionsPrint
             foreach (Type ignoredProp in ignoredProps)
             {
                 if (ignoredProp.GetProperties().Contains(member))
+                {
                     prop.Ignored = true;
+                }
 
                 if (prop.PropertyType == ignoredProp || prop.PropertyType.IsSubclassOf(ignoredProp))
+                {
                     prop.Ignored = true;
+                }
             }
 
             return prop;

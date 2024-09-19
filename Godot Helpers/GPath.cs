@@ -44,7 +44,9 @@ public partial class GPath : Path2D
 
         // Add points to the path
         for (int i = 0; i < points.Length; i++)
+        {
             Curve.AddPoint(points[i]);
+        }
 
         CalculateTweenValues();
     }
@@ -70,9 +72,13 @@ public partial class GPath : Path2D
     public void AnimateTo(int targetIndex)
     {
         if (targetIndex > _tweenIndex)
+        {
             AnimateForwards(targetIndex - _tweenIndex);
+        }
         else
+        {
             AnimateBackwards(_tweenIndex - targetIndex);
+        }
     }
 
     public int AnimateForwards(int step = 1)
@@ -121,19 +127,29 @@ public partial class GPath : Path2D
             // These values were found through trial and error
             // If you see a simpler pattern than this, please tell me lol
             if (B.Y >= A.Y)
+            {
                 if (B.X >= A.X)
+                {
                     // Next point is under and after first point
                     v = new Vector4(-1, -1, 1, 1);
+                }
                 else
+                {
                     // Next point is under and before first point
                     v = new Vector4(1, -1, -1, 1);
+                }
+            }
             else
                 if (B.X <= A.X)
+            {
                 // Next point is over and before first point
                 v = new Vector4(1, 1, -1, -1);
+            }
             else
+            {
                 // Next point is over and after first point
                 v = new Vector4(-1, 1, 1, -1);
+            }
 
             int index = 1 + i * 2;
 
@@ -151,7 +167,9 @@ public partial class GPath : Path2D
     {
         _tweenValues = new float[_points.Length];
         for (int i = 0; i < _points.Length; i++)
+        {
             _tweenValues[i] = Curve.GetClosestOffset(_points[i]);
+        }
     }
 
     private void Animate(bool forwards)
@@ -171,11 +189,13 @@ public partial class GPath : Path2D
 
         // Dynamically calculate the start index
         for (int i = 0; i < _tweenValues.Length; i++)
+        {
             if (_pathFollow.Progress <= _tweenValues[i])
             {
                 startIndex = i;
                 break;
             }
+        }
 
         // The number of level icons left to pass
         int levelIconsLeft = Mathf.Max(1, Mathf.Abs(_tweenIndex - startIndex));

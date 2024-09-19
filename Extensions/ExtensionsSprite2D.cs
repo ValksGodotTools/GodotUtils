@@ -93,7 +93,9 @@ public static class ExtensionsSprite2D
         for (int y = (int)size.Y - 1; y >= 0; y--)
         {
             if (img.GetPixel((int)size.X / 2, y).A != 0)
+            {
                 break;
+            }
 
             diff++;
         }

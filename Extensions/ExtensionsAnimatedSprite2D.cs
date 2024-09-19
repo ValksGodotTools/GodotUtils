@@ -25,10 +25,14 @@ public static class ExtensionsAnimatedSprite2D
         int frameCount = sprite.SpriteFrames.GetFrameCount(anim);
 
         if (frameCount - 1 >= frame)
+        {
             sprite.Frame = frame;
+        }
         else
+        {
             ServiceProvider.Services.Get<Logger>().LogWarning($"The frame '{frame}' specified for {sprite.Name} is" +
                 $"lower than the frame count '{frameCount}'");
+        }
 
         sprite.Play(anim);
     }
@@ -164,7 +168,9 @@ public static class ExtensionsAnimatedSprite2D
         for (int y = (int)size.Y - 1; y >= 0; y--)
         {
             if (img.GetPixel((int)size.X / 2, y).A != 0)
+            {
                 break;
+            }
 
             diff++;
         }

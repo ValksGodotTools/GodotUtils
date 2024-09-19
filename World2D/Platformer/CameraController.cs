@@ -31,7 +31,9 @@ public partial class CameraController : Camera2D
     public override void _Input(InputEvent @event)
     {
         if (@event is InputEventMouseButton mouseEvent)
+        {
             InputEventMouseButton(mouseEvent);
+        }
 
         @event.Dispose(); // Object count was increasing a lot when this function was executed
     }
@@ -42,14 +44,18 @@ public partial class CameraController : Camera2D
         {
             // Prevent the camera from going too far left
             if (camLeftPos > LimitLeft)
+            {
                 Position -= new Vector2(_horizontalPanSpeed, 0);
+            }
         }
 
         if (Input.IsActionPressed("move_right"))
         {
             // Prevent the camera from going too far right
             if (camRightPos < LimitRight)
+            {
                 Position += new Vector2(_horizontalPanSpeed, 0);
+            }
         }
     }
 
@@ -89,15 +95,21 @@ public partial class CameraController : Camera2D
     {
         // Not sure why or if this is required
         if (!@event.IsPressed())
+        {
             return;
+        }
 
         // Zoom in
         if (@event.ButtonIndex == MouseButton.WheelUp)
+        {
             _targetZoom += _zoomIncrement;
+        }
 
         // Zoom out
         if (@event.ButtonIndex == MouseButton.WheelDown)
+        {
             _targetZoom -= _zoomIncrement;
+        }
 
         // Clamp the zoom
         _targetZoom = Mathf.Clamp(_targetZoom, _minZoom, _maxZoom);

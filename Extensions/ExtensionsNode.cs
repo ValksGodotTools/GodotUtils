@@ -43,14 +43,18 @@ public static class ExtensionsNode
         foreach (Node child in children)
         {
             if (child is T type)
+            {
                 return type;
+            }
 
             if (recursive)
             {
                 T val = FindNode<T>(child.GetChildren());
 
                 if (val is not null)
+                {
                     return val;
+                }
             }
         }
 

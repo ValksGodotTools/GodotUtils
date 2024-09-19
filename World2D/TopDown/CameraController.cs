@@ -52,19 +52,29 @@ public partial class CameraController : Node
         Vector2 dir = Vector2.Zero;
 
         if (GInput.IsMovingLeft())
+        {
             dir.X -= 1;
+        }
 
         if (GInput.IsMovingRight())
+        {
             dir.X += 1;
+        }
 
         if (GInput.IsMovingUp())
+        {
             dir.Y -= 1;
+        }
 
         if (GInput.IsMovingDown())
+        {
             dir.Y += 1;
+        }
 
         if (_panning)
+        {
             _camera.Position = _initialPanPosition - (GetViewport().GetMousePosition() / _camera.Zoom.X);
+        }
 
         // Arrow keys and WASD movement are added onto the panning position changes
         _camera.Position += dir.Normalized() * _speed;
@@ -83,7 +93,9 @@ public partial class CameraController : Node
     public override void _UnhandledInput(InputEvent @event)
     {
         if (@event is InputEventMouseButton mouseButton)
+        {
             InputEventMouseButton(mouseButton);
+        }
 
         @event.Dispose(); // Object count was increasing a lot when this function was executed
     }
@@ -98,7 +110,9 @@ public partial class CameraController : Node
     {
         // Left click to start panning the camera
         if (@event.ButtonIndex != MouseButton.Left)
+        {
             return;
+        }
 
         // Is this the start of a left click or is this releasing a left click?
         if (@event.IsPressed())
@@ -108,23 +122,31 @@ public partial class CameraController : Node
             _panning = true;
         }
         else
+        {
             // Only stop panning once left click has been released
             _panning = false;
+        }
     }
 
     private void HandleZoom(InputEventMouseButton @event)
     {
         // Not sure why or if this is required
         if (!@event.IsPressed())
+        {
             return;
+        }
 
         // Zoom in
         if (@event.ButtonIndex == MouseButton.WheelUp)
+        {
             _targetZoom += _zoomIncrement;
+        }
 
         // Zoom out
         if (@event.ButtonIndex == MouseButton.WheelDown)
+        {
             _targetZoom -= _zoomIncrement;
+        }
 
         // Clamp the zoom
         _targetZoom = Mathf.Clamp(_targetZoom, _minZoom, _maxZoom);

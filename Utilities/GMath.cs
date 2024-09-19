@@ -20,7 +20,9 @@ public static class GMath
         int num = 0;
 
         foreach (int layer in layers)
+        {
             num |= 1 << layer - 1;
+        }
 
         return num;
     }

@@ -31,7 +31,9 @@ public partial class GCodeHighlighter : CodeHighlighter
         ];
 
         foreach (string keyword in keywords)
+        {
             KeywordColors.Add(keyword, new Color("a59fff"));
+        }
     }
 }
 

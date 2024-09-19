@@ -125,7 +125,9 @@ public class Logger
     public void Update()
     {
         if (!_messages.TryDequeue(out LogInfo result))
+        {
             return;
+        }
 
         switch (result.Opcode)
         {
@@ -138,7 +140,9 @@ public class Logger
                 PrintErr(result.Data.Message, result.Color);
 
                 if (result.Data is LogMessageTrace exceptionData && exceptionData.ShowTrace)
+                {
                     PrintErr(exceptionData.TracePath, BBColor.DarkGray);
+                }
 
                 Console.ResetColor();
                 break;
@@ -147,7 +151,9 @@ public class Logger
                 Print(result.Data.Message, result.Color);
 
                 if (result.Data is LogMessageTrace debugData && debugData.ShowTrace)
+                {
                     Print(debugData.TracePath, BBColor.DarkGray);
+                }
 
                 Console.ResetColor();
                 break;
@@ -192,10 +198,14 @@ public class Logger
         //Console.ForegroundColor = color;
 
         if (GOS.IsExportedRelease())
+        {
             GD.Print(v);
+        }
         else
+        {
             // Full list of BBCode color tags: https://absitomen.com/index.php?topic=331.0
             GD.PrintRich($"[color={color}]{v}");
+        }
     }
 
     private void PrintErr(object v, BBColor color)

@@ -23,7 +23,9 @@ public static class ExtensionsRayCast2D
     public static Variant GetTileData(this RayCast2D raycast, string layerName)
     {
         if (!raycast.IsColliding() || raycast.GetCollider() is not TileMapLayer tileMap)
+        {
             return default;
+        }
 
         Vector2 collisionPos = raycast.GetCollisionPoint();
         Vector2I tilePos = tileMap.LocalToMap(tileMap.ToLocal(collisionPos));
@@ -31,7 +33,9 @@ public static class ExtensionsRayCast2D
         TileData tileData = tileMap.GetCellTileData(tilePos);
 
         if (tileData == null)
+        {
             return default;
+        }
 
         return tileData.GetCustomData(layerName);
     }
@@ -45,7 +49,9 @@ public static class ExtensionsRayCast2D
         node.CollisionMask = 0;
 
         foreach (int value in values)
+        {
             node.SetCollisionMaskValue(value, true);
+        }
     }
 
     /// <summary>
@@ -58,7 +64,9 @@ public static class ExtensionsRayCast2D
         if (parent != null)
         {
             if (parent is CollisionObject2D collision)
+            {
                 raycast.AddException(collision);
+            }
 
             ExcludeRaycastParents(raycast, parent.GetParentOrNull<Node>());
         }
@@ -72,8 +80,12 @@ public static class ExtensionsRayCast2D
     public static bool IsAnyRayCastColliding(this List<RayCast2D> raycasts)
     {
         foreach (RayCast2D raycast in raycasts)
+        {
             if (raycast.IsColliding())
+            {
                 return true;
+            }
+        }
 
         return false;
     }
@@ -86,8 +98,12 @@ public static class ExtensionsRayCast2D
     public static RayCast2D GetAnyRayCastCollider(this List<RayCast2D> raycasts)
     {
         foreach (RayCast2D raycast in raycasts)
+        {
             if (raycast.IsColliding())
+            {
                 return raycast;
+            }
+        }
 
         return default;
     }

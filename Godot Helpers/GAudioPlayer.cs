@@ -22,7 +22,9 @@ public class GAudioPlayer
             float v = value.Remap(0, 100, -40, 0);
 
             if (value == 0)
+            {
                 v = -80;
+            }
 
             StreamPlayer.VolumeDb = v;
         }
@@ -53,7 +55,9 @@ public class GAudioPlayer
         StreamPlayer = new AudioStreamPlayer();
 
         if (deleteOnFinished)
+        {
             StreamPlayer.Finished += () => StreamPlayer.QueueFree();
+        }
 
         parent.AddChild(StreamPlayer);
     }

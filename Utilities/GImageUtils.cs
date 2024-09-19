@@ -11,8 +11,12 @@ public static class GImageUtils
         for (int x = 0; x < size.X; x++)
         {
             for (int y = 0; y < size.Y; y++)
+            {
                 if (img.GetPixel(x, y).A != 0)
+                {
                     return columns;
+                }
+            }
 
             columns++;
         }
@@ -27,8 +31,12 @@ public static class GImageUtils
         for (int x = (int)size.X - 1; x >= 0; x--)
         {
             for (int y = 0; y < size.Y; y++)
+            {
                 if (img.GetPixel(x, y).A != 0)
+                {
                     return columns;
+                }
+            }
 
             columns++;
         }
@@ -43,8 +51,12 @@ public static class GImageUtils
         for (int y = 0; y < size.Y; y++)
         {
             for (int x = 0; x < size.X; x++)
+            {
                 if (img.GetPixel(x, y).A != 0)
+                {
                     return rows;
+                }
+            }
 
             rows++;
         }
@@ -59,8 +71,12 @@ public static class GImageUtils
         for (int y = (int)size.Y - 1; y >= 0; y--)
         {
             for (int x = 0; x < size.X; x++)
+            {
                 if (img.GetPixel(x, y).A != 0)
+                {
                     return rows;
+                }
+            }
 
             rows++;
         }

@@ -76,7 +76,9 @@ public class GTween
     public GTween AnimateProp(Variant finalValue, double duration)
     {
         if (string.IsNullOrWhiteSpace(_animatingProperty))
+        {
             throw new Exception("No animation property has been set with tween.SetAnimatingProp(...)");
+        }
 
         return Animate(_animatingProperty, finalValue, duration);
     }
@@ -317,7 +319,9 @@ public class GTween
     private GTween UpdateTweener(string methodName, Action action)
     {
         if (_tweener == null)
+        {
             throw new Exception($"Cannot call {methodName}() because no tweener has been set with tween.Animate(...)");
+        }
 
         action();
         return this;
