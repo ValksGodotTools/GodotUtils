@@ -4,6 +4,11 @@ namespace GodotUtils;
 
 public static class ExtensionsSceneTree
 {
+    public static T GetAutoload<T>(this SceneTree tree, string autoload) where T : Node
+    {
+        return tree.Root.GetNode<T>($"/root/{autoload}");
+    }
+
     /// <summary>
     /// Unfocus the current UI element that is being focused
     /// </summary>
