@@ -64,8 +64,7 @@ public class ServiceProvider
     {
         if (!services.ContainsKey(typeof(T)))
         {
-            GD.Print($"Unable to obtain service '{typeof(T)}'");
-            return default;
+            throw new Exception($"Unable to obtain service '{typeof(T)}'");
         }
 
         return (T)services[typeof(T)].Instance;
