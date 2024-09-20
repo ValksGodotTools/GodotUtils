@@ -31,6 +31,23 @@ public static class ExtensionsNode
     }
 
     /// <summary>
+    /// Attempt to find a child node of type T
+    /// </summary>
+    public static bool TryGetNode<T>(this Node node, out T foundNode, bool recursive = true) where T : Node
+    {
+        foundNode = FindNode<T>(node.GetChildren(), recursive);
+        return foundNode != null;
+    }
+
+    /// <summary>
+    /// Check if a child node of type T exists
+    /// </summary>
+    public static bool HasNode<T>(this Node node, bool recursive = true) where T : Node
+    {
+        return FindNode<T>(node.GetChildren(), recursive) != null;
+    }
+
+    /// <summary>
     /// Find a child node of type T
     /// </summary>
     public static T GetNode<T>(this Node node, bool recursive = true) where T : Node
