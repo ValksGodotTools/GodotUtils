@@ -30,7 +30,7 @@ public static class ExtensionsAnimatedSprite2D
         }
         else
         {
-            ServiceProvider.Services.Get<Logger>().LogWarning($"The frame '{frame}' specified for {sprite.Name} is" +
+            GD.Print($"The frame '{frame}' specified for {sprite.Name} is " +
                 $"lower than the frame count '{frameCount}'");
         }
 
