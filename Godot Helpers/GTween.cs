@@ -228,85 +228,23 @@ public class GTween
         return UpdateTweener(nameof(SetEase), () => _tweener.SetEase(easeType));
     }
 
-    public GTween TransLinear()
-    {
-        return UpdateTweener(nameof(TransLinear), () => _tweener.SetTrans(TransitionType.Linear));
-    }
+    public GTween TransLinear() => SetTrans(TransitionType.Linear);
+    public GTween TransBack() => SetTrans(TransitionType.Back);
+    public GTween TransSine() => SetTrans(TransitionType.Sine);
+    public GTween TransBounce() => SetTrans(TransitionType.Bounce);
+    public GTween TransCirc() => SetTrans(TransitionType.Circ);
+    public GTween TransCubic() => SetTrans(TransitionType.Cubic);
+    public GTween TransElastic() => SetTrans(TransitionType.Elastic);
+    public GTween TransExpo() => SetTrans(TransitionType.Expo);
+    public GTween TransQuad() => SetTrans(TransitionType.Quad);
+    public GTween TransQuart() => SetTrans(TransitionType.Quart);
+    public GTween TransQuint() => SetTrans(TransitionType.Quint);
+    public GTween TransSpring() => SetTrans(TransitionType.Spring);
 
-    public GTween TransBack()
-    {
-        return UpdateTweener(nameof(TransBack), () => _tweener.SetTrans(TransitionType.Back));
-    }
-
-    public GTween TransSine()
-    {
-        return UpdateTweener(nameof(TransSine), () => _tweener.SetTrans(TransitionType.Sine));
-    }
-
-    public GTween TransBounce()
-    {
-        return UpdateTweener(nameof(TransBounce), () => _tweener.SetTrans(TransitionType.Bounce));
-    }
-
-    public GTween TransCirc()
-    {
-        return UpdateTweener(nameof(TransCirc), () => _tweener.SetTrans(TransitionType.Circ));
-    }
-
-    public GTween TransCubic()
-    {
-        return UpdateTweener(nameof(TransCubic), () => _tweener.SetTrans(TransitionType.Cubic));
-    }
-
-    public GTween TransElastic()
-    {
-        return UpdateTweener(nameof(TransElastic), () => _tweener.SetTrans(TransitionType.Elastic));
-    }
-
-    public GTween TransExpo()
-    {
-        return UpdateTweener(nameof(TransExpo), () => _tweener.SetTrans(TransitionType.Expo));
-    }
-
-    public GTween TransQuad()
-    {
-        return UpdateTweener(nameof(TransQuad), () => _tweener.SetTrans(TransitionType.Quad));
-    }
-
-    public GTween TransQuart()
-    {
-        return UpdateTweener(nameof(TransQuart), () => _tweener.SetTrans(TransitionType.Quart));
-    }
-
-    public GTween TransQuint()
-    {
-        return UpdateTweener(nameof(TransQuint), () => _tweener.SetTrans(TransitionType.Quint));
-    }
-
-    public GTween TransSpring()
-    {
-        return UpdateTweener(nameof(TransSpring), () => _tweener.SetTrans(TransitionType.Spring));
-    }
-
-    public GTween EaseIn()
-    {
-        return UpdateTweener(nameof(EaseIn), () => _tweener.SetEase(EaseType.In));
-    }
-
-    public GTween EaseOut()
-    {
-        return UpdateTweener(nameof(EaseOut), () => _tweener.SetEase(EaseType.Out));
-    }
-
-    public GTween EaseInOut()
-    {
-        return UpdateTweener(nameof(EaseInOut), () => _tweener.SetEase(EaseType.InOut));
-    }
-
-    public GTween EaseOutIn()
-    {
-        return UpdateTweener(nameof(EaseOutIn), () => _tweener.SetEase(EaseType.OutIn));
-    }
+    public GTween EaseIn() => SetEase(EaseType.In);
+    public GTween EaseOut() => SetEase(EaseType.Out);
+    public GTween EaseInOut() => SetEase(EaseType.InOut);
+    public GTween EaseOutIn() => SetEase(EaseType.OutIn);
 
     /// <summary>
     /// Checks if the tween is still playing
