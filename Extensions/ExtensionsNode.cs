@@ -135,14 +135,14 @@ public static class ExtensionsNode
     /// <summary>
     /// Recursively retrieves all nodes of type <typeparamref name="T"/> from <paramref name="node"/>
     /// </summary>
-    public static List<T> GetChildren<T>(this Node node) where T : Node
+    public static List<T> GetChildren<T>(this Node node, bool recursive = true) where T : Node
     {
         List<T> children = [];
-        FindChildrenOfType(node, children);
+        FindChildrenOfType(node, children, recursive);
         return children;
     }
 
-    private static void FindChildrenOfType<T>(Node node, List<T> children) where T : Node
+    private static void FindChildrenOfType<T>(Node node, List<T> children, bool recursive) where T : Node
     {
         foreach (Node child in node.GetChildren())
         {
@@ -151,7 +151,10 @@ public static class ExtensionsNode
                 children.Add(typedChild);
             }
 
-            FindChildrenOfType(child, children);
+            if (recursive)
+            {
+                FindChildrenOfType(child, children, recursive);
+            }
         }
     }
 
