@@ -10,6 +10,7 @@ public class GTween
     private Tween _tween;
     private Node _node;
     private string _animatingProperty;
+    private ShaderMaterial _animatingShaderMaterial;
 
     public GTween(Node node)
     {
@@ -24,26 +25,6 @@ public class GTween
     }
 
     /// <summary>
-    /// Creates a looping tween that will stop and execute a callback when a condition is met.
-    /// </summary>
-    public static GTween Loop(Node node, double duration, Func<bool> condition, Action callback)
-    {
-        GTween tween = new(node);
-        tween.Delay(duration)
-            .Loop()
-            .Callback(() =>
-            {
-                if (condition())
-                {
-                    tween.Stop();
-                    callback();
-                }
-            });
-
-        return tween;
-    }
-
-    /// <summary>
     /// Creates a delay of <paramref name="duration"/> seconds followed by a
     /// <paramref name="callback"/>
     /// </summary>
@@ -55,14 +36,6 @@ public class GTween
             .Callback(callback);
 
         return tween;
-    }
-
-    /// <summary>
-    /// Creates a 0.01s delay followed by a <paramref name="callback"/>
-    /// </summary>
-    public static GTween SmallDelay(Node node, Action callback)
-    {
-        return Delay(node, 0.01, callback);
     }
 
     /// <summary>
@@ -81,6 +54,28 @@ public class GTween
         }
 
         return Animate(_animatingProperty, finalValue, duration);
+    }
+
+    /// <summary>
+    /// Animates a specified <paramref name="shaderParam"/>. All tweens use the Sine transition by default.
+    /// 
+    /// <code>
+    /// tween.SetAnimatingShaderMaterial(shaderMaterial);
+    /// tween.AnimateShader("blend_intensity", 1.0f, 2.0);
+    /// </code>
+    /// </summary>
+    public GTween AnimateShader(string shaderParam, Variant finalValue, double duration)
+    {
+        if (_animatingShaderMaterial == null)
+        {
+            throw new Exception("Animating shader material has not been set");
+        }
+
+        _tweener = _tween
+            .TweenProperty(_animatingShaderMaterial, $"shader_parameter/{shaderParam}", finalValue, duration)
+            .SetTrans(Tween.TransitionType.Sine);
+
+        return this;
     }
 
     /// <summary>
@@ -111,6 +106,20 @@ public class GTween
     public GTween SetAnimatingProp(string property)
     {
         _animatingProperty = property;
+        return this;
+    }
+
+    /// <summary>
+    /// Sets the <paramref name="shaderMaterial"/> to be animated on
+    /// 
+    /// <code>
+    /// tween.SetAnimatingShaderMaterial(shaderMaterial);
+    /// tween.AnimateShader("blend_intensity", 1.0f, 2.0);
+    /// </code>
+    /// </summary>
+    public GTween SetAnimatingShaderMaterial(ShaderMaterial shaderMaterial)
+    {
+        _animatingShaderMaterial = shaderMaterial;
         return this;
     }
 
