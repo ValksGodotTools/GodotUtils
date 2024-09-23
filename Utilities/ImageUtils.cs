@@ -2,7 +2,7 @@ using Godot;
 
 namespace GodotUtils;
 
-public static class GImageUtils
+public static class ImageUtils
 {
     public static int GetTransparentColumnsLeft(Image img, Vector2 size)
     {

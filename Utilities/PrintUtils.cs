@@ -2,7 +2,7 @@
 
 namespace GodotUtils;
 
-public static class GPrintUtils
+public static class PrintUtils
 {
     public static void Warning(object message)
     {

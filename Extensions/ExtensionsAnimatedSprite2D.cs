@@ -111,8 +111,8 @@ public static class ExtensionsAnimatedSprite2D
         Image img = tex.GetImage();
         Vector2I size = img.GetSize();
 
-        int transColumnsLeft = GImageUtils.GetTransparentColumnsLeft(img, size);
-        int transColumnsRight = GImageUtils.GetTransparentColumnsRight(img, size);
+        int transColumnsLeft = ImageUtils.GetTransparentColumnsLeft(img, size);
+        int transColumnsRight = ImageUtils.GetTransparentColumnsRight(img, size);
 
         int pixelWidth = size.X - transColumnsLeft - transColumnsRight;
 
@@ -138,8 +138,8 @@ public static class ExtensionsAnimatedSprite2D
         Image img = tex.GetImage();
         Vector2I size = img.GetSize();
 
-        int transRowsTop = GImageUtils.GetTransparentRowsTop(img, size);
-        int transRowsBottom = GImageUtils.GetTransparentRowsBottom(img, size);
+        int transRowsTop = ImageUtils.GetTransparentRowsTop(img, size);
+        int transRowsBottom = ImageUtils.GetTransparentRowsBottom(img, size);
 
         int pixelHeight = size.Y - transRowsTop - transRowsBottom;
 

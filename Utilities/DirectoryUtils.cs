@@ -4,7 +4,7 @@ using System;
 
 namespace GodotUtils;
 
-public static class GDirectories
+public static class DirectoryUtils
 {
     /// <summary>
     /// Recursively traverses all directories and performs a action on each file path. 

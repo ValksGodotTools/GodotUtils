@@ -2,7 +2,7 @@ using Godot;
 
 namespace GodotUtils;
 
-public static class GNodeUtils
+public static class NodeUtils
 {
     public static Area2D CreateAreaRect(Node parent, Vector2 size, string debugColor = "ff001300")
     {

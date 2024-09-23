@@ -4,11 +4,11 @@ using System.Text.RegularExpressions;
 
 namespace GodotUtils;
 
-public static class GSceneFileUtils
+public static class SceneFileUtils
 {
     public static void FixBrokenDependencies()
     {
-        GDirectories.Traverse("res://", FixBrokenResourcePaths);
+        DirectoryUtils.Traverse("res://", FixBrokenResourcePaths);
     }
 
     private static void FixBrokenResourcePaths(string fullFilePath)
@@ -33,7 +33,7 @@ public static class GSceneFileUtils
 
             if (!Godot.FileAccess.FileExists(oldResourcePath))
             {
-                string newResourcePathGlobal = GDirectories.FindFile("res://", oldResourcePath.GetFile());
+                string newResourcePathGlobal = DirectoryUtils.FindFile("res://", oldResourcePath.GetFile());
 
                 if (!string.IsNullOrWhiteSpace(newResourcePathGlobal))
                 {
