@@ -28,8 +28,8 @@ public static class CursorUtils
     private static Node GetPhysicsNodeAtPosition(Node2D node, Vector2 position, bool collideWithAreas, bool collideWithBodies, bool excludeSelf = false)
     {
         // Create a shape query parameters object
-        PhysicsShapeQueryParameters2D queryParams = new();
-        queryParams.Transform = new Transform2D(0, position);
+        PhysicsPointQueryParameters2D queryParams = new();
+        queryParams.Position = position;
         queryParams.CollideWithAreas = collideWithAreas;
         queryParams.CollideWithBodies = collideWithBodies;
 
@@ -48,17 +48,12 @@ public static class CursorUtils
             queryParams.Exclude = new Godot.Collections.Array<Rid>(rids);
         }
 
-        // Use a small circle shape to simulate a point intersection
-        CircleShape2D circleShape = new();
-        circleShape.Radius = 1.0f;
-        queryParams.Shape = circleShape;
-
         // Perform the query
         PhysicsDirectSpaceState2D spaceState =
             PhysicsServer2D.SpaceGetDirectState(node.GetWorld2D().GetSpace());
 
         Godot.Collections.Array<Godot.Collections.Dictionary> results =
-            spaceState.IntersectShape(queryParams, 1);
+            spaceState.IntersectPoint(queryParams, 1);
 
         foreach (Godot.Collections.Dictionary result in results)
         {
