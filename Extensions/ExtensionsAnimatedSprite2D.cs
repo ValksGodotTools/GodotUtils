@@ -54,32 +54,25 @@ public static class ExtensionsAnimatedSprite2D
     }
 
     /// <summary>
-    /// Gets the scaled width of the specified sprite frame
+    /// Gets the size of the specified sprite animation.
     /// </summary>
-    public static int GetWidth(this AnimatedSprite2D sprite, string anim = "")
+    public static Vector2 GetSize(this AnimatedSprite2D sprite, string anim = "")
     {
         anim = string.IsNullOrWhiteSpace(anim) ? sprite.Animation : anim;
-        return (int)(sprite.SpriteFrames.GetFrameTexture(anim, 0).GetWidth() *
-            sprite.Scale.X);
+
+        Texture2D frameTexture = sprite.SpriteFrames.GetFrameTexture(anim, 0);
+
+        return new Vector2(frameTexture.GetWidth(), frameTexture.GetHeight());
     }
 
     /// <summary>
-    /// Gets the scaled height of the specified sprite frame
-    /// </summary>
-    public static int GetHeight(this AnimatedSprite2D sprite, string anim = "")
-    {
-        anim = string.IsNullOrWhiteSpace(anim) ? sprite.Animation : anim;
-        return (int)(sprite.SpriteFrames.GetFrameTexture(anim, 0).GetHeight() *
-            sprite.Scale.Y);
-    }
-
-    /// <summary>
-    /// Gets the scaled size of the specified sprite frame
+    /// Gets the scaled size of the specified sprite animation.
     /// </summary>
     public static Vector2 GetScaledSize(this AnimatedSprite2D sprite, string anim = "")
     {
-        anim = string.IsNullOrWhiteSpace(anim) ? sprite.Animation : anim;
-        return new Vector2(GetWidth(sprite, anim), GetHeight(sprite, anim));
+        Vector2 size = sprite.GetSize(anim);
+
+        return new Vector2(size.X * sprite.Scale.X, size.Y * sprite.Scale.Y);
     }
 
     /// <summary>
