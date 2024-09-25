@@ -26,6 +26,29 @@ public static class ExtensionsNode
     }
 
     /// <summary>
+    /// Retrieves a node of type <typeparamref name="T"/> from the current scene at the specified path.
+    /// </summary>
+    /// <typeparam name="T">The type of the node to retrieve.</typeparam>
+    /// <param name="node">The node from which to start the operation.</param>
+    /// <param name="path">The path to the node in the scene tree.</param>
+    /// <returns>The node at the specified path, cast to type <typeparamref name="T"/>.</returns>
+    public static T GetSceneNode<T>(this Node node, string path) where T : Node
+    {
+        return node.GetTree().CurrentScene.GetNode<T>(path);
+    }
+
+    /// <summary>
+    /// Retrieves a node of type <typeparamref name="T"/> from the current scene.
+    /// </summary>
+    /// <typeparam name="T">The type of the node to retrieve.</typeparam>
+    /// <param name="node">The node from which to start the operation.</param>
+    /// <returns>The node of type <typeparamref name="T"/>, if found.</returns>
+    public static T GetSceneNode<T>(this Node node) where T : Node
+    {
+        return node.GetTree().CurrentScene.GetNode<T>(recursive: false);
+    }
+
+    /// <summary>
     /// Recursively searches for all nodes of <paramref name="type"/>
     /// </summary>
     public static List<Node> GetNodes(this Node node, Type type)
