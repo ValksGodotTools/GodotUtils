@@ -5,7 +5,7 @@ namespace GodotUtils;
 
 public static class ExtensionsRayCast3D
 {
-    public static int GetRaycastsColliding(this List<RayCast3D> raycasts)
+    public static int GetRaycastsColliding(this RayCast3D[] raycasts)
     {
         int numRaycastsColliding = 0;
 

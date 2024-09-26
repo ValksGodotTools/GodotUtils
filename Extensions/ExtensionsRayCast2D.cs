@@ -77,7 +77,7 @@ public static class ExtensionsRayCast2D
     /// </summary>
     /// <param name="raycasts">Collection of raycasts to check</param>
     /// <returns>True if any ray cast is colliding, else false</returns>
-    public static bool IsAnyRayCastColliding(this List<RayCast2D> raycasts)
+    public static bool IsAnyRayCastColliding(this RayCast2D[] raycasts)
     {
         foreach (RayCast2D raycast in raycasts)
         {
@@ -95,7 +95,7 @@ public static class ExtensionsRayCast2D
     /// </summary>
     /// <param name="raycasts">Collection of raycasts to check</param>
     /// <returns>Raycast which is colliding, else default</returns>
-    public static RayCast2D GetAnyRayCastCollider(this List<RayCast2D> raycasts)
+    public static RayCast2D GetAnyRayCastCollider(this RayCast2D[] raycasts)
     {
         foreach (RayCast2D raycast in raycasts)
         {
