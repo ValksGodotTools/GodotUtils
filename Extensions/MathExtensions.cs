@@ -3,7 +3,7 @@ using System;
 
 namespace GodotUtils;
 
-public static class ExtensionsMath
+public static class MathExtensions
 {
     public static Color Lerp(this Color color1, Color color2, float t)
     {

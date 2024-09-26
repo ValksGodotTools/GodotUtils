@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace GodotUtils;
 
-public static class ExtensionsRayCast3D
+public static class RayCast3DExtensions
 {
     public static int GetRaycastsColliding(this RayCast3D[] raycasts)
     {

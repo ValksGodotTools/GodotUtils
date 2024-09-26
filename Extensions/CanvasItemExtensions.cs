@@ -2,7 +2,7 @@ using Godot;
 
 namespace GodotUtils;
 
-public static class ExtensionsCanvasItem
+public static class CanvasItemExtensions
 {
     public static void SetUnshaded(this CanvasItem canvasItem)
     {

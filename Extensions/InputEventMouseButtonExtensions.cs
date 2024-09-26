@@ -2,7 +2,7 @@ using Godot;
 
 namespace GodotUtils;
 
-public static class ExtensionsInputEventMouseButton
+public static class InputEventMouseButtonExtensions
 {
     public static bool IsWheelUp(this InputEventMouseButton @event)
     {

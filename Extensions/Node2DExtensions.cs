@@ -2,7 +2,7 @@ using Godot;
 
 namespace GodotUtils;
 
-public static class ExtensionsNode2D
+public static class Node2DExtensions
 {
     /// <summary>
     /// <para>

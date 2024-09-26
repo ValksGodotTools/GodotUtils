@@ -2,7 +2,7 @@ using Godot;
 
 namespace GodotUtils;
 
-public static class ExtensionsAnimationTree
+public static class AnimationTreeExtensions
 {
     /// <summary>
     /// Set a condition to 'value' then flip 'value' when 0.1 seconds have passed.

@@ -2,7 +2,7 @@ using Godot;
 
 namespace GodotUtils;
 
-public static class ExtensionsSprite2D
+public static class Sprite2DExtensions
 {
     /// <summary>
     /// The sprite size multiplied by the sprites scale

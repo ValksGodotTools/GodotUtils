@@ -2,7 +2,7 @@ using Godot;
 
 namespace GodotUtils;
 
-public static class ExtensionsCollisionObject2D
+public static class CollisionObject2DExtensions
 {
     /// <summary>
     /// Set the <paramref name="layers"/> for CollisionLayer and CollisionMask

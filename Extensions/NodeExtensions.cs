@@ -5,7 +5,7 @@ using System;
 
 namespace GodotUtils;
 
-public static class ExtensionsNode
+public static class NodeExtensions
 {
     /// <summary>
     /// Add a child (deferred) to the current scene node. This is the node that is a child of the root node, 

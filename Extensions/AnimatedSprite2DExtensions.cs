@@ -2,7 +2,7 @@ using Godot;
 
 namespace GodotUtils;
 
-public static class ExtensionsAnimatedSprite2D
+public static class AnimatedSprite2DExtensions
 {
     /// <summary>
     /// There may be a small delay when switching between animations. Use this function

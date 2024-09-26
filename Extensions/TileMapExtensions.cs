@@ -2,7 +2,7 @@ using Godot;
 
 namespace GodotUtils;
 
-public static class ExtensionsTileMap
+public static class TileMapExtensions
 {
     /// <summary>
     /// Retrieves the custom data of type <typeparamref name="T"/> set at <paramref name="tileCoordinates"/>. 

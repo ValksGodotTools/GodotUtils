@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace GodotUtils;
 
-public static class ExtensionsRayCast2D
+public static class RayCast2DExtensions
 {
     /// <summary>
     /// <para>

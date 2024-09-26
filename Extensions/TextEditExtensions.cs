@@ -4,7 +4,7 @@ using System;
 
 namespace GodotUtils;
 
-public static class ExtensionsTextEdit
+public static class TextEditExtensions
 {
     private static readonly Dictionary<ulong, string> prevTexts = [];
 

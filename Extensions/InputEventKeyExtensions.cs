@@ -2,7 +2,7 @@ using Godot;
 
 namespace GodotUtils;
 
-public static class ExtensionsInputEventKey
+public static class InputEventKeyExtensions
 {
     public static bool IsJustPressed(this InputEventKey v, Key key)
     {

@@ -2,7 +2,7 @@ using Godot;
 
 namespace GodotUtils;
 
-public static class ExtensionsCamera2D
+public static class Camera2DExtensions
 {
     public static void SetPositionIgnoreSmoothing(this Camera2D camera, Vector2 position)
     {

@@ -2,7 +2,7 @@ using Godot;
 
 namespace GodotUtils;
 
-public static class ExtensionsSceneTree
+public static class SceneTreeExtensions
 {
     public static T GetAutoload<T>(this SceneTree tree, string autoload) where T : Node
     {

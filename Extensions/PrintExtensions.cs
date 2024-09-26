@@ -11,7 +11,7 @@ namespace GodotUtils;
 /// <summary>
 /// Provides extension methods for printing objects and collections in a formatted manner.
 /// </summary>
-public static class ExtensionsPrint
+public static class PrintExtensions
 {
     /// <summary>
     /// Prints the elements of an enumerable collection in a formatted string.

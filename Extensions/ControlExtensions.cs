@@ -2,7 +2,7 @@ using Godot;
 
 namespace GodotUtils;
 
-public static class ExtensionsControl
+public static class ControlExtensions
 {
     public static void CoverEntireRect(this Control control)
     {
