@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace GodotUtils;
 
-public static class SceneFileUtils
+public static partial class SceneFileUtils
 {
     public static void FixBrokenDependencies()
     {
@@ -15,11 +15,11 @@ public static class SceneFileUtils
     {
         if (fullFilePath.EndsWith(".tscn"))
         {
-            FixBrokenResourcePath(fullFilePath, new Regex("path=\"(?<path>.+)\" "));
+            FixBrokenResourcePath(fullFilePath, TSCNPath());
         }
         else if (fullFilePath.EndsWith(".glb.import"))
         {
-            FixBrokenResourcePath(fullFilePath, new Regex("\"save_to_file/path\": \"(?<path>.+)\""));
+            FixBrokenResourcePath(fullFilePath, GLBPath());
         }
     }
 
@@ -50,5 +50,11 @@ public static class SceneFileUtils
 
         File.WriteAllText(fullFilePath, text);
     }
+
+    [GeneratedRegex("path=\"(?<path>.+)\" ")]
+    private static partial Regex TSCNPath();
+
+    [GeneratedRegex("\"save_to_file/path\": \"(?<path>.+)\"")]
+    private static partial Regex GLBPath();
 }
 
