@@ -6,3 +6,5 @@ bin/*
 obj/*
 .vs/*
 
+# Include these files
+!**/*.gdignore
