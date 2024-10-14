@@ -16,3 +16,8 @@ public class State(string name = "")
         return _name.ToLower();
     }
 }
+
+public interface IStateMachine
+{
+    void SwitchState(State newState);
+}
