@@ -4,6 +4,11 @@ namespace GodotUtils;
 
 public static class SceneTreeExtensions
 {
+    public static T GetCurrentScene<T>(this SceneTree tree) where T : Node
+    {
+        return tree.CurrentScene as T;
+    }
+    
     public static T GetAutoload<T>(this SceneTree tree, string autoload) where T : Node
     {
         return tree.Root.GetNode<T>($"/root/{autoload}");
